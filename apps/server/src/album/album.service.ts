@@ -1,9 +1,7 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Album } from './schemas/album.schema';
-import { isValidMongoId } from './utils/albumService.utils';
-
 import { Query } from 'express-serve-static-core';
 
 
@@ -43,8 +41,10 @@ export class AlbumService {
 
     async findById(id: string): Promise<Album> {
 
-        if (!isValidMongoId(id)) {
-            throw new HttpException('id is not a mongoDb id', 400)
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
         }
 
         const album = await this.albumModel.findById(id);
@@ -57,8 +57,10 @@ export class AlbumService {
     }
 
     async updateById(id: string, album: Album): Promise<Album> {
-        if (!isValidMongoId(id)) {
-            throw new HttpException('id is not a mongoDb id', 400)
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
         }
 
         return await this.albumModel.findByIdAndUpdate(id, album, {
@@ -68,8 +70,10 @@ export class AlbumService {
     }
 
     async deleteById(id: string): Promise<Album> {
-        if (!isValidMongoId(id)) {
-            throw new HttpException('id is not a mongoDb id', 400)
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
         }
 
         return await this.albumModel.findByIdAndDelete(id)
