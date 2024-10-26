@@ -1,16 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { Album } from './schemas/album.schema';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+
+import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('album')
 export class AlbumController {
     constructor(private albumService: AlbumService) {}
 
     @Get()
-    async getAllAlbums(): Promise<Album[]> {
-        return await this.albumService.findAll()
+    async getAllAlbums(@Query() query: ExpressQuery): Promise<Album[]> {
+        return await this.albumService.findAll(query)
     }
 
     @Post()

@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 import { Album } from './schemas/album.schema';
 import { isValidMongoId } from './utils/albumService.utils';
 
+import { Query } from 'express-serve-static-core';
+
+
 @Injectable()
 export class AlbumService {
     constructor(
@@ -12,8 +15,24 @@ export class AlbumService {
     ) {}
 
 
-    async findAll(): Promise<Album[]> {
-        const albums = await this.albumModel.find();
+    async findAll(query: Query): Promise<Album[]> {
+
+        const resPerPage = 2
+        const currentPage = Number(query.page) || 1
+        const skip = resPerPage * (currentPage - 1)
+
+        const keyword = query.keyword ? {
+            title: {
+                $regex: query.keyword,
+                $options: 'i'
+            }
+        } : {}
+
+        const albums = await this.albumModel
+                .find({ ...keyword })
+                .limit(resPerPage)
+                .skip(skip);
+
         return albums;
     }
 
