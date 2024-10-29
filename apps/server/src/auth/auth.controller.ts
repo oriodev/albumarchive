@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, Post, UseGuards } from '@nestjs/common';
-import { AuthPayloadDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
-import { LocalGuard } from './guards/local.guard';
+import { SignUpDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -10,14 +10,14 @@ export class AuthController {
         private authService: AuthService
     ) {}
     
-    @Post('login')
-    @UseGuards(LocalGuard)
-     async login(@Body() authPayload: AuthPayloadDto) {
-        const user = await this.authService.validateUser(authPayload)
+    @Post('/signup')
+    signUp(@Body() signUpDto: SignUpDto): Promise<{ token: string }> {
+        return this.authService.signUp(signUpDto);
+    }
 
-        if (!user) throw new HttpException('invalid credentials', 401);
-
-        return user;
+    @Get('/login')
+    login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+        return this.authService.login(loginDto);
     }
 
 }
