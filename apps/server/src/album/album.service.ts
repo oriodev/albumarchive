@@ -19,15 +19,21 @@ export class AlbumService {
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
 
-        const keyword = query.keyword ? {
-            title: {
-                $regex: query.keyword,
-                $options: 'i'
-            }
+        const search = query.search ? {
+            $or: [
+                { title: {
+                    $regex: query.search,
+                    $options: 'i'
+                }},
+                {artist: {
+                    $regex: query.search,
+                    $options: 'i'
+                }}
+            ]
         } : {}
 
         const albums = await this.albumModel
-                .find({ ...keyword })
+                .find({ ...search })
                 .limit(resPerPage)
                 .skip(skip);
 
