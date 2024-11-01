@@ -1,5 +1,5 @@
 import { IsDateString, IsNumber, IsOptional, IsString, Max, Min } from "class-validator"
-import { ObjectId } from "mongoose"
+import { ObjectId, Types } from "mongoose"
 
 export class UpdateAlbumDto {
     @IsOptional()
@@ -23,7 +23,7 @@ export class UpdateAlbumDto {
     readonly cover_image_url: string
 
     @IsOptional()
-    readonly reviews: [ObjectId]
+    readonly reviews: Types.ObjectId[]
 
     @IsOptional()
     @IsNumber()

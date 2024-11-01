@@ -41,7 +41,11 @@ export class AlbumService {
     }
 
     async create(album: Album): Promise<Album> {
-        const res = await this.albumModel.create(album);
+        const data = Object.assign(album)
+        const res = await this.albumModel.create(data);
+
+        console.log('res', res)
+
         return res;
     }
 
