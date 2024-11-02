@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 @Schema({
     timestamps: true
@@ -25,7 +25,7 @@ export class Album {
     overall_rating: number;
 
     @Prop()
-    reviews: [ObjectId];
+    reviews: [mongoose.Schema.Types.ObjectId];
 
 }
 

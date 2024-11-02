@@ -1,5 +1,5 @@
 import { IsDateString, IsNotEmpty, IsNumber, IsString, Max, Min } from "class-validator"
-import { ObjectId, Types } from "mongoose"
+import mongoose, { ObjectId, Types } from "mongoose"
 
 export class CreateAlbumDto {
 
@@ -24,7 +24,7 @@ export class CreateAlbumDto {
     readonly cover_image_url: string
 
     @IsNotEmpty()
-    readonly reviews: Types.ObjectId[]
+    readonly reviews: [mongoose.Schema.Types.ObjectId]
 
     @IsNotEmpty()
     @IsNumber()

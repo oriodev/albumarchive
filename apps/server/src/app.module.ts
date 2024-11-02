@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AlbumModule } from './album/album.module';
 import { DiscogsApiModule } from './discogs_api/discogs_api.module';
+import { ListModule } from './list/list.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { DiscogsApiModule } from './discogs_api/discogs_api.module';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     AlbumModule,
-    DiscogsApiModule
+    DiscogsApiModule,
+    ListModule
   ],
   controllers: [AppController],
 })
