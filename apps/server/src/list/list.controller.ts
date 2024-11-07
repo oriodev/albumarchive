@@ -28,14 +28,14 @@ export class ListController {
     }
 
 
-    @Put('/addalbum/:id')
-    async addAlbum(
-        @Param('id')
-        id: string,
-        @Body() body: { albumId: string }
-    ): Promise<List> {
-        return this.listService.addAlbum(id, body.albumId)
-    }
+    // @Put('/addalbum/:id')
+    // async addAlbum(
+    //     @Param('id')
+    //     id: string,
+    //     @Body() body: { albumId: string }
+    // ): Promise<List> {
+    //     return this.listService.addAlbum(id, body.albumId)
+    // }
 
     @Put('/deletealbum/:id')
     async deleteAlbum(

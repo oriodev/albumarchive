@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { List } from './schemas/list.schema';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId, Types } from 'mongoose';
 import { AlbumService } from '../album/album.service';
 
 @Injectable()
@@ -11,6 +11,24 @@ export class ListService {
         private listModel: mongoose.Model<List>,
         private albumService: AlbumService 
     ) {}
+
+
+    async findById(id: string): Promise<List> {
+
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
+        }
+
+        const list = await this.listModel.findById(id);
+
+        if (!list) {
+            throw new NotFoundException('list not found')
+        }
+
+        return list;
+    }
 
     async create (list: List): Promise<List> {
         const data = Object.assign(list)
@@ -42,25 +60,47 @@ export class ListService {
         })
     }
 
-    async addAlbum (id: string, album_id: string): Promise<List> {
-        const albumIsValid = await this.albumService.findById(album_id)
-        
-        if (!albumIsValid) {
-            throw new BadRequestException('that album does not exist in our db')
-        }
+    /**
+     * checks if an album id is in a list.
+     *
+     * @param list_id - The list id you are searching.
+     * @param album_id - The album id you are searching for.
+     * @returns Boolean.
+     * @throws Error if the list_id or album_id are invalid ids.
+    */
+    async isAlbumInList(list_id: string, album_id: string) {
+        // check if list_id is valid id.
+        // check if album_id is valid id.
+        // fetch the list by id and return only the albums for efficiency.
+        const list = await this.listModel.findById(list_id, 'albums')
 
-        const isValidId = mongoose.isValidObjectId(id)
+        const album = new mongoose.Schema.Types.ObjectId(album_id)
 
-        if(!isValidId) {
-            throw new BadRequestException('please enter a valid mongodb id for the list')
-        }
-
-        return await this.listModel.findByIdAndUpdate(
-            id,
-            { $push: { albums: album_id } },
-            { new: true }
-        )
+        return list.albums.includes(album)
     }
+
+    // async addAlbum (id: string, album_id: ObjectId): Promise<List> {
+    //     const isValidId = mongoose.isValidObjectId(id)
+
+    //     if(!isValidId) {
+    //         throw new BadRequestException('please enter a valid mongodb id for the list')
+    //     }
+
+    //     const albumIsValid = await this.albumService.findById(album_id)
+        
+    //     if (!albumIsValid) {
+    //         throw new BadRequestException('that album does not exist in our db')
+    //     }
+
+    //     // check if album id already exists
+
+
+    //     return await this.listModel.findByIdAndUpdate(
+    //         id,
+    //         { $push: { albums: album_id } },
+    //         { new: true }
+    //     )
+    // }
 
     async removeAlbum (id: string, album_id: string): Promise<List> {
         const albumIsValid = await this.albumService.findById(album_id)

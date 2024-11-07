@@ -78,8 +78,8 @@ describe('AlbumService', () => {
         })
     })
 
-    describe('findByIdFunction', () => {
-        it('should find and return a book by ID', async () => {
+    describe('findById', () => {
+        it('should find and return an album by ID', async () => {
             jest.spyOn(model, 'findById').mockResolvedValue(mockAlbum)
 
             const result = await albumService.findById(mockAlbum._id);

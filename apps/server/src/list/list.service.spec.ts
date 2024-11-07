@@ -3,7 +3,7 @@ import { ListService } from './list.service';
 import mongoose, { Model, Types } from 'mongoose';
 import { List, Type } from './schemas/list.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { AlbumService } from '../album/album.service';
 import { Album } from '../album/schemas/album.schema';
@@ -17,7 +17,8 @@ describe('ListService', () => {
   const mockListService = {
     create: jest.fn(),
     findByIdAndDelete: jest.fn(),
-    findByIdAndUpdate: jest.fn()
+    findByIdAndUpdate: jest.fn(),
+    findById: jest.fn()
   }
 
   const mockAlbumService = {
@@ -42,6 +43,14 @@ describe('ListService', () => {
     type: Type.LISTENED,
     albums: [],
 };
+
+const mockListWithAlbum = {
+  _id: "671cf2598f4e61ab24d095b3",
+  name: "My Favorite Albums",
+  description: "A collection of my all-time favorite albums.",
+  type: Type.LISTENED,
+  albums: ["671cf2598f4e61ab24d095b3"]
+}
 
   const mockAlbumId = "671cf2598f4e61ab24d095b3";
 
@@ -145,43 +154,43 @@ describe('ListService', () => {
     })
   })
 
-  describe('addAlbum', () => {
-    const updatedList = {
-      _id: "671cf2598f4e61ab24d095b3",
-      name: "My Favorite Albums",
-      description: "A collection of my all-time favorite albums.",
-      type: Type.LISTENED,
-      albums: [new ObjectId("671cf2598f4e61ab24d095b3")],
-  };
+  // describe('addAlbum', () => {
+  //   const updatedList = {
+  //     _id: "671cf2598f4e61ab24d095b3",
+  //     name: "My Favorite Albums",
+  //     description: "A collection of my all-time favorite albums.",
+  //     type: Type.LISTENED,
+  //     albums: [new ObjectId("671cf2598f4e61ab24d095b3")],
+  // };
   
-    it('should add album and return list', async () => {
-      jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(mockAlbum as any)
+  //   it('should add album and return list', async () => {
+  //     jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
+  //     jest.spyOn(albumService, 'findById').mockResolvedValue(mockAlbum as any)
 
-      const result = await service.addAlbum(mockList._id, mockAlbumId)
+  //     const result = await service.addAlbum(mockList._id, mockAlbumId)
 
-      expect(result).toEqual(updatedList)
-    })
+  //     expect(result).toEqual(updatedList)
+  //   })
 
-    it('should throw BadRequestException if album id is invalid', async () => {
-      jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(undefined)
+  //   it('should throw BadRequestException if album id is invalid', async () => {
+  //     jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
+  //     jest.spyOn(albumService, 'findById').mockResolvedValue(undefined)
 
-      await expect(service.addAlbum(mockList._id, mockAlbumId))
-        .rejects
-        .toThrow(BadRequestException)
-    })
+  //     await expect(service.addAlbum(mockList._id, mockAlbumId))
+  //       .rejects
+  //       .toThrow(BadRequestException)
+  //   })
 
-    it('should throw BadRequestException if list id is invalid mongo id', async () => {
-      jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(mockAlbum as any)
-      jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false)
+  //   it('should throw BadRequestException if list id is invalid mongo id', async () => {
+  //     jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(updatedList)
+  //     jest.spyOn(albumService, 'findById').mockResolvedValue(mockAlbum as any)
+  //     jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false)
 
-      await expect(service.addAlbum(mockList._id, mockAlbumId))
-        .rejects
-        .toThrow(BadRequestException)
-    })
-  })
+  //     await expect(service.addAlbum(mockList._id, mockAlbumId))
+  //       .rejects
+  //       .toThrow(BadRequestException)
+  //   })
+  // })
 
   describe('removeAlbum', () => {
     const initialList = {
@@ -220,4 +229,48 @@ describe('ListService', () => {
         .toThrow(BadRequestException)
     })
   })
+
+  describe('findById', () => {
+    it('should find and return a list by ID', async () => {
+        jest.spyOn(model, 'findById').mockResolvedValue(mockList)
+
+        const result = await service.findById(mockList._id);
+        
+        expect(model.findById).toHaveBeenCalledWith(mockList._id) 
+        expect(result).toEqual(mockList)
+    })
+
+    it('should throw BadRequestException if invalid id is provided', async () => {
+        const id = 'invalid-id'
+
+        const isValidObjectionIdMock = jest
+        .spyOn(mongoose, 'isValidObjectId')
+        .mockReturnValue(false)
+
+        await expect(service.findById(id)).rejects.toThrow(BadRequestException)
+        expect(isValidObjectionIdMock).toHaveBeenCalledWith(id)
+        isValidObjectionIdMock.mockRestore()
+    })
+
+    it('should throw NotFoundException if album is not found', async () => {
+        const id = '671cf9598f4e61ab24d095b5'
+
+        jest.spyOn(mongoose, 'isValidObjectId').mockReturnValue(true)
+
+        jest.spyOn(model, 'findById').mockResolvedValue(null)
+        await expect(service.findById(id)).rejects.toThrow(NotFoundException)
+    })
+  })
+
+  // describe('isAlbumInList', () => {
+  //   it('should return true if album is in list', async () => {
+
+  //     jest.spyOn(model, 'findById').mockResolvedValueOnce(mockListWithAlbum)
+
+  //     const result = await service.isAlbumInList(mockList._id, mockAlbum._id)
+  //     expect(result).toEqual(true)
+  //   })
+  // })
+
+
 });
