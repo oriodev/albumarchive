@@ -1,5 +1,7 @@
-export default function Home() {
+
+
+export default function Page() {
   return (
-    <div>album archive.</div>
-  );
+    <p>hello</p>
+  )
 }
