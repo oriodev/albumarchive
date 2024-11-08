@@ -7,8 +7,9 @@ import { Query as ExpressQuery } from 'express-serve-static-core';
 export class DiscogsApiController {
     constructor(private readonly discogsApiService: DiscogsApiService) {}
 
-    @Get('records')
+    @Get()
     async getRecords(@Query() query: ExpressQuery) {
+        console.log('hellooo?')
         return await this.discogsApiService.searchAlbum(query)
     }
 }

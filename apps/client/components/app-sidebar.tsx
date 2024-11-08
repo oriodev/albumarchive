@@ -72,7 +72,7 @@ const data = {
       icon: Headphones,
     },
     {
-      name: "To List",
+      name: "To Listen",
       url: "#",
       icon: ListTodo,
     },
