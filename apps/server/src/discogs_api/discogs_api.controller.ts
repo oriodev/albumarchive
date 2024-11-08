@@ -9,7 +9,6 @@ export class DiscogsApiController {
 
     @Get()
     async getRecords(@Query() query: ExpressQuery) {
-        console.log('hellooo?')
         return await this.discogsApiService.searchAlbum(query)
     }
 }
