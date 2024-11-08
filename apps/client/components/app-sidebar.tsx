@@ -33,18 +33,18 @@ const data = {
   },
   navMain: [
     {
-      title: "Example Page",
+      title: "auth stuff temp",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "a",
-          url: "#",
+          title: "login page",
+          url: "/login",
         },
         {
-          title: "b",
-          url: "#",
+          title: "signup page",
+          url: "/signup",
         },
         {
           title: "c",
