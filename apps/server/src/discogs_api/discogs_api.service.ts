@@ -23,19 +23,24 @@ export class DiscogsApiService {
                 }
             }));
 
-            const formattedResponse = response.data.results.map((album) => {
+            const uniqueAlbums = new Set();
+            const formattedResponse = [];
 
-                const [albumTitle, albumArtist] = album.title.split(' - ').map(part => part.trim())
+            response.data.results.forEach((album) => {
+                const [albumArtist, albumTitle] = album.title.split(' - ').map(part => part.trim());
+                const uniqueKey = `${albumTitle}-${albumArtist}`;
+                
+                if (!uniqueAlbums.has(uniqueKey)) {
 
-                return {
-                    genres: album.genre,
-                    title: album.title,
-                    album_title: albumTitle,
-                    artist: albumArtist,
-                    coverArt: album.cover_image,
-                    releaseDate: album.year,
+                    uniqueAlbums.add(uniqueKey);
+                    formattedResponse.push({
+                        title: albumTitle,
+                        artist: albumArtist,
+                        genre: album.genre,
+                        coverImage: album.cover_image,
+                        releaseDate: album.releaseDate
+                    })
                 }
-
             })
 
             return formattedResponse;

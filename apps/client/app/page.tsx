@@ -2,14 +2,14 @@ import { getAlbumsFromDiscogs } from "@/api/discogs.api";
 import { Album } from "@/types";
 
 export default async function Page() {
-  const data = await getAlbumsFromDiscogs("troye");
+  const data = await getAlbumsFromDiscogs("owl city");
 
   const albums = data.map((album: Album) => (
     <div key={album.title} className="pb-5">
-      <p>{album.title}</p>
-      <p>{album.artist}</p>
-      <p>{album.genre}</p>
-      <p>{album.overallRating}</p>
+      <p>title: {album.title}</p>
+      <p>artist: {album.artist}</p>
+      <p>genre: {album.genre}</p>
+      <p>rating: {album.overallRating}</p>
     </div>
   ));
 
