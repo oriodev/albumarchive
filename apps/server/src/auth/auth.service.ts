@@ -17,14 +17,13 @@ export class AuthService {
   ) {}  
 
   async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
-    const { name, email, password } = signUpDto;
+    const { username, email, password } = signUpDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      
           const user = await this.userModel.create({
-            name,
+            username,
             email,
             password: hashedPassword
           })
@@ -36,7 +35,19 @@ export class AuthService {
     } catch (error) {
 
       if (error.code === 11000) {
-        throw new ConflictException('duplicate email')
+        const duplicateField = 
+          error.errmsg.match(/dup key: { email: "(.*)" }/) || 
+          error.errmsg.match(/dup key: { username: "(.*)" }/);
+
+        const fieldname = duplicateField[0].includes('email') ? 'email' : 'username'
+
+        if (fieldname === 'email') {
+          throw new ConflictException('this email already exists')
+        }
+
+        if (fieldname === 'username') {
+          throw new ConflictException('this username already exists')
+        }
       }
       
     }

@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/zod/signup-schema";
 import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
 import { PasswordInput } from "./ui/password-input";
+import { signUp } from "@/api/auth.api";
 
 export function SignUpForm() {
   const form = useForm<z.infer<typeof signupSchema>>({
@@ -30,8 +31,34 @@ export function SignUpForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signupSchema>) => {
-    console.log(values);
+  const { setError } = form;
+
+  const onSubmit = async (values: z.infer<typeof signupSchema>) => {
+    try {
+      const response = await signUp(values);
+
+      if (response.statusCode === 409) {
+        if (response.message.includes("username")) {
+          setError("username", {
+            type: "manual",
+            message: response.message,
+          });
+        }
+
+        if (response.message.includes("email")) {
+          setError("email", {
+            type: "manual",
+            message: response.message,
+          });
+        }
+      }
+
+      if (response.statusCode === 201) {
+        console.log("token:", response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

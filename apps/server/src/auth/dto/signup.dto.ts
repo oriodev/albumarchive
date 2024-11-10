@@ -4,10 +4,10 @@ export class SignUpDto  {
 
     @IsNotEmpty()
     @IsString()
-    readonly name: string
+    readonly username: string
 
     @IsNotEmpty()
-    @IsEmail({}, { message: 'please email correct email'} )
+    @IsEmail({}, { message: 'please enter correct email'} )
     readonly email: string
 
     @IsNotEmpty()
