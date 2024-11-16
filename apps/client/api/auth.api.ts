@@ -48,6 +48,8 @@ export const login = async (user: User) => {
         sameSite: "lax",
         path: "/",
       });
+
+      return { success: "token created" };
     }
 
     return data;

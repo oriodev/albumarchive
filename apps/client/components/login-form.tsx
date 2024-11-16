@@ -19,6 +19,7 @@ import { loginSchema } from "@/zod/login-schema";
 import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
 import { PasswordInput } from "./ui/password-input";
 import { login } from "@/api/auth.api";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -30,6 +31,7 @@ export function LoginForm() {
   });
 
   const { setError } = form;
+  const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
@@ -49,6 +51,10 @@ export function LoginForm() {
             message: response.message,
           });
         }
+      }
+
+      if (response.success) {
+        router.push("/central");
       }
     } catch (error) {
       console.log(error);
