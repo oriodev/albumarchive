@@ -11,7 +11,7 @@ export interface Album {
 
 export interface User {
   _id?: string;
-  username: string;
+  username?: string;
   email: string;
   password?: string;
 }

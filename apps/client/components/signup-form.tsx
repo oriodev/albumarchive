@@ -54,7 +54,7 @@ export function SignUpForm() {
       }
 
       if (response.statusCode === 201) {
-        console.log("token:", response);
+        await console.log("token:", response);
       }
     } catch (error) {
       console.log(error);
