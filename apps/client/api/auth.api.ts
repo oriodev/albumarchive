@@ -1,4 +1,7 @@
+"use server";
+
 import { User } from "@/types";
+import { cookies } from "next/headers";
 
 export const signUp = async (user: User) => {
   try {
@@ -32,7 +35,20 @@ export const login = async (user: User) => {
     });
 
     const data = await response.json();
-    console.log("login data: ", data);
+
+    if (data.token) {
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      const cookieStore = await cookies();
+
+      cookieStore.set("session", data.token, {
+        httpOnly: true,
+        secure: true,
+        expires: expiresAt,
+        sameSite: "lax",
+        path: "/",
+      });
+    }
 
     return data;
   } catch (error) {

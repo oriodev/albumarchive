@@ -50,10 +50,6 @@ export function LoginForm() {
           });
         }
       }
-
-      if (response.statusCode === 201) {
-        console.log("token:", response);
-      }
     } catch (error) {
       console.log(error);
     }
