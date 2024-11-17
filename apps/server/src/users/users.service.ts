@@ -1,26 +1,30 @@
-import { Injectable } from '@nestjs/common';
-
-// change this to user schema later.
-export type User = any;
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
+import { User } from '../auth/schemas/user.schema';
 
 @Injectable()
 export class UsersService {
-    // remove this later.
-    private readonly users = [
-        {
-            userId: 1,
-            username: 'cas',
-            password: 'password'
-        },
-        {
-            userId: 2,
-            username: 'luca',
-            password: 'password'
-        }
-    ]
+    constructor(
+        @InjectModel(User.name)
+        private userModel: Model<User>,
+      ) {}  
 
-    async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username)
+      async findById(id: string): Promise<User> {
+
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
+        }
+
+        const user = await this.userModel.findById(id);
+
+        if (!user) {
+            throw new NotFoundException('user not found')
+        }
+
+        return user;
     }
 
 }

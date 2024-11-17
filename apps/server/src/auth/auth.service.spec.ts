@@ -19,9 +19,8 @@ describe('AuthService', () => {
         findOne: jest.fn()
     }
 
-
     const signUpDto = {
-        name: 'Ghulam',
+        username: 'Ghulam',
         email: 'ghulam1@gmail.com',
         password: '12345678', 
       };
@@ -30,7 +29,7 @@ describe('AuthService', () => {
 
     const mockUser = {
         _id: '61c0ccf11d7bf83d153d7c06',
-        name: 'Ghulam',
+        username: 'Ghulam',
         email: 'ghulam1@gmail.com',
       };
 
