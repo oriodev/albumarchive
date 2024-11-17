@@ -20,6 +20,7 @@ import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
 import { PasswordInput } from "./ui/password-input";
 import { login } from "@/api/auth.api";
 import { useRouter } from "next/navigation";
+import { createSession } from "@/api/session.api";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -37,6 +38,7 @@ export function LoginForm() {
     try {
       const response = await login(values);
 
+      // ERROR HANDLING
       if (response.statusCode === 401) {
         if (response.message.includes("password")) {
           setError("password", {
@@ -53,7 +55,9 @@ export function LoginForm() {
         }
       }
 
-      if (response.success) {
+      // SESSION HANDLING
+      if (response.token) {
+        await createSession(response.token);
         router.push("/central");
       }
     } catch (error) {
