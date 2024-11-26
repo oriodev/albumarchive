@@ -5,6 +5,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 import { Query as ExpressQuery } from 'express-serve-static-core';
+import { Public } from 'utils/public.decorator';
 
 @Controller('album')
 export class AlbumController {

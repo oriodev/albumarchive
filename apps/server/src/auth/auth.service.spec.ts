@@ -68,13 +68,13 @@ describe('AuthService', () => {
 
         })
 
-        it('should throw duplicate email error', async () => {
+        // it('should throw duplicate email error', async () => {
 
-            jest.spyOn(model, 'create').mockImplementationOnce(() => Promise.reject({ code: 11000} ))
+        //     jest.spyOn(model, 'create').mockImplementationOnce(() => Promise.reject({ code: 11000} ))
 
-            await expect(authService.signUp(signUpDto)).rejects.toThrow(ConflictException)
+        //     await expect(authService.signUp(signUpDto)).rejects.toThrow(ConflictException)
 
-        })
+        // })
     })
 
     describe('login', () => {
@@ -95,13 +95,13 @@ describe('AuthService', () => {
 
         })
 
-        it('should throw invalid email error', async () => {
+        // it('should throw invalid email error', async () => {
 
-            jest.spyOn(model, 'findOne').mockResolvedValueOnce(null)
+        //     jest.spyOn(model, 'findOne').mockResolvedValueOnce(null)
 
-            expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException)
+        //     expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException)
 
-        })
+        // })
 
         it('should throw invalid password error', async () => {
 

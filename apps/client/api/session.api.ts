@@ -19,3 +19,17 @@ export const createSession = async (token: string) => {
     console.log(error);
   }
 };
+
+export const getSession = async () => {
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("session");
+    if (sessionCookie) {
+      return sessionCookie.value;
+    }
+
+    // return { error: "no valid session" };
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -7,6 +7,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AlbumModule } from './album/album.module';
 import { DiscogsApiModule } from './discogs_api/discogs_api.module';
 import { ListModule } from './list/list.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,8 +22,15 @@ import { ListModule } from './list/list.module';
     MongooseModule.forRoot(process.env.DB_URI),
     AlbumModule,
     DiscogsApiModule,
-    ListModule
+    ListModule,
+    JwtModule
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard
+    }
+  ]
 })
 export class AppModule {}

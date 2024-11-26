@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from 'src/auth/schemas/user.schema';
 
@@ -7,11 +7,16 @@ export class UsersController {
     constructor(private usersService: UsersService) {}
 
     @Get(':id')
-    async getUser(
+    async getUserById(
         @Param('id')
         id: string
     ): Promise<User> {
         return await this.usersService.findById(id)
+    }
+
+    @Get()
+    getUser(@Request() req) {
+        return req.user
     }
 
 }
