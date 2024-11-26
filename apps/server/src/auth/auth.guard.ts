@@ -21,10 +21,6 @@ import { IS_PUBLIC_KEY } from 'utils/public.decorator';
         context.getHandler(),
         context.getClass(),
       ]);
-
-      console.log(context.getHandler(), context.getClass())
-
-      console.log('public?', isPublic)
       
       if (isPublic) {
         return true;
