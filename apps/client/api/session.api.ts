@@ -28,7 +28,16 @@ export const getSession = async () => {
       return sessionCookie.value;
     }
 
-    // return { error: "no valid session" };
+    return { error: "no valid session" };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteSession = async () => {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
   } catch (error) {
     console.log(error);
   }
