@@ -24,67 +24,89 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { getUserDetails } from "@/utils/user.utils";
+import { useEffect, useState } from "react";
+import { User } from "@/types";
 
-const data = {
-  user: {
-    name: "ori",
-    email: "ori@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "auth stuff temp",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "login page",
-          url: "/login",
-        },
-        {
-          title: "signup page",
-          url: "/signup",
-        },
-        {
-          title: "c",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  lists: [
-    {
-      name: "Listened",
-      url: "#",
-      icon: Headphones,
-    },
-    {
-      name: "To Listen",
-      url: "#",
-      icon: ListTodo,
-    },
-    {
-      name: "Custom List",
-      url: "#",
-      icon: List,
-    },
-  ],
-};
+type userState = User | null;
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = useState<userState>(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userDetails = await getUserDetails();
+        if (userDetails) {
+          setUser(userDetails);
+        }
+      } catch (err) {
+        console.error("error:", err);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  const data = {
+    user: {
+      username: user?.username || "",
+      email: user?.email || "",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: [
+      {
+        title: "auth stuff temp",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "login page",
+            url: "/login",
+          },
+          {
+            title: "signup page",
+            url: "/signup",
+          },
+          {
+            title: "c",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Support",
+        url: "#",
+        icon: LifeBuoy,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ],
+    lists: [
+      {
+        name: "Listened",
+        url: "#",
+        icon: Headphones,
+      },
+      {
+        name: "To Listen",
+        url: "#",
+        icon: ListTodo,
+      },
+      {
+        name: "Custom List",
+        url: "#",
+        icon: List,
+      },
+    ],
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
