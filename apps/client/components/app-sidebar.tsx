@@ -24,29 +24,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { getUserDetails } from "@/utils/user.utils";
-import { useEffect, useState } from "react";
-import { User } from "@/types";
-
-type userState = User | null;
+import { useUser } from "@/utils/providers/UserProvider";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = useState<userState>(null);
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const userDetails = await getUserDetails();
-        if (userDetails) {
-          setUser(userDetails);
-        }
-      } catch (err) {
-        console.error("error:", err);
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
+  const user = useUser();
 
   const data = {
     user: {
