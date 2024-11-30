@@ -27,4 +27,14 @@ export class UsersService {
         return user;
     }
 
+    async deleteById(id: string): Promise<User> {
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
+        }
+
+        return await this.userModel.findByIdAndDelete(id)
+    }
+
 }

@@ -10,7 +10,8 @@ describe('UsersService', () => {
   let model: Model<User>;
 
   const mockUserService = {
-    findById: jest.fn()
+    findById: jest.fn(),
+    findByIdAndDelete: jest.fn()
   }
 
   const mockUserId = '67309d8c36ce871afc3358c1'
@@ -78,5 +79,17 @@ describe('UsersService', () => {
       await expect(service.findById(id)).rejects.toThrow(NotFoundException)
   })
   })
+
+  describe('deleteById', () => {
+    it('should delete and return a user', async () => {
+
+        jest.spyOn(model, 'findByIdAndDelete').mockResolvedValue(mockUser);
+        
+        const result = await service.deleteById(mockUser._id);
+
+        expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockUser._id)
+        expect(result).toEqual(mockUser)
+    })
+})
 
 });
