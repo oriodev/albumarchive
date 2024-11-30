@@ -46,6 +46,10 @@ export function NavUser({
     router.push("/central/profile");
   };
 
+  const handleAccount = () => {
+    router.push("/central/account");
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -92,7 +96,7 @@ export function NavUser({
                 <User />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAccount}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>

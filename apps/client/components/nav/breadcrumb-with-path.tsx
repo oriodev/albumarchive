@@ -14,6 +14,10 @@ export function BreadcrumbWithPath() {
   const pathname = usePathname();
   const crumbs = pathname.substring(1).split("/");
 
+  const buildPath = (crumbs: string[], index: number) => {
+    return crumbs.slice(0, index + 1).join("/");
+  };
+
   return (
     <div>
       <Breadcrumb>
@@ -21,7 +25,7 @@ export function BreadcrumbWithPath() {
           {crumbs.map((crumb, index) => (
             <Fragment key={crumb}>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href={`/${crumb}`}>
+                <BreadcrumbLink href={`/${buildPath(crumbs, index)}`}>
                   <p>{crumb}</p>
                 </BreadcrumbLink>
               </BreadcrumbItem>

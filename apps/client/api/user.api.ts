@@ -42,9 +42,33 @@ export const getUser = async (id: string) => {
     if (response.status === 200) {
       const user = await response.json();
       return {
+        id: user._id,
         username: user.username,
         email: user.email,
       };
+    }
+
+    return null;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/${id}`);
+
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const user = await response.json();
+      return user;
     }
 
     return null;

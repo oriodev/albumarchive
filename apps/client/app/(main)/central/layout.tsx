@@ -1,6 +1,6 @@
 // SHADCN IMPORTS.
-import { AppSidebar } from "@/components/app-sidebar";
-import { BreadcrumbWithPath } from "@/components/breadcrumb-with-path";
+import { AppSidebar } from "@/components/nav/app-sidebar";
+import { BreadcrumbWithPath } from "@/components/nav/breadcrumb-with-path";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,

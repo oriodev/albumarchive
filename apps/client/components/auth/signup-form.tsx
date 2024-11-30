@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,17 +16,18 @@ import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/zod/login-schema";
+import { signupSchema } from "@/zod/signup-schema";
 import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
 import { PasswordInput } from "./ui/password-input";
-import { login } from "@/api/auth.api";
-import { useRouter } from "next/navigation";
+import { signUp } from "@/api/auth.api";
 import { createSession } from "@/api/session.api";
+import { useRouter } from "next/navigation";
 
-export function LoginForm() {
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+export function SignUpForm() {
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
     },
@@ -34,14 +36,13 @@ export function LoginForm() {
   const { setError } = form;
   const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof signupSchema>) => {
     try {
-      const response = await login(values);
+      const response = await signUp(values);
 
-      // ERROR HANDLING
-      if (response.statusCode === 401) {
-        if (response.message.includes("password")) {
-          setError("password", {
+      if (response.statusCode === 409) {
+        if (response.message.includes("username")) {
+          setError("username", {
             type: "manual",
             message: response.message,
           });
@@ -55,7 +56,6 @@ export function LoginForm() {
         }
       }
 
-      // SESSION HANDLING
       if (response.token) {
         await createSession(response.token);
         router.push("/central");
@@ -70,13 +70,38 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="mx-auto max-w-sm">
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardTitle className="text-2xl">Sign Up</CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+              Enter your email below to create a new account
             </CardDescription>
           </CardHeader>
+
+          {/* SIGN UP FORM */}
           <CardContent>
             <div className="grid gap-4">
+              {/* USERNAME */}
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="grid gap-2">
+                        <Label htmlFor="name">Username</Label>
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="bloop123"
+                          required
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* EMAIL */}
               <FormField
                 control={form.control}
@@ -110,12 +135,7 @@ export function LoginForm() {
                       <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                           <Label htmlFor="password">Password</Label>
-                          <Link
-                            href="#"
-                            className="ml-auto inline-block text-sm underline"
-                          >
-                            Forgot your password?
-                          </Link>
+                          <p className="italic text-sm">min 6 characters</p>
                         </div>
                         <PasswordInput id="password" required {...field} />
                       </div>
@@ -127,18 +147,16 @@ export function LoginForm() {
 
               {/* SUBMIT */}
               <Button type="submit" className="w-full">
-                Login
+                Signup
               </Button>
-
-              {/* THE REST */}
               <Button variant="outline" className="w-full">
-                Login with Google
+                Signup with Google (one day)
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline">
-                Sign up
+              Already have an account?{" "}
+              <Link href="/login" className="underline">
+                Log in
               </Link>
             </div>
           </CardContent>

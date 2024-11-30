@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,30 +15,33 @@ import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/zod/signup-schema";
-import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
-import { PasswordInput } from "./ui/password-input";
-import { signUp } from "@/api/auth.api";
+import { loginSchema } from "@/zod/login-schema";
+import { FormField, FormItem, FormControl, FormMessage } from "../ui/form";
+import { PasswordInput } from "../ui/password-input";
+import { login } from "@/api/auth.api";
+import { useRouter } from "next/navigation";
+import { createSession } from "@/api/session.api";
 
-export function SignUpForm() {
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+export function LoginForm() {
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
   });
 
   const { setError } = form;
+  const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof signupSchema>) => {
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      const response = await signUp(values);
+      const response = await login(values);
 
-      if (response.statusCode === 409) {
-        if (response.message.includes("username")) {
-          setError("username", {
+      // ERROR HANDLING
+      if (response.statusCode === 401) {
+        if (response.message.includes("password")) {
+          setError("password", {
             type: "manual",
             message: response.message,
           });
@@ -53,8 +55,10 @@ export function SignUpForm() {
         }
       }
 
-      if (response.statusCode === 201) {
-        await console.log("token:", response);
+      // SESSION HANDLING
+      if (response.token) {
+        await createSession(response.token);
+        router.push("/central");
       }
     } catch (error) {
       console.log(error);
@@ -66,38 +70,13 @@ export function SignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className="mx-auto max-w-sm">
           <CardHeader>
-            <CardTitle className="text-2xl">Sign Up</CardTitle>
+            <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
-              Enter your email below to create a new account
+              Enter your email below to login to your account
             </CardDescription>
           </CardHeader>
-
-          {/* SIGN UP FORM */}
           <CardContent>
             <div className="grid gap-4">
-              {/* USERNAME */}
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className="grid gap-2">
-                        <Label htmlFor="name">Username</Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="bloop123"
-                          required
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* EMAIL */}
               <FormField
                 control={form.control}
@@ -131,7 +110,12 @@ export function SignUpForm() {
                       <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                           <Label htmlFor="password">Password</Label>
-                          <p className="italic text-sm">min 6 characters</p>
+                          <Link
+                            href="#"
+                            className="ml-auto inline-block text-sm underline"
+                          >
+                            Forgot your password?
+                          </Link>
                         </div>
                         <PasswordInput id="password" required {...field} />
                       </div>
@@ -143,16 +127,18 @@ export function SignUpForm() {
 
               {/* SUBMIT */}
               <Button type="submit" className="w-full">
-                Signup
+                Login
               </Button>
+
+              {/* THE REST */}
               <Button variant="outline" className="w-full">
-                Signup with Google (one day)
+                Login with Google
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/login" className="underline">
-                Log in
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="underline">
+                Sign up
               </Link>
             </div>
           </CardContent>
