@@ -1,11 +1,6 @@
 // SHADCN IMPORTS.
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
+import { BreadcrumbWithPath } from "@/components/breadcrumb-with-path";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -33,13 +28,7 @@ export default function RootLayout({
               <Separator orientation="vertical" className="mr-2 h-4" />
 
               {/* BREADCRUMB. */}
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">Home</BreadcrumbLink>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+              <BreadcrumbWithPath />
             </div>
           </header>
 
