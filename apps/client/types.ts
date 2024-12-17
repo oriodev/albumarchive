@@ -2,7 +2,7 @@ export interface Album {
   _id?: string;
   title: string;
   artist: string;
-  genre: string;
+  genre: string[];
   releaseDate: string;
   coverImage: string;
   overallRating: number;

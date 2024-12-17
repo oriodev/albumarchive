@@ -9,10 +9,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { truncateString } from "@/utils/global.utils";
+import RatingStars from "./rating-stars";
 
 export function AlbumCard({ album }: { album: Album }) {
-  console.log("album: ", album);
-
   return (
     <Card>
       <CardHeader className="relative h-64 m-2">
@@ -25,11 +24,11 @@ export function AlbumCard({ album }: { album: Album }) {
         />
       </CardHeader>
       <CardContent>
+        <CardDescription>
+          <RatingStars rating={album.overallRating} centered={true} />
+        </CardDescription>
         <CardTitle>{truncateString(album.title, 25)}</CardTitle>
-        <CardDescription>{album.overallRating || "???"}</CardDescription>
         <p>{truncateString(album.artist, 25)}</p>
-        <p>{truncateString(album.genre, 25)}</p>
-        <p>{truncateString(album.releaseDate, 25)}</p>
       </CardContent>
     </Card>
   );

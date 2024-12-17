@@ -2,7 +2,7 @@
 
 import { getAlbums } from "@/api/albums.api";
 import { getAlbumsFromDiscogs } from "@/api/discogs.api";
-import { AlbumCard } from "@/components/albums/album-card";
+import { AlbumDialogue } from "@/components/albums/album-dialogue";
 import { SearchBar } from "@/components/albums/search-form";
 import { Button } from "@/components/ui/button";
 import { Album } from "@/types";
@@ -34,7 +34,7 @@ export default function Page() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
         {albums.map((album: Album) => (
           <div key={`${album.title}+${album.artist}+${album.genre}`}>
-            <AlbumCard album={album} />
+            <AlbumDialogue album={album} />
           </div>
         ))}
 

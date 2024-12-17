@@ -38,7 +38,8 @@ export class DiscogsApiService {
                         artist: albumArtist,
                         genre: album.genre,
                         coverImage: album.cover_image,
-                        releaseDate: album.releaseDate
+                        releaseDate: album.year,
+                        overallRating: null
                     })
                 }
             })
