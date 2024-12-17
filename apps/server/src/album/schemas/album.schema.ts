@@ -19,7 +19,7 @@ export class Album {
     release_date: Date;
 
     @Prop()
-    cover_image_url: string;
+    coverImage: string;
 
     @Prop()
     overall_rating: number;

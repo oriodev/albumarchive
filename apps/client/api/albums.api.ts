@@ -1,14 +1,22 @@
 import { Album } from "@/types";
+import { getSession } from "./session.api";
 
 export const getAlbums = async (search: string = "", page: string = "1") => {
-  const url = new URL(`${process.env.BACKEND_API}/album`);
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album`);
   url.searchParams.append("search", search);
   url.searchParams.append("page", page);
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch albums");
+    return [];
   }
 
   const data = await response.json();

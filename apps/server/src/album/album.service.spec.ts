@@ -24,7 +24,7 @@ describe('AlbumService', () => {
         artist: "Troye Sivan Mellet",
         genre: "Pop",
         release_date: "2015-12-04T00:00:00.000Z",
-        cover_image_url: "https://link-to-cover-image.com/blue_neighbourhood.jpg",
+        coverImage: "https://link-to-cover-image.com/blue_neighbourhood.jpg",
         overall_rating: 4.5,
         reviews: [],
     }
@@ -121,7 +121,7 @@ describe('AlbumService', () => {
                 artist: "Troye Sivan Mellet",
                 genre: "Pop",
                 release_date: "2015-12-04T00:00:00.000Z",
-                cover_image_url: "https://link-to-cover-image.com/blue_neighbourhood.jpg",
+                coverImage: "https://link-to-cover-image.com/blue_neighbourhood.jpg",
                 overall_rating: 4.5,
                 reviews: [],
             }

@@ -4,7 +4,7 @@ export interface Album {
   artist: string;
   genre: string;
   releaseDate: string;
-  coverImageUrl: string;
+  coverImage: string;
   overallRating: number;
   reviews: [];
 }

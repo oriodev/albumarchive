@@ -20,7 +20,7 @@ export class UpdateAlbumDto {
 
     @IsOptional()
     @IsString()
-    readonly cover_image_url: string
+    readonly coverImage: string
 
     @IsOptional()
     readonly reviews: [mongoose.Schema.Types.ObjectId]

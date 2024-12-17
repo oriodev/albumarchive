@@ -1,9 +1,18 @@
+import { getSession } from "./session.api";
+
 export const getAlbumsFromDiscogs = async (search: string = "") => {
-  const url = new URL(`${process.env.BACKEND_API}/discogs`);
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/discogs`);
   url.searchParams.append("search", search);
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch albums");

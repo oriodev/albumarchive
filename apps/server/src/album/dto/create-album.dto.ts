@@ -21,7 +21,7 @@ export class CreateAlbumDto {
 
     @IsNotEmpty()
     @IsString()
-    readonly cover_image_url: string
+    readonly coverImage: string
 
     @IsNotEmpty()
     readonly reviews: [mongoose.Schema.Types.ObjectId]
