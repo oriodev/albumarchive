@@ -25,7 +25,8 @@ export class AuthService {
           const user = await this.userModel.create({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            private: true
           })
       
           const token = this.jwtService.sign({ id: user._id })

@@ -1,10 +1,22 @@
-import { Controller, Delete, Get, Param, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, Query, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from 'src/auth/schemas/user.schema';
+import { Query as ExpressQuery } from 'express-serve-static-core';
+
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) {}
+
+    @Get()
+    getUser(@Request() req) {
+        return req.user
+    }
+
+    @Get('/all')
+    findAll(@Query() query: ExpressQuery) {
+        return this.usersService.findAll(query)
+    }
 
     @Get(':id')
     async getUserById(
@@ -12,11 +24,6 @@ export class UsersController {
         id: string
     ): Promise<User> {
         return await this.usersService.findById(id)
-    }
-
-    @Get()
-    getUser(@Request() req) {
-        return req.user
     }
 
     @Delete(':id')
@@ -27,4 +34,12 @@ export class UsersController {
         return this.usersService.deleteById(id)
     }
 
+    @Put(':id')
+    async editUser(
+        @Param('id')
+        id: string,
+        @Body() user: User
+    ): Promise<User> {
+        return this.usersService.editById(user, id)
+    }
 }

@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 export function DeleteButton() {
   const user = useUser();
   const router = useRouter();
-  console.log(user);
 
   const handleDelete = async () => {
     if (user?.id) {

@@ -9,9 +9,14 @@ import {
 interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (searchQuery: string) => void;
+  searchType: string;
 }
 
-export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
+export function SearchBar({
+  searchQuery,
+  setSearchQuery,
+  searchType,
+}: SearchBarProps) {
   return (
     <SidebarGroup className="py-0">
       <SidebarGroupContent className="relative">
@@ -20,7 +25,7 @@ export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
         </Label>
         <SidebarInput
           id="search"
-          placeholder="Search albums..."
+          placeholder={`Search ${searchType}...`}
           className="pl-8 pt-5 pb-5"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

@@ -17,11 +17,11 @@ import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/zod/signup-schema";
-import { FormField, FormItem, FormControl, FormMessage } from "./ui/form";
-import { PasswordInput } from "./ui/password-input";
+import { FormField, FormItem, FormControl, FormMessage } from "../ui/form";
 import { signUp } from "@/api/auth.api";
 import { createSession } from "@/api/session.api";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "../ui/password-input";
 
 export function SignUpForm() {
   const form = useForm<z.infer<typeof signupSchema>>({

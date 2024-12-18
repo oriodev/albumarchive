@@ -13,6 +13,9 @@ export class User {
 
     @Prop() 
     password: string
+
+    @Prop()
+    private: boolean
     
 }
 

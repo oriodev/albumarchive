@@ -9,6 +9,7 @@ import {
   List,
   ListTodo,
   Send,
+  User,
 } from "lucide-react";
 
 import { NavProjects } from "@/components/nav/nav-projects";
@@ -46,6 +47,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: "albums",
             url: "/central/albums",
             icon: Album,
+          },
+          {
+            title: "users",
+            url: "/central/users",
+            icon: User,
           },
         ],
       },
