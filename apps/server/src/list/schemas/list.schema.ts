@@ -21,8 +21,8 @@ export class List {
     @Prop()
     type: Type;
     
-    // @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
-    // user: Types.ObjectId;
+    @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
+    user: Types.ObjectId;
 
     @Prop()
     albums: [mongoose.Schema.Types.ObjectId];

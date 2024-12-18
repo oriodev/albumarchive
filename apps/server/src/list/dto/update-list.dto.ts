@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { Type } from "../schemas/list.schema";
+import mongoose, { Types } from "mongoose";
 import { IsEnum, IsOptional, IsString } from "class-validator";
+import { Type } from "../schemas/list.schema";
 
 export class UpdateListDto {
 
@@ -15,6 +15,9 @@ export class UpdateListDto {
     @IsOptional()
     @IsEnum(Type)
     readonly type: Type
+
+    @IsOptional()
+    readonly user: Types.ObjectId
 
     @IsOptional()
     readonly albums: [mongoose.Schema.Types.ObjectId]

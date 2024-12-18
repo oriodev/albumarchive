@@ -27,7 +27,6 @@ export class ListController {
         return this.listService.updateById(id, list)
     }
 
-
     // @Put('/addalbum/:id')
     // async addAlbum(
     //     @Param('id')
