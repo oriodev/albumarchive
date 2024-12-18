@@ -16,3 +16,17 @@ export interface User {
   password?: string;
   private?: boolean;
 }
+
+export enum Type {
+  LISTENED = "Listened",
+  TOLISTEN = "To Listen",
+  CUSTOM = "Custom",
+}
+
+export interface List {
+  name: string;
+  description: string;
+  type: Type;
+  user: string;
+  albums: string[];
+}

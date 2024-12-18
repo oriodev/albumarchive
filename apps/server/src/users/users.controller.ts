@@ -27,7 +27,7 @@ export class UsersController {
     }
 
     @Delete(':id')
-    async deleteAlbum(
+    async deleteUser(
         @Param('id')
         id: string
     ): Promise<User> {
