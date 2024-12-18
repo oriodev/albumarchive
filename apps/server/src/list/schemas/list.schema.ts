@@ -21,7 +21,7 @@ export class List {
     @Prop()
     type: Type;
     
-    @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
+    @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
     user: Types.ObjectId;
 
     @Prop()

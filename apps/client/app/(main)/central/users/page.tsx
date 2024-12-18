@@ -13,6 +13,7 @@ export default function Page() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const users = await getAllUsers(searchQuery);
+
     setUsers(users);
   };
 

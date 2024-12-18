@@ -4,25 +4,29 @@ import { User } from "@/types";
 import { getSession } from "./session.api";
 
 export const getAllUsers = async (search: string = "", page: string = "1") => {
-  const token = await getSession();
+  try {
+    const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/all`);
-  url.searchParams.append("search", search);
-  url.searchParams.append("page", page);
+    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/all`);
+    url.searchParams.append("search", search);
+    url.searchParams.append("page", page);
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
-    return [];
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error: ", error);
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const getUserId = async () => {
