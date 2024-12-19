@@ -7,13 +7,15 @@ import { UsersModule } from 'src/users/users.module';
 import { AlbumModule } from 'src/album/album.module';
 import { AlbumSchema } from 'src/album/schemas/album.schema';
 import { AlbumService } from 'src/album/album.service';
+import { UserSchema } from 'src/auth/schemas/user.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'List', schema: ListSchema }]),
     MongooseModule.forFeature([{ name: 'Album', schema: AlbumSchema }]),
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     UsersModule,
-    // AlbumModule
+    AlbumModule
   ],
   controllers: [ListController],
   providers: [ListService, AlbumService]

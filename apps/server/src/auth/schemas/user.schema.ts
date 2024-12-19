@@ -19,7 +19,7 @@ export class User {
     private: boolean
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }] })
-    lists: [mongoose.Schema.Types.ObjectId];   
+    lists: mongoose.Schema.Types.ObjectId[];   
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

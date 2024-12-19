@@ -3,15 +3,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { List } from './schemas/list.schema';
 import mongoose, { ObjectId, Types } from 'mongoose';
 import { AlbumService } from '../album/album.service';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class ListService {
     constructor(
         @InjectModel(List.name)
         private listModel: mongoose.Model<List>,
-        private albumService: AlbumService 
+        @InjectModel('User')
+        private userModel: mongoose.Model<User>,
+        private albumService: AlbumService
     ) {}
-
 
     async findById(id: string): Promise<List> {
 
@@ -30,9 +32,30 @@ export class ListService {
         return list;
     }
 
+    async findBySlug(user: string, slug: string): Promise<List> {
+
+        const isValidId = mongoose.isValidObjectId(user)
+        
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
+        }
+
+        const list = await this.listModel.findOne({
+            user: user,
+            slug: { $regex: new RegExp(slug, 'i') }
+        })
+
+        return list
+
+    }
+
     async create (list: List): Promise<List> {
         const data = Object.assign(list)
         const res = await this.listModel.create(data)
+
+        await this.userModel.findByIdAndUpdate(list.user, {
+            $push: { lists: res._id },
+        })
 
         return res
     }

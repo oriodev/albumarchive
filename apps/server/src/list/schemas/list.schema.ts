@@ -19,6 +19,9 @@ export class List {
     description: string;
 
     @Prop()
+    slug: string;
+
+    @Prop()
     type: Type;
     
     @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })

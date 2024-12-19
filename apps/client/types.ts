@@ -15,6 +15,7 @@ export interface User {
   email: string;
   password?: string;
   private?: boolean;
+  lists?: List[];
 }
 
 export enum Type {
@@ -24,7 +25,9 @@ export enum Type {
 }
 
 export interface List {
+  _id?: string;
   name: string;
+  slug: string;
   description: string;
   type: Type;
   user: string;

@@ -10,6 +10,10 @@ export class CreateListDto {
 
     @IsNotEmpty()
     @IsString()
+    readonly slug: string
+
+    @IsNotEmpty()
+    @IsString()
     readonly description: string
 
     @IsNotEmpty()

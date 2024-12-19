@@ -68,11 +68,13 @@ export const getUser = async (id: string) => {
 
     if (response.status === 200) {
       const user = await response.json();
+
       return {
         id: user._id,
         username: user.username,
         email: user.email,
         private: user.private,
+        lists: user.lists,
       };
     }
 

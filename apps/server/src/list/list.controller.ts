@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ListService } from './list.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { List } from './schemas/list.schema';
@@ -7,6 +7,11 @@ import { UpdateListDto } from './dto/update-list.dto';
 @Controller('list')
 export class ListController {
     constructor(private listService: ListService) {}
+
+    @Get()
+    async getListByName(@Query('user') user: string, @Query('slug') slug: string): Promise<List> {
+        return await this.listService.findBySlug(user, slug);
+    }
 
     @Post()
     async createList(@Body() list: CreateListDto): Promise<List> {

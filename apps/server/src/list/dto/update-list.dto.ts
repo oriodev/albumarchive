@@ -10,6 +10,10 @@ export class UpdateListDto {
 
     @IsOptional()
     @IsString()
+    readonly slug: string
+
+    @IsOptional()
+    @IsString()
     readonly description: string
 
     @IsOptional()

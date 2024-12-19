@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Album,
-  Disc,
-  Headphones,
-  LifeBuoy,
-  List,
-  ListTodo,
-  Send,
-  User,
-} from "lucide-react";
+import { Album, Disc, Headphones, LifeBuoy, Send, User } from "lucide-react";
 
 import { NavProjects } from "@/components/nav/nav-projects";
 import { NavSecondary } from "@/components/nav/nav-secondary";
@@ -28,9 +19,23 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useUser } from "@/utils/providers/UserProvider";
+import { slugify } from "@/utils/global.utils";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser();
+
+  const lists =
+    user?.lists?.map((list) => {
+      const slug = slugify(list.name);
+
+      return {
+        id: list._id || "",
+        name: list.name,
+        type: list.type,
+        url: `/central/lists/${slug}`,
+        icon: Headphones,
+      };
+    }) || [];
 
   const data = {
     user: {
@@ -68,23 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: Send,
       },
     ],
-    lists: [
-      {
-        name: "Listened",
-        url: "#",
-        icon: Headphones,
-      },
-      {
-        name: "To Listen",
-        url: "#",
-        icon: ListTodo,
-      },
-      {
-        name: "Custom List",
-        url: "#",
-        icon: List,
-      },
-    ],
+    lists: lists,
   };
 
   return (
