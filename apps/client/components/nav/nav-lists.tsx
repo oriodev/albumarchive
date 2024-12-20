@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Edit,
-  Folder,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
+import { Edit, Folder, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -24,23 +18,22 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { DeleteDialog } from "./delete-dialog";
-// import { deleteList } from "@/api/lists.api";
+import Link from "next/link";
+import { listToRender } from "@/types";
+import NewListBtn from "../lists/new-list-btn";
 
-export function NavProjects({
-  projects,
+export function NavLists({
+  lists,
   title,
+  setLists,
 }: {
-  projects: {
-    id: string;
-    name: string;
-    type: string;
-    url: string;
-    icon: LucideIcon;
-  }[];
+  lists: listToRender[];
   title: string;
+  setLists: React.Dispatch<React.SetStateAction<listToRender[]>>;
 }) {
   const { isMobile } = useSidebar();
   const [itemToDelete, setItemToDelete] = useState<{
@@ -52,18 +45,21 @@ export function NavProjects({
     <AlertDialog>
       {/* SIDEBAR. */}
       <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-        <SidebarGroupLabel>{title}</SidebarGroupLabel>
+        <div className="flex justify-between">
+          <SidebarGroupLabel>{title}</SidebarGroupLabel>
+          <NewListBtn setLists={setLists} lists={lists} />
+        </div>
 
-        {/* ITERATE THROUGH PROJECTS. */}
+        {/* ITERATE THROUGH LISTS. */}
         <SidebarMenu>
-          {projects.map((item) => (
+          {lists.map((item) => (
             // SET NAME AND ICON.
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link href={item.url || "/"}>
                   <item.icon />
                   <span>{item.name}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
 
               {/* DROPDOWN MENU. */}
@@ -119,7 +115,7 @@ export function NavProjects({
           ))}
 
           {/* MORE BUTTON. */}
-          {projects.length > 10 && (
+          {lists.length > 10 && (
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <MoreHorizontal />
@@ -131,7 +127,7 @@ export function NavProjects({
       </SidebarGroup>
 
       {/* DELETE DIALOG CONTENT. */}
-      <DeleteDialog itemToDelete={itemToDelete} />
+      <DeleteDialog itemToDelete={itemToDelete} setLists={setLists} />
     </AlertDialog>
   );
 }

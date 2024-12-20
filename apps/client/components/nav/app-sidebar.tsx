@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Album, Disc, Headphones, LifeBuoy, Send, User } from "lucide-react";
 
-import { NavProjects } from "@/components/nav/nav-projects";
+import { NavLists } from "@/components/nav/nav-lists";
 import { NavSecondary } from "@/components/nav/nav-secondary";
 import { NavUser } from "@/components/nav/nav-user";
 import {
@@ -20,22 +20,34 @@ import {
 } from "@/components/ui/sidebar";
 import { useUser } from "@/utils/providers/UserProvider";
 import { slugify } from "@/utils/global.utils";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { listToRender } from "@/types";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useUser();
 
-  const lists =
-    user?.lists?.map((list) => {
-      const slug = slugify(list.name);
+  const [lists, setLists] = useState<listToRender[]>([]);
 
-      return {
-        id: list._id || "",
-        name: list.name,
-        type: list.type,
-        url: `/central/lists/${slug}`,
-        icon: Headphones,
-      };
-    }) || [];
+  useEffect(() => {
+    if (user?.lists) {
+      setLists(
+        user?.lists?.map((list) => {
+          const slug = slugify(list.name);
+
+          return {
+            id: list._id || "",
+            name: list.name,
+            type: list.type,
+            url: `/central/lists/${slug}`,
+            icon: Headphones,
+          };
+        }),
+      );
+    } else {
+      setLists([]);
+    }
+  }, [user]);
 
   const data = {
     user: {
@@ -104,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>{item.title}</a>
+                      <Link href={item.url}>{item.title}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -112,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-        <NavProjects projects={data.lists} title="lists" />
+        <NavLists lists={data.lists || []} title="lists" setLists={setLists} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

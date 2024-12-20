@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteList } from "@/api/lists.api";
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -9,16 +10,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { listToRender } from "@/types";
+import { useRouter } from "next/navigation";
 
 interface DeleteDialogProps {
   itemToDelete: { id: string; type: string } | undefined;
+  setLists: React.Dispatch<React.SetStateAction<listToRender[]>>;
 }
 
-export function DeleteDialog({ itemToDelete }: DeleteDialogProps) {
+export function DeleteDialog({ itemToDelete, setLists }: DeleteDialogProps) {
+  const router = useRouter();
+
   const handleDelete = async (id: string) => {
     if (id) {
-      // await deleteList(id);
-      console.log("DELETING: ", id);
+      await deleteList(id);
+      setLists((prev) => prev.filter((item) => item.id !== id));
+      router.push("/central/lists/listened");
     }
 
     return null;

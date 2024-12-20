@@ -54,7 +54,6 @@ export const getUserId = async () => {
 };
 
 export const getUser = async (id: string) => {
-  console.log("called getUser() again");
   try {
     const token = await getSession();
     const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/${id}`);

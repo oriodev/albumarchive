@@ -1,3 +1,5 @@
+import { type LucideIcon } from "lucide-react";
+
 export interface Album {
   _id?: string;
   title: string;
@@ -32,4 +34,12 @@ export interface List {
   type: Type;
   user: string;
   albums: string[];
+}
+
+export interface listToRender {
+  id: string;
+  name: string;
+  type: Type;
+  url: string;
+  icon: LucideIcon;
 }

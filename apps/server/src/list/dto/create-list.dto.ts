@@ -12,7 +12,6 @@ export class CreateListDto {
     @IsString()
     readonly slug: string
 
-    @IsNotEmpty()
     @IsString()
     readonly description: string
 
