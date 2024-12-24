@@ -12,17 +12,17 @@ export class Album {
     @Prop()
     artist: string;
 
-    @Prop()
-    genre: string;
+    @Prop({ type: [String] })
+    genre: string[];
 
     @Prop()
-    release_date: Date;
+    releaseDate: string;
 
     @Prop()
     coverImage: string;
 
     @Prop()
-    overall_rating: number;
+    overallRating: number;
 
     @Prop()
     reviews: [mongoose.Schema.Types.ObjectId];
@@ -30,3 +30,4 @@ export class Album {
 }
 
 export const AlbumSchema = SchemaFactory.createForClass(Album)
+AlbumSchema.index({ artist: 1, title: 1 }, { unique: true });

@@ -12,11 +12,11 @@ export class UpdateAlbumDto {
 
     @IsOptional()
     @IsString()
-    readonly genre: string
+    readonly genre: string[]
 
     @IsOptional()
     @IsDateString()
-    readonly release_date: Date
+    readonly releaseDate: string
 
     @IsOptional()
     @IsString()
@@ -29,5 +29,5 @@ export class UpdateAlbumDto {
     @IsNumber()
     @Min(1)
     @Max(5)
-    readonly overall_rating: number   
+    readonly overallRating: number   
 }

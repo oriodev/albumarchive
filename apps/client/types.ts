@@ -8,7 +8,7 @@ export interface Album {
   releaseDate: string;
   coverImage: string;
   overallRating: number;
-  reviews: [];
+  reviews: string[];
 }
 
 export interface User {

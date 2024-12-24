@@ -15,7 +15,7 @@ export class AlbumService {
 
     async findAll(query: Query): Promise<Album[]> {
 
-        const resPerPage = 2
+        const resPerPage = 10
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
 
@@ -56,6 +56,17 @@ export class AlbumService {
         }
 
         const album = await this.albumModel.findById(id);
+
+        if (!album) {
+            throw new NotFoundException('album not found')
+        }
+
+        return album;
+    }
+
+    async findByName(title: string): Promise<Album> {
+
+        const album = await this.albumModel.findOne({ title: title })
 
         if (!album) {
             throw new NotFoundException('album not found')

@@ -12,12 +12,11 @@ export class CreateAlbumDto {
     readonly artist: string 
 
     @IsNotEmpty()
-    @IsString()
-    readonly genre: string
+    readonly genre: string[]
 
     @IsNotEmpty()
     @IsDateString()
-    readonly release_date: Date
+    readonly releaseDate: string
 
     @IsNotEmpty()
     @IsString()
@@ -28,7 +27,5 @@ export class CreateAlbumDto {
 
     @IsNotEmpty()
     @IsNumber()
-    @Min(1)
-    @Max(5)
-    readonly overall_rating: number   
+    readonly overallRating: number   
 }

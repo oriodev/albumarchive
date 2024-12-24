@@ -5,20 +5,24 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 import { Query as ExpressQuery } from 'express-serve-static-core';
-import { Public } from 'utils/public.decorator';
 
 @Controller('album')
 export class AlbumController {
     constructor(private albumService: AlbumService) {}
 
-    @Get()
-    async getAllAlbums(@Query() query: ExpressQuery): Promise<Album[]> {
-        return await this.albumService.findAll(query)
-    }
-
+    
     @Post()
     async createAlbum(@Body() album: CreateAlbumDto): Promise<Album> {
         return this.albumService.create(album)
+    }
+    
+    
+    @Get('/by-title/')
+    async getAlbumByTitle(
+        @Query('title')
+        title: string
+    ): Promise<Album> {
+        return await this.albumService.findByName(title)
     }
 
     @Get(':id')
@@ -27,6 +31,11 @@ export class AlbumController {
         id: string
     ): Promise<Album> {
         return await this.albumService.findById(id)
+    }
+
+    @Get()
+    async getAllAlbums(@Query() query: ExpressQuery): Promise<Album[]> {
+        return await this.albumService.findAll(query)
     }
 
     @Put(':id')

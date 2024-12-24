@@ -69,7 +69,7 @@ export function AlbumDialogue({ album }: { album: Album }) {
 
         {/* BUTTONS */}
         <div className="flex justify-between gap-2 pt-5">
-          <AddToList />
+          <AddToList album={album} />
           <Button className="w-full">Reviews</Button>
         </div>
       </DialogContent>

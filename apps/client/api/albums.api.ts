@@ -16,7 +16,28 @@ export const getAlbums = async (search: string = "", page: string = "1") => {
   });
 
   if (!response.ok) {
-    return [];
+    return null;
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const getAlbumByTitle = async (title: string) => {
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album/by-title`);
+  url.searchParams.append("title", title);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
   }
 
   const data = await response.json();
@@ -24,17 +45,22 @@ export const getAlbums = async (search: string = "", page: string = "1") => {
 };
 
 export const createAlbum = async (album: Album) => {
-  const url = new URL(`${process.env.BACKEND_API}/album`);
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album`);
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(album),
   });
 
   if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Error response: ", errorText);
     throw new Error("Failed to create albums");
   }
 

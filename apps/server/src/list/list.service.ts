@@ -102,28 +102,28 @@ export class ListService {
         return list.albums.includes(album)
     }
 
-    // async addAlbum (id: string, album_id: ObjectId): Promise<List> {
-    //     const isValidId = mongoose.isValidObjectId(id)
+    async addAlbum (id: string, album_id: string): Promise<List> {
+        const isValidId = mongoose.isValidObjectId(id)
 
-    //     if(!isValidId) {
-    //         throw new BadRequestException('please enter a valid mongodb id for the list')
-    //     }
+        if(!isValidId) {
+            throw new BadRequestException('please enter a valid mongodb id for the list')
+        }
 
-    //     const albumIsValid = await this.albumService.findById(album_id)
+        const albumIsValid = await this.albumService.findById(album_id)
         
-    //     if (!albumIsValid) {
-    //         throw new BadRequestException('that album does not exist in our db')
-    //     }
+        if (!albumIsValid) {
+            throw new BadRequestException('that album does not exist in our db')
+        }
 
-    //     // check if album id already exists
+        // check if album id already exists
 
 
-    //     return await this.listModel.findByIdAndUpdate(
-    //         id,
-    //         { $push: { albums: album_id } },
-    //         { new: true }
-    //     )
-    // }
+        return await this.listModel.findByIdAndUpdate(
+            id,
+            { $push: { albums: album_id } },
+            { new: true }
+        )
+    }
 
     async removeAlbum (id: string, album_id: string): Promise<List> {
         const albumIsValid = await this.albumService.findById(album_id)
