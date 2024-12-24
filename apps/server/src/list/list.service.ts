@@ -42,7 +42,7 @@ export class ListService {
 
         const list = await this.listModel.findOne({
             user: user,
-            slug: { $regex: new RegExp(slug, 'i') }
+            slug: slug 
         })
 
         return list

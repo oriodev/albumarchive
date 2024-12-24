@@ -54,6 +54,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
       type: list.type,
       url: `/central/lists/${list.slug}`,
       icon: Headphones,
+      description: "",
     };
 
     if (list) {

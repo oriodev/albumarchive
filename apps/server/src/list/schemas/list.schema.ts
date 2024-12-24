@@ -32,3 +32,4 @@ export class List {
 }
 
 export const ListSchema = SchemaFactory.createForClass(List)
+ListSchema.index({ name: 1, user: 1 }, { unique: true });

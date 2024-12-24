@@ -103,3 +103,30 @@ export const deleteList = async (id: string) => {
     console.log("error: ", error);
   }
 };
+
+export const updateList = async (id: string, updatedList: Partial<List>) => {
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/${id}`);
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedList),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update list");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating list:", error);
+    throw error;
+  }
+};

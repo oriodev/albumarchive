@@ -42,4 +42,10 @@ export interface listToRender {
   type: Type;
   url: string;
   icon: LucideIcon;
+  description: string;
+}
+
+export enum Dialogs {
+  delete = "delete",
+  edit = "edit",
 }

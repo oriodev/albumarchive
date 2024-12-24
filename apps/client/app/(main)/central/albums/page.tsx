@@ -11,7 +11,7 @@ import { useState } from "react";
 export default function Page() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showMoreBtn, setShowMoreBtn] = useState(true);
+  const [showMoreBtn, setShowMoreBtn] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

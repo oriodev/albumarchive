@@ -23,8 +23,9 @@ import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { DeleteDialog } from "./delete-dialog";
 import Link from "next/link";
-import { listToRender } from "@/types";
+import { Dialogs, listToRender } from "@/types";
 import NewListBtn from "../lists/new-list-btn";
+import { EditDialog } from "./edit-dialog";
 
 export function NavLists({
   lists,
@@ -36,10 +37,8 @@ export function NavLists({
   setLists: React.Dispatch<React.SetStateAction<listToRender[]>>;
 }) {
   const { isMobile } = useSidebar();
-  const [itemToDelete, setItemToDelete] = useState<{
-    id: string;
-    type: string;
-  }>();
+  const [dialog, setDialog] = useState<Dialogs>();
+  const [itemToHandle, setItemToHandle] = useState<listToRender>();
 
   return (
     <AlertDialog>
@@ -84,22 +83,30 @@ export function NavLists({
                   {item.type !== "Listened" && item.type !== "To Listen" && (
                     <>
                       {/* EDIT LIST. */}
-                      <DropdownMenuItem>
-                        <Edit className="text-muted-foreground" />
-                        <span>Edit List</span>
-                      </DropdownMenuItem>
+                      <AlertDialogTrigger asChild>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            // TRIGGER THE MENU OPENINGs.
+                            setItemToHandle(item);
+                            setDialog(Dialogs.edit);
+                          }}
+                        >
+                          <Edit className="text-muted-foreground" />
+                          <span>Edit List</span>
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+
+                      {/* SEPARATOR. */}
                       <DropdownMenuSeparator />
 
                       {/* DELETE LIST. */}
                       <AlertDialogTrigger asChild>
                         <DropdownMenuItem
-                          onClick={() =>
+                          onClick={() => {
                             // TRIGGER THE MENU OPENINGs.
-                            setItemToDelete({
-                              id: item.id,
-                              type: item.type,
-                            })
-                          }
+                            setItemToHandle(item);
+                            setDialog(Dialogs.delete);
+                          }}
                         >
                           <Trash2 className="text-muted-foreground" />
                           <span>Delete List</span>
@@ -127,7 +134,15 @@ export function NavLists({
       </SidebarGroup>
 
       {/* DELETE DIALOG CONTENT. */}
-      <DeleteDialog itemToDelete={itemToDelete} setLists={setLists} />
+      {dialog === Dialogs.delete ? (
+        <DeleteDialog itemToDelete={itemToHandle} setLists={setLists} />
+      ) : (
+        <EditDialog
+          itemToEdit={itemToHandle}
+          setLists={setLists}
+          lists={lists}
+        />
+      )}
     </AlertDialog>
   );
 }

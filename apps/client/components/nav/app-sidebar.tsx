@@ -41,6 +41,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             type: list.type,
             url: `/central/lists/${slug}`,
             icon: Headphones,
+            description: list.description,
           };
         }),
       );
