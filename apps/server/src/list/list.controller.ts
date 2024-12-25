@@ -23,21 +23,13 @@ export class ListController {
         return await this.listService.deleteById(id)
     }
 
-    @Put(':id')
-    async updateList(
-        @Param('id')
-        id: string,
-        @Body() list: UpdateListDto
-    ): Promise<List> {
-        return this.listService.updateById(id, list)
-    }
-
-    @Put('/addalbum/:id')
+    @Put('/add-album')
     async addAlbum(
-        @Param('id')
+        @Query('id')
         id: string,
         @Body() body: { albumId: string }
     ): Promise<List> {
+        console.log('album id in controller: ', body)
         return this.listService.addAlbum(id, body.albumId)
     }
 
@@ -50,4 +42,12 @@ export class ListController {
         return this.listService.removeAlbum(id, body.albumId)
     }
     
+    @Put(':id')
+    async updateList(
+        @Param('id')
+        id: string,
+        @Body() list: UpdateListDto
+    ): Promise<List> {
+        return this.listService.updateById(id, list)
+    }
 }

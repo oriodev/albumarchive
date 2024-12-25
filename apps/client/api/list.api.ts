@@ -130,3 +130,37 @@ export const updateList = async (id: string, updatedList: Partial<List>) => {
     throw error;
   }
 };
+
+export const addAlbumToList = async (list_id: string, album_id: string) => {
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/add-album`);
+  url.searchParams.append("id", list_id);
+
+  const body = {
+    albumId: album_id,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error response: ", errorText);
+      throw new Error("Failed to add album to list");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error adding album to list list:", error);
+    throw error;
+  }
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteList } from "@/api/lists.api";
+import { deleteList } from "@/api/list.api";
 import {
   AlertDialogAction,
   AlertDialogCancel,

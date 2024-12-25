@@ -22,7 +22,7 @@ import { signUp } from "@/api/auth.api";
 import { createSession } from "@/api/session.api";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "../ui/password-input";
-import { generateNewUserLists } from "@/api/lists.api";
+import { generateNewUserLists } from "@/api/list.api";
 
 export function SignUpForm() {
   const form = useForm<z.infer<typeof signupSchema>>({

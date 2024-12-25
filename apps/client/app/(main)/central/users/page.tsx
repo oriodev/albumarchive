@@ -17,8 +17,6 @@ export default function Page() {
     setUsers(users);
   };
 
-  console.log(users);
-
   return (
     <>
       <form onSubmit={handleSubmit}>

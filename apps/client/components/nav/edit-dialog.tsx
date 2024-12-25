@@ -19,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, FormItem, FormControl, FormMessage } from "../ui/form";
 import { editListSchema } from "@/zod/edit-list-schema";
 import { useEffect } from "react";
-import { updateList } from "@/api/lists.api";
+import { updateList } from "@/api/list.api";
 import { Headphones } from "lucide-react";
 import { slugify } from "@/utils/global.utils";
 import { useRouter } from "next/navigation";

@@ -21,6 +21,7 @@ import {
 import { useUser } from "@/utils/providers/UserProvider";
 import { Album } from "@/types";
 import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
+import { addAlbumToList } from "@/api/list.api";
 
 interface AddToListProps {
   album: Album;
@@ -33,16 +34,8 @@ export function AddToList({ album }: AddToListProps) {
   const user = useUser();
   const lists = user?.lists || [];
 
-  // check if the album is already in each list.
-  // if it is then make it so you can't add the album to the list.
-  // easier to
-
   const onAddToList = async (listId: string) => {
-    console.log("album being fetched is: ", album.title);
-
     const localAlbum = await getAlbumByTitle(album.title);
-
-    console.log("result of localAlbum is: ", localAlbum);
 
     if (!localAlbum) {
       const albumToAdd = {
@@ -55,16 +48,20 @@ export function AddToList({ album }: AddToListProps) {
         reviews: [],
       };
 
-      console.log("album to add is: ", albumToAdd);
-
       const addAlbumToLocal = await createAlbum(albumToAdd);
 
       if (!addAlbumToLocal) {
         console.log("yeah that didnt work we didnt add album to the local db");
       }
-    }
 
-    // addAlbumToList()
+      console.log("album id is: ", addAlbumToLocal._id);
+
+      await addAlbumToList(listId, addAlbumToLocal._id);
+    } else {
+      console.log("album id is: ", localAlbum._id);
+
+      await addAlbumToList(listId, localAlbum._id);
+    }
   };
 
   return (

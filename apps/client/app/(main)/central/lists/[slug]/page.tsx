@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
-import { getList } from "@/api/lists.api";
+import { getList } from "@/api/list.api";
 import { List } from "@/types";
 
 export default function Page({

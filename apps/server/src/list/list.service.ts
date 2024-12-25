@@ -92,17 +92,24 @@ export class ListService {
      * @throws Error if the list_id or album_id are invalid ids.
     */
     async isAlbumInList(list_id: string, album_id: string) {
-        // check if list_id is valid id.
-        // check if album_id is valid id.
-        // fetch the list by id and return only the albums for efficiency.
+
+        if (!mongoose.isValidObjectId(list_id) || !mongoose.isValidObjectId(album_id)) {
+            throw new Error('invalid list_id or album_id');
+        }
+
         const list = await this.listModel.findById(list_id, 'albums')
 
-        const album = new mongoose.Schema.Types.ObjectId(album_id)
+        if (!list) {
+            throw new Error('List not found');
+        }
 
-        return list.albums.includes(album)
+        const albumIds = list.albums.map((id) => id.toString());
+
+        return albumIds.includes(album_id);
     }
 
     async addAlbum (id: string, album_id: string): Promise<List> {
+
         const isValidId = mongoose.isValidObjectId(id)
 
         if(!isValidId) {
@@ -116,7 +123,12 @@ export class ListService {
         }
 
         // check if album id already exists
+        const isAlbumInList = await this.isAlbumInList(id, album_id)
 
+
+        if (isAlbumInList) {
+            throw new BadRequestException('album is already in list')
+        }
 
         return await this.listModel.findByIdAndUpdate(
             id,

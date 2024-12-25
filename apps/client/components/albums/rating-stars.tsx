@@ -39,7 +39,7 @@ export default function RatingStars({
     <div
       className={`flex ${centered ? "justify-center" : "justify-left"} gap-5`}
     >
-      {rating === null && <StarOff />}
+      {rating === 0 && <StarOff />}
       {stars}
     </div>
   );

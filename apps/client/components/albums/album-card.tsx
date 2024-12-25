@@ -18,9 +18,9 @@ export function AlbumCard({ album }: { album: Album }) {
         <Image
           alt={album.title}
           src={album.coverImage}
-          // width={500}
-          layout="fill"
-          objectFit="cover"
+          style={{ objectFit: "cover" }}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
       </CardHeader>
       <CardContent>

@@ -1,4 +1,4 @@
-import { createList } from "@/api/lists.api";
+import { createList } from "@/api/list.api";
 import {
   Tooltip,
   TooltipContent,

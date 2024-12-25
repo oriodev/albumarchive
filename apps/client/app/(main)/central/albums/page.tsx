@@ -22,7 +22,24 @@ export default function Page() {
 
   const handleMore = async () => {
     const fetchedAlbums = await getAlbumsFromDiscogs(searchQuery);
-    setAlbums(fetchedAlbums);
+
+    setAlbums((prevAlbums) => {
+      const existingTitlesAndArtists = new Set(
+        prevAlbums.map((album) => `${album.title}+${album.artist}`),
+      );
+
+      const uniqueFetchedAlbums = fetchedAlbums.filter((album: Album) => {
+        const identifier = `${album.title}+${album.artist}`;
+        if (existingTitlesAndArtists.has(identifier)) {
+          return false;
+        }
+        existingTitlesAndArtists.add(identifier);
+        return true;
+      });
+
+      return [...prevAlbums, ...uniqueFetchedAlbums];
+    });
+
     setShowMoreBtn(false);
   };
 
