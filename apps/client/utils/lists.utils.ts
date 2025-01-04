@@ -136,7 +136,7 @@ export const removeAlbum = async (
   albumId: string,
   albums: Album[],
   setAlbums: (albums: Album[]) => void,
-  updateState: boolean = true,
+  updateState: boolean,
 ) => {
   await removeAlbumFromList(listToDeleteFromId, albumId);
 

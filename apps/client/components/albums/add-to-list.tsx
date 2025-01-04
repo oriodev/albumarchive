@@ -127,7 +127,13 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     );
 
     if (listToDeleteFrom?.type === "toListen") {
-      removeAlbum(listToDeleteFrom.id, album._id, albums, setAlbums);
+      removeAlbum(
+        listToDeleteFrom.id,
+        album._id,
+        albums,
+        setAlbums,
+        updateState,
+      );
 
       toast({
         title: "Moved To Listened",
@@ -137,7 +143,13 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
 
     if (listToDeleteFrom?.type === "listened") {
       console.log("we just not finding this?");
-      removeAlbum(listToDeleteFrom.id, album._id, albums, setAlbums);
+      removeAlbum(
+        listToDeleteFrom.id,
+        album._id,
+        albums,
+        setAlbums,
+        updateState,
+      );
 
       toast({
         title: "Moved To To Listen",
