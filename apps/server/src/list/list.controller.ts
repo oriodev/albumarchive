@@ -13,6 +13,11 @@ export class ListController {
         return await this.listService.findBySlug(user, slug);
     }
 
+    @Get('/album-in-list')
+    async isAlbumInList(@Query('list') list: string, @Query('album') album: string): Promise<Boolean> {
+        return await this.listService.isAlbumInList(list, album)
+    }
+
     @Post()
     async createList(@Body() list: CreateListDto): Promise<List> {
         return await this.listService.create(list)
@@ -29,11 +34,10 @@ export class ListController {
         id: string,
         @Body() body: { albumId: string }
     ): Promise<List> {
-        console.log('album id in controller: ', body)
         return this.listService.addAlbum(id, body.albumId)
     }
 
-    @Put('/deletealbum/:id')
+    @Put('/delete-album/:id')
     async deleteAlbum(
         @Param('id')
         id: string,

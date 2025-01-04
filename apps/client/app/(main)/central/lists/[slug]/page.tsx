@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { getList } from "@/api/list.api";
-import { List } from "@/types";
+import { Album, List } from "@/types";
+import { getAlbumById } from "@/api/albums.api";
+import ListGrid from "@/components/lists/list-grid";
 
 export default function Page({
   params,
@@ -13,6 +15,7 @@ export default function Page({
   const user = useUser();
   const [list, setList] = useState<List>();
   const [loading, setLoading] = useState(true);
+  const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
     const fetchList = async () => {
@@ -28,6 +31,20 @@ export default function Page({
     fetchList();
   }, [user, params]);
 
+  useEffect(() => {
+    const getFullAlbums = async () => {
+      if (list && list.albums) {
+        const fullAlbums = await Promise.all(
+          list.albums.map(async (albumId) => await getAlbumById(albumId)),
+        );
+
+        setAlbums(fullAlbums);
+      }
+    };
+
+    getFullAlbums();
+  }, [list]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -40,6 +57,7 @@ export default function Page({
     <div>
       <h1 className="text-2xl">{list.name}</h1>
       <p className="italic">{list.description}</p>
+      <ListGrid albums={albums} setAlbums={setAlbums} />
     </div>
   );
 }

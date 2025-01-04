@@ -1,9 +1,10 @@
 "use client";
 
+// REACT.
 import * as React from "react";
-import { Check, PlusCircleIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+// COMPONENTS.
+import { Check, PlusCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,50 +19,151 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover-dialogue";
+
+// UTILS.
+import { cn } from "@/lib/utils";
+import {
+  addAlbumToLocalDb,
+  deleteFromList,
+  findListsAlbumIsIn,
+  getListFromId,
+  removeAlbum,
+} from "@/utils/lists.utils";
+
+// HOOKS.
+import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
-import { Album } from "@/types";
-import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
+import { useEffect, useMemo } from "react";
+
+// API CALLS.
+import { getAlbumByTitle } from "@/api/albums.api";
 import { addAlbumToList } from "@/api/list.api";
+
+// TYPES.
+import { Album, Type } from "@/types";
+import { useParams } from "next/navigation";
+import { slugify } from "@/utils/global.utils";
 
 interface AddToListProps {
   album: Album;
+  setAlbums: (albums: Album[]) => void;
+  albums: Album[];
 }
 
-export function AddToList({ album }: AddToListProps) {
+export function AddToList({ album, setAlbums, albums }: AddToListProps) {
+  // HOOKS.
+  const { toast } = useToast();
+  const user = useUser();
+  const lists = useMemo(() => user?.lists || [], [user]);
+  const params = useParams();
+
+  // STATES.
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+  const [albumInLists, setAlbumInLists] = React.useState<{
+    [key: string]: { isInList: boolean; type: Type };
+  }>({});
 
-  const user = useUser();
-  const lists = user?.lists || [];
+  // USE EFFECT.
+  useEffect(() => {
+    const getAlbumStatusMap = async () => {
+      const albumStatusMap = await findListsAlbumIsIn(lists, album);
+      setAlbumInLists(albumStatusMap);
+    };
 
+    getAlbumStatusMap();
+  }, [album, lists]);
+
+  // HANDLE ADDING TO LIST.
   const onAddToList = async (listId: string) => {
-    const localAlbum = await getAlbumByTitle(album.title);
+    // THROW AN ERROR IF THERE'S NO ALBUM ID.
 
-    if (!localAlbum) {
-      const albumToAdd = {
-        title: album.title,
-        artist: album.artist,
-        genre: album.genre,
-        releaseDate: album.releaseDate,
-        coverImage: album.coverImage,
-        overallRating: 0,
-        reviews: [],
-      };
-
-      const addAlbumToLocal = await createAlbum(albumToAdd);
-
-      if (!addAlbumToLocal) {
-        console.log("yeah that didnt work we didnt add album to the local db");
-      }
-
-      console.log("album id is: ", addAlbumToLocal._id);
-
-      await addAlbumToList(listId, addAlbumToLocal._id);
-    } else {
-      console.log("album id is: ", localAlbum._id);
-
-      await addAlbumToList(listId, localAlbum._id);
+    if (!album._id) {
+      toast({
+        title: "Album does not exist somehow",
+        description: "idk either tbh",
+      });
+      return;
     }
+
+    // GRAB THE FULL LIST.
+
+    const selectedList = getListFromId(lists, listId);
+
+    if (!selectedList?._id) {
+      toast({
+        title: "List does not exist somehow",
+        description: "idk either tbh",
+      });
+      return;
+    }
+
+    const slug = Array.isArray(params.slug)
+      ? params.slug[0]
+      : params.slug || "";
+    const updateState = slugify(selectedList.name) === slug;
+
+    // ARE WE DELETING FROM LIST?
+
+    const isAlbumInList = selectedList?._id in albumInLists;
+
+    if (isAlbumInList) {
+      removeAlbum(selectedList?._id, album._id, albums, setAlbums, updateState);
+
+      toast({
+        title: `Removed ${album.title} from ${selectedList?.name}`,
+      });
+
+      return;
+    }
+
+    // HANDLING DELETING LIST FROM LISTENED/TO LISTEN.
+
+    const listToDeleteFrom = await deleteFromList(
+      selectedList,
+      album,
+      lists,
+      albumInLists,
+    );
+
+    if (listToDeleteFrom?.type === "toListen") {
+      removeAlbum(listToDeleteFrom.id, album._id, albums, setAlbums);
+
+      toast({
+        title: "Moved To Listened",
+        description: "Congrats on listening to a new album <3",
+      });
+    }
+
+    if (listToDeleteFrom?.type === "listened") {
+      console.log("we just not finding this?");
+      removeAlbum(listToDeleteFrom.id, album._id, albums, setAlbums);
+
+      toast({
+        title: "Moved To To Listen",
+        description: "Guess u didn't listen to that album yet huh",
+      });
+    }
+
+    // ACTUALLY ADDING THE ALBUM TO THE LIST.
+
+    const albumInLocal = await getAlbumByTitle(album.title);
+
+    if (!albumInLocal) {
+      await addAlbumToLocalDb(album);
+    }
+
+    const albumFromLocal = await getAlbumByTitle(album.title);
+
+    if (!albumFromLocal) {
+      throw new Error("album is not in local db for some reason");
+    }
+
+    await addAlbumToList(listId, albumFromLocal._id);
+
+    toast({
+      title: `Added ${albumFromLocal.title} to ${selectedList?.name}`,
+    });
   };
 
   return (
@@ -93,10 +195,13 @@ export function AddToList({ album }: AddToListProps) {
                     onAddToList(currentValue);
                   }}
                 >
+                  {/* make this show if album is already in list. */}
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === list.name ? "opacity-100" : "opacity-0",
+                      albumInLists[list._id || ""]
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                   {list.name}

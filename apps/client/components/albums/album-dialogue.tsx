@@ -14,7 +14,17 @@ import { Button } from "../ui/button";
 import RatingStars from "./rating-stars";
 import { AddToList } from "./add-to-list";
 
-export function AlbumDialogue({ album }: { album: Album }) {
+interface AlbumDialogueProps {
+  album: Album;
+  setAlbums: (albums: Album[]) => void;
+  albums: Album[];
+}
+
+export function AlbumDialogue({
+  album,
+  setAlbums,
+  albums,
+}: AlbumDialogueProps) {
   return (
     <Dialog>
       <DialogTrigger className="w-full">
@@ -69,7 +79,7 @@ export function AlbumDialogue({ album }: { album: Album }) {
 
         {/* BUTTONS */}
         <div className="flex justify-between gap-2 pt-5">
-          <AddToList album={album} />
+          <AddToList album={album} setAlbums={setAlbums} albums={albums} />
           <Button className="w-full">Reviews</Button>
         </div>
       </DialogContent>

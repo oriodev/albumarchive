@@ -154,7 +154,7 @@ export const addAlbumToList = async (list_id: string, album_id: string) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error response: ", errorText);
-      throw new Error("Failed to add album to list");
+      return null;
     }
 
     const data = await response.json();
@@ -163,4 +163,66 @@ export const addAlbumToList = async (list_id: string, album_id: string) => {
     console.error("Error adding album to list list:", error);
     throw error;
   }
+};
+
+export const removeAlbumFromList = async (
+  list_id: string,
+  album_id: string,
+) => {
+  const token = await getSession();
+
+  const url = new URL(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/delete-album/${list_id}`,
+  );
+
+  const body = {
+    albumId: album_id,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error response: ", errorText);
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error removing album from list:", error);
+    throw error;
+  }
+};
+
+export const getIsAlbumInList = async (list_id: string, album_id: string) => {
+  const token = await getSession();
+
+  const url = new URL(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/album-in-list`,
+  );
+  url.searchParams.append("list", list_id);
+  url.searchParams.append("album", album_id);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch is album in list info");
+  }
+
+  const data = await response.json();
+  return data;
 };
