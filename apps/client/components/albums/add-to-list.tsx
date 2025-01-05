@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import {
   addAlbumToLocalDb,
-  deleteFromList,
+  shouldWeDeleteFromList,
   findListsAlbumIsIn,
   getListFromId,
   removeAlbum,
@@ -76,9 +76,23 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
 
   // HANDLE ADDING TO LIST.
   const onAddToList = async (listId: string) => {
+    // IS ALBUM IN LOCAL DATABASE?
+
+    const albumInLocal = await getAlbumByTitle(album.title);
+
+    if (!albumInLocal) {
+      await addAlbumToLocalDb(album);
+    }
+
+    const albumFromLocal = await getAlbumByTitle(album.title);
+
+    if (!albumFromLocal) {
+      throw new Error("album is not in local db for some reason");
+    }
+
     // THROW AN ERROR IF THERE'S NO ALBUM ID.
 
-    if (!album._id) {
+    if (!albumFromLocal._id) {
       toast({
         title: "Album does not exist somehow",
         description: "idk either tbh",
@@ -101,14 +115,21 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     const slug = Array.isArray(params.slug)
       ? params.slug[0]
       : params.slug || "";
-    const updateState = slugify(selectedList.name) === slug;
 
     // ARE WE DELETING FROM LIST?
 
     const isAlbumInList = selectedList?._id in albumInLists;
 
     if (isAlbumInList) {
-      removeAlbum(selectedList?._id, album._id, albums, setAlbums, updateState);
+      const updateState = slugify(selectedList.name) === slug;
+
+      removeAlbum(
+        selectedList?._id,
+        albumFromLocal._id,
+        albums,
+        setAlbums,
+        updateState,
+      );
 
       toast({
         title: `Removed ${album.title} from ${selectedList?.name}`,
@@ -119,7 +140,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
 
     // HANDLING DELETING LIST FROM LISTENED/TO LISTEN.
 
-    const listToDeleteFrom = await deleteFromList(
+    const listToDeleteFrom = await shouldWeDeleteFromList(
       selectedList,
       album,
       lists,
@@ -127,9 +148,11 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     );
 
     if (listToDeleteFrom?.type === "toListen") {
+      const updateState = slug === "to-listen";
+
       removeAlbum(
         listToDeleteFrom.id,
-        album._id,
+        albumFromLocal._id,
         albums,
         setAlbums,
         updateState,
@@ -142,10 +165,11 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     }
 
     if (listToDeleteFrom?.type === "listened") {
-      console.log("we just not finding this?");
+      const updateState = slug === "listened";
+
       removeAlbum(
         listToDeleteFrom.id,
-        album._id,
+        albumFromLocal._id,
         albums,
         setAlbums,
         updateState,
@@ -158,18 +182,6 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     }
 
     // ACTUALLY ADDING THE ALBUM TO THE LIST.
-
-    const albumInLocal = await getAlbumByTitle(album.title);
-
-    if (!albumInLocal) {
-      await addAlbumToLocalDb(album);
-    }
-
-    const albumFromLocal = await getAlbumByTitle(album.title);
-
-    if (!albumFromLocal) {
-      throw new Error("album is not in local db for some reason");
-    }
 
     await addAlbumToList(listId, albumFromLocal._id);
 

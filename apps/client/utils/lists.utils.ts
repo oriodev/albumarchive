@@ -1,6 +1,19 @@
 import { createAlbum } from "@/api/albums.api";
-import { getIsAlbumInList, removeAlbumFromList } from "@/api/list.api";
-import { Album, List, Type } from "@/types";
+import { removeAlbumFromList } from "@/api/list.api";
+import { Album, List, Type, User } from "@/types";
+
+/**
+ * checks whether the album is in a list
+ * @param {List} list A list
+ * @param {Album} album An album.
+ * @returns {Boolean} true or false
+ */
+export const isAlbumInList = (list: List, album: Album): boolean => {
+  if (!album._id) {
+    return false;
+  }
+  return list.albums.includes(album._id);
+};
 
 /**
  * find out what lists an album is in.
@@ -15,7 +28,7 @@ export const findListsAlbumIsIn = async (
   const results = await Promise.all(
     lists.map(async (list) => {
       if (list._id && album._id) {
-        const isInList = await getIsAlbumInList(list._id, album._id);
+        const isInList = isAlbumInList(list, album);
         return { id: list._id, type: list.type, isInList };
       }
       return { id: list._id, type: list.type, isInList: false };
@@ -53,6 +66,60 @@ export const getListFromId = (lists: List[], listId: string): List | null => {
 };
 
 /**
+ * tells you if the album is in Listened
+ * @param {User} user The user.
+ * @param {Album} album The album we are maybe deleting from a list.
+ * @returns {Promise<boolean>} Boolean.
+ */
+export const isAlbumInListened = async (
+  user: User | null,
+  album: Album,
+): Promise<boolean> => {
+  if (!user) {
+    return false;
+  }
+
+  const lists = user?.lists || [];
+
+  const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
+
+  const listened = lists.filter((list) => list.type === "Listened")[0];
+
+  if (!listened?._id) {
+    return false;
+  }
+
+  return listened?._id in listsAlbumIsIn;
+};
+
+/**
+ * tells you if the album is in Listened
+ * @param {User} user The user.
+ * @param {Album} album The album we are maybe deleting from a list.
+ * @returns {Promise<boolean>} Boolean.
+ */
+export const isAlbumInToListen = async (
+  user: User | null,
+  album: Album,
+): Promise<boolean> => {
+  if (!user) {
+    return false;
+  }
+
+  const lists = user?.lists || [];
+
+  const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
+
+  const toListen = lists.filter((list) => list.type === "To Listen")[0];
+
+  if (!toListen?._id) {
+    return false;
+  }
+
+  return toListen?._id in listsAlbumIsIn;
+};
+
+/**
  * tells you what list you need to delete the album from, if any.
  * @param {List} selectedList The list we are adding to.
  * @param {Album} album The album we are maybe deleting from a list.
@@ -60,7 +127,7 @@ export const getListFromId = (lists: List[], listId: string): List | null => {
  * @param {} albumInLists a map of all the lists that the album is in.
  * @returns {Promise<{ type: string, id: string }>} An object { type: string, id: string }
  */
-export const deleteFromList = async (
+export const shouldWeDeleteFromList = async (
   selectedList: List | null,
   album: Album,
   lists: List[],
@@ -139,6 +206,8 @@ export const removeAlbum = async (
   updateState: boolean,
 ) => {
   await removeAlbumFromList(listToDeleteFromId, albumId);
+
+  console.log("updateState: ", updateState);
 
   if (updateState) {
     const updatedAlbums = albums.filter(

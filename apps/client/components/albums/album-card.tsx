@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { truncateString } from "@/utils/global.utils";
 import RatingStars from "./rating-stars";
+import { AlbumBadges } from "./album-badges";
 
 export function AlbumCard({ album }: { album: Album }) {
   return (
@@ -23,12 +24,13 @@ export function AlbumCard({ album }: { album: Album }) {
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-1">
         <CardDescription>
           <RatingStars rating={album.overallRating} centered={true} />
         </CardDescription>
         <CardTitle>{truncateString(album.title, 25)}</CardTitle>
         <p>{truncateString(album.artist, 25)}</p>
+        <AlbumBadges album={album} />
       </CardContent>
     </Card>
   );
