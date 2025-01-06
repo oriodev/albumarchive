@@ -48,7 +48,7 @@ export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{user.username}</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription>{user.description}</DialogDescription>
         </DialogHeader>
         {viewProfile ? <ViewableProfile /> : <UnviewableProfile />}
       </DialogContent>

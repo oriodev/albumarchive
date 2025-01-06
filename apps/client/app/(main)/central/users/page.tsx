@@ -11,7 +11,7 @@ export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const currentUser = useUser();
+  const { user: currentUser } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
