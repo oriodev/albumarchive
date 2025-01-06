@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
 import { listToRender } from "@/types";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useUser();
+  const { user } = useUser();
 
   const [lists, setLists] = useState<listToRender[]>([]);
 

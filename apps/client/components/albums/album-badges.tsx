@@ -1,4 +1,4 @@
-import { Album, User } from "@/types";
+import { Album } from "@/types";
 import { Badge } from "../ui/badge";
 import { isAlbumInListened, isAlbumInToListen } from "@/utils/lists.utils";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ interface AlbumBadgesProps {
 }
 
 export function AlbumBadges({ album }: AlbumBadgesProps) {
-  const user = useUser();
+  const { user } = useUser();
 
   const [showListened, setShowListened] = useState(false);
   const [showToListen, setShowToListen] = useState(false);

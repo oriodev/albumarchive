@@ -53,7 +53,7 @@ interface AddToListProps {
 export function AddToList({ album, setAlbums, albums }: AddToListProps) {
   // HOOKS.
   const { toast } = useToast();
-  const user = useUser();
+  const { user } = useUser();
   const lists = useMemo(() => user?.lists || [], [user]);
   const params = useParams();
 

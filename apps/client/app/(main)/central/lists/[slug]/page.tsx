@@ -12,7 +12,7 @@ export default function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const user = useUser();
+  const { user } = useUser();
   const [list, setList] = useState<List>();
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState<Album[]>([]);

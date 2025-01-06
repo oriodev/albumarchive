@@ -12,6 +12,9 @@ export class User {
     @Prop({ unique: [true, 'duplicate email entered']})
     email: string
 
+    @Prop({ required: false })
+    description: string
+
     @Prop() 
     password: string
 

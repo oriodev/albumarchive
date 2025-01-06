@@ -10,10 +10,20 @@ import {
 } from "react";
 import { getUserDetails } from "../user.utils";
 
-const UserContext = createContext<User | null>(null);
+interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+  updateUserInfo: (update: Partial<User>) => void;
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+
+  const updateUserInfo = (update: Partial<User>) => {
+    setUser((prevUser) => (prevUser ? { ...prevUser, ...update } : null));
+  };
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -32,13 +42,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
     fetchUserDetails();
   }, [user]);
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, setUser, updateUserInfo }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error("useUser must be used within a Providers");
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };

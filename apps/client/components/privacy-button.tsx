@@ -17,7 +17,7 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { useState } from "react";
 
 export function PrivacyButton() {
-  const user = useUser();
+  const { user } = useUser();
   const [privacy, setPrivacy] = useState(user?.private);
 
   const handlePrivacyToggle = async () => {

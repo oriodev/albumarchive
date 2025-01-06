@@ -17,7 +17,7 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { useRouter } from "next/navigation";
 
 export function DeleteButton() {
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
   const handleDelete = async () => {

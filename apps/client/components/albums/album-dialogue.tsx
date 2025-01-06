@@ -31,7 +31,7 @@ export function AlbumDialogue({
   setAlbums,
   albums,
 }: AlbumDialogueProps) {
-  const user = useUser();
+  const { user } = useUser();
   const { toast } = useToast();
   const params = useParams();
 
