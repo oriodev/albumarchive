@@ -19,10 +19,10 @@ export default function Page({
 
   useEffect(() => {
     const fetchList = async () => {
-      if (user && user.id) {
+      if (user && user._id) {
         const slug = (await params).slug;
 
-        const fetchedList = await getList(slug, user.id);
+        const fetchedList = await getList(slug, user._id);
         setList(fetchedList);
       }
       setLoading(false);

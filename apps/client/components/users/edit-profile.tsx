@@ -39,11 +39,11 @@ export function EditingProfile({}) {
   const { handleSubmit, control } = form;
 
   const onSubmit = async (data: FormData) => {
-    if (!user?.id) {
+    if (!user?._id) {
       throw new Error("no user id");
     }
 
-    await updateUser(user?.id, data);
+    await updateUser(user?._id, data);
     updateUserInfo({ description: data.description });
     router.push("/central/profile");
   };

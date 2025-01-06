@@ -21,8 +21,8 @@ export function DeleteButton() {
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (user?.id) {
-      const result = await deleteUser(user.id);
+    if (user?._id) {
+      const result = await deleteUser(user._id);
       if (result) {
         router.push("/");
       }

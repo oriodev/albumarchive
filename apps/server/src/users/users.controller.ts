@@ -26,6 +26,11 @@ export class UsersController {
         return await this.usersService.findById(id)
     }
 
+    @Post('/batch')
+    async findByIdsBatch(@Body('ids') ids: string[]): Promise<User[]> {
+        return this.usersService.findByIdsBatch(ids);
+    }
+
     @Delete(':id')
     async deleteUser(
         @Param('id')
@@ -46,6 +51,7 @@ export class UsersController {
     @Post(':id/follow')
     async followUser(@Param('id') userId: string, @Req() req) {
       const currentUserId = req.user.id;
+
       return this.usersService.followUser(currentUserId, userId);
     }
   

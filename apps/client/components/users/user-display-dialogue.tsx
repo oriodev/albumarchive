@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -6,10 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import UserDisplayCard from "./user-display-card";
 import { User } from "@/types";
 import { Button } from "../ui/button";
+import { followUser, unfollowUser } from "@/api/user.api";
+import { useEffect, useState } from "react";
+import { checkIfFollowing } from "@/utils/user.utils";
+import { useUser } from "@/utils/providers/UserProvider";
 // import Image from "next/image";
 
 interface UserDisplayDialogueProps {
@@ -17,17 +23,89 @@ interface UserDisplayDialogueProps {
 }
 
 export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
-  //   const { toast } = useToast();
+  const { toast } = useToast();
+  const { user: currentUser } = useUser();
+
+  const [currentlyFollowing, setCurrentlyFollowing] = useState(true);
+
+  useEffect(() => {
+    const getCurrentlyFollowing = async () => {
+      if (!currentUser?._id) {
+        setCurrentlyFollowing(false);
+        return;
+      }
+
+      const followStatus = await checkIfFollowing(currentUser?._id, user);
+      setCurrentlyFollowing(followStatus);
+    };
+
+    getCurrentlyFollowing();
+  }, [currentUser?._id, user]);
 
   const viewProfile = !user.private;
+
+  const handleFollow = async () => {
+    if (!user._id) {
+      toast({
+        title: "Could not follow user",
+        description: "User id does not exist",
+      });
+      return;
+    }
+
+    const follow = await followUser(user._id);
+
+    if (!follow) {
+      toast({
+        title: "Could not follow user",
+        description: "Follow user failed",
+      });
+      return;
+    }
+
+    setCurrentlyFollowing(true);
+    toast({
+      title: `Followed ${user.username}`,
+    });
+    return;
+  };
+
+  const handleUnfollow = async () => {
+    if (!user._id) {
+      toast({
+        title: "Could not unfollow user",
+        description: "User id does not exist",
+      });
+      return;
+    }
+
+    const unfollow = await unfollowUser(user._id);
+
+    if (!unfollow) {
+      toast({
+        title: "Could not unfollow user",
+        description: "Unfollow user failed",
+      });
+      return;
+    }
+
+    setCurrentlyFollowing(false);
+    toast({
+      title: `Unfollowed ${user.username}`,
+    });
+    return;
+  };
 
   const ViewableProfile = () => {
     return (
       <div className="flex gap-2">
         <Button>Visit Profile</Button>
 
-        {/* TODO: MAKE THIS SHOW DEPENDING ON FOLLOW STATUS */}
-        <Button>Follow</Button>
+        {currentlyFollowing ? (
+          <Button onClick={handleUnfollow}>Unfollow</Button>
+        ) : (
+          <Button onClick={handleFollow}>Follow</Button>
+        )}
       </div>
     );
   };

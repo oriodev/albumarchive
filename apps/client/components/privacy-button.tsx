@@ -21,8 +21,8 @@ export function PrivacyButton() {
   const [privacy, setPrivacy] = useState(user?.private);
 
   const handlePrivacyToggle = async () => {
-    if (user?.id) {
-      await updateUser(user.id, {
+    if (user?._id) {
+      await updateUser(user._id, {
         private: !privacy,
       });
       setPrivacy(!privacy);

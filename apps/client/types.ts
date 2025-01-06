@@ -12,13 +12,15 @@ export interface Album {
 }
 
 export interface User {
-  id?: string;
+  _id?: string;
   username?: string;
   description?: string;
   email: string;
   password?: string;
   private?: boolean;
   lists?: List[];
+  following?: string[];
+  followers?: string[];
 }
 
 export enum Type {

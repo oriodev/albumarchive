@@ -69,18 +69,56 @@ export const getUser = async (id: string) => {
       const user = await response.json();
 
       return {
-        id: user._id,
+        _id: user._id,
         username: user.username,
         email: user.email,
         description: user.description,
         private: user.private,
         lists: user.lists,
+        following: user.following,
+        followers: user.followers,
       };
     }
 
     return null;
   } catch (error) {
     console.log("error: ", error);
+  }
+};
+
+export const getUsersBatch = async (ids: string[]) => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/batch`);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ids }),
+    });
+
+    if (response.status === 201) {
+      const users = await response.json();
+
+      return users.map((user: User) => ({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        private: user.private,
+        lists: user.lists,
+        following: user.following,
+        followers: user.followers,
+      }));
+    }
+
+    return null;
+  } catch (error) {
+    console.log("error: ", error);
+    return null;
   }
 };
 
@@ -119,6 +157,66 @@ export const updateUser = async (id: string, updatedUser: Partial<User>) => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(updatedUser),
+    });
+
+    if (response.status === 200) {
+      const user = await response.json();
+      return user;
+    }
+
+    return null;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+/**
+ * Follow a user.
+ * @param userId the id of the user you want to follow.
+ */
+export const followUser = async (userId: string) => {
+  try {
+    const token = await getSession();
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/follow`,
+    );
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 201) {
+      const user = await response.json();
+      return user;
+    }
+
+    return null;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
+/**
+ * Unfollow a user.
+ * @param userId the id of the user you want to follow.
+ */
+export const unfollowUser = async (userId: string) => {
+  try {
+    const token = await getSession();
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/unfollow`,
+    );
+
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (response.status === 200) {

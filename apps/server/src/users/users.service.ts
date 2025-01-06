@@ -53,6 +53,28 @@ export class UsersService {
         return user;
     }
 
+    /**
+     * Fetch a list of users by their IDs.
+     * @param ids a list of ids we want to fetch.
+     */
+    async findByIdsBatch(ids: string[]): Promise<User[]> {
+        // Validate the IDs
+        const invalidIds = ids.filter(id => !mongoose.isValidObjectId(id));
+        if (invalidIds.length > 0) {
+            throw new BadRequestException('please enter valid mongo ids');
+        }
+
+        // Fetch users by IDs
+        const users = await this.userModel.find({ _id: { $in: ids } }).populate('lists');
+
+        // Check if any users were found
+        if (users.length === 0) {
+            throw new NotFoundException('no users found for the provided ids');
+        }
+
+        return users;
+    }
+
     async deleteById(id: string): Promise<User> {
         const isValidId = mongoose.isValidObjectId(id)
 

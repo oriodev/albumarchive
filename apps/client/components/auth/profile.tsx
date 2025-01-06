@@ -9,15 +9,31 @@ import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FollowPreview } from "../users/follow-preview";
+import { getUsersBatch } from "@/api/user.api";
 
 export function Profile() {
   const { user } = useUser();
   const router = useRouter();
 
   const [profileData, setProfileData] = useState(user);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   useEffect(() => {
-    setProfileData(user);
+    if (user) {
+      setProfileData(user);
+
+      const setFollowData = async () => {
+        const followerData = await getUsersBatch(user.followers || []);
+        setFollowers(followerData);
+
+        const followingData = await getUsersBatch(user.following || []);
+        setFollowing(followingData);
+      };
+
+      setFollowData();
+    }
   }, [user]);
 
   // SET INITIAL FOR PROFILE PIC FALLBACK
@@ -59,6 +75,8 @@ export function Profile() {
               Edit Profile
             </Button>
           </div>
+          <FollowPreview title="following" users={following} />
+          <FollowPreview title="followers" users={followers} />
         </div>
       </div>
     );
