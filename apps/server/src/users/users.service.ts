@@ -82,4 +82,28 @@ export class UsersService {
         return updatedUser
     }
 
+    async followUser(currentUserId: string, userId: string) {
+        await this.userModel.updateOne(
+          { _id: currentUserId },
+          { $addToSet: { following: userId } }
+        );
+        await this.userModel.updateOne(
+          { _id: userId },
+          { $addToSet: { followers: currentUserId } }
+        );
+        return { message: 'followed' };
+      }
+    
+    async unfollowUser(currentUserId: string, userId: string) {
+    await this.userModel.updateOne(
+        { _id: currentUserId },
+        { $pull: { following: userId } }
+    );
+    await this.userModel.updateOne(
+        { _id: userId },
+        { $pull: { followers: currentUserId } }
+    );
+    return { message: 'unfollowed' };
+    }
+
 }
