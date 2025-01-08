@@ -56,7 +56,9 @@ export const getUserId = async () => {
 export const getUser = async (id: string) => {
   try {
     const token = await getSession();
-    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/${id}`);
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/id/${id}`,
+    );
 
     const response = await fetch(url, {
       method: "GET",
@@ -83,6 +85,42 @@ export const getUser = async (id: string) => {
     return null;
   } catch (error) {
     console.log("error: ", error);
+  }
+};
+
+export const getUserByUsername = async (username: string) => {
+  try {
+    const token = await getSession();
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/username/${username}`,
+    );
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const user = await response.json();
+
+      return {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        private: user.private,
+        lists: user.lists,
+        following: user.following,
+        followers: user.followers,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.log("error: ", error);
+    return null;
   }
 };
 

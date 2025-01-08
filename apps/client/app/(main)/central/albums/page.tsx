@@ -47,6 +47,7 @@ export default function Page() {
 
   return (
     <>
+      <p className="text-2xl pl-3">Albums.</p>
       <form onSubmit={handleSubmit}>
         <SearchBar
           searchQuery={searchQuery}

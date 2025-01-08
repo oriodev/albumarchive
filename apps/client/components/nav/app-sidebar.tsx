@@ -77,12 +77,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navSecondary: [
       {
         title: "Support",
-        url: "#",
+        url: "/central/support",
         icon: LifeBuoy,
       },
       {
         title: "Feedback",
-        url: "#",
+        url: "/central/feedback",
         icon: Send,
       },
     ],

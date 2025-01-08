@@ -16,6 +16,7 @@ import { followUser, unfollowUser } from "@/api/user.api";
 import { useEffect, useState } from "react";
 import { checkIfFollowing } from "@/utils/user.utils";
 import { useUser } from "@/utils/providers/UserProvider";
+import { useRouter } from "next/navigation";
 // import Image from "next/image";
 
 interface UserDisplayDialogueProps {
@@ -24,6 +25,7 @@ interface UserDisplayDialogueProps {
 
 export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
   const { toast } = useToast();
+  const router = useRouter();
   const { user: currentUser } = useUser();
 
   const [currentlyFollowing, setCurrentlyFollowing] = useState(true);
@@ -99,7 +101,9 @@ export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
   const ViewableProfile = () => {
     return (
       <div className="flex gap-2">
-        <Button>Visit Profile</Button>
+        <Button onClick={() => router.push(`/central/users/${user.username}`)}>
+          Visit Profile
+        </Button>
 
         {currentlyFollowing ? (
           <Button onClick={handleUnfollow}>Unfollow</Button>
@@ -112,9 +116,13 @@ export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
 
   const UnviewableProfile = () => {
     return (
-      <>
-        <Button>Request Follow</Button>
-      </>
+      <div className="flex gap-2">
+        <Button onClick={() => router.push(`/central/users/${user.username}`)}>
+          Visit Profile
+        </Button>
+
+        <Button onClick={handleFollow}>Request Follow</Button>
+      </div>
     );
   };
 

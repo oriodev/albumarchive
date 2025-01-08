@@ -2,15 +2,18 @@
 
 // HOOKS.
 import { useUser } from "@/utils/providers/UserProvider";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // COMPONENTS.
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FollowPreview } from "../users/follow-preview";
+
+// API CALLS.
 import { getUsersBatch } from "@/api/user.api";
+import { getUsernameInitial } from "@/utils/user.utils";
+import { FallbackProfile } from "../users/fallback-profile";
 
 export function Profile() {
   const { user } = useUser();
@@ -19,6 +22,7 @@ export function Profile() {
   const [profileData, setProfileData] = useState(user);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -30,6 +34,7 @@ export function Profile() {
 
         const followingData = await getUsersBatch(user.following || []);
         setFollowing(followingData);
+        setLoading(false);
       };
 
       setFollowData();
@@ -37,11 +42,7 @@ export function Profile() {
   }, [user]);
 
   // SET INITIAL FOR PROFILE PIC FALLBACK
-  let initial = "?";
-
-  if (profileData?.username) {
-    initial = profileData?.username[0].toUpperCase();
-  }
+  const initial = getUsernameInitial(profileData);
 
   const DisplayProfile = () => {
     return (
@@ -82,17 +83,5 @@ export function Profile() {
     );
   };
 
-  const FallbackProfile = () => {
-    return (
-      <div className="flex justify-center items-center space-x-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
-      </div>
-    );
-  };
-
-  return <div>{user ? <DisplayProfile /> : <FallbackProfile />}</div>;
+  return <div>{loading ? <FallbackProfile /> : <DisplayProfile />}</div>;
 }

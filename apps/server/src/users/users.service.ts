@@ -44,13 +44,24 @@ export class UsersService {
             throw new BadRequestException('please enter a valid mongo id')
         }
 
-        const user = await this.userModel.findById(id).populate('lists');;
+        const user = await this.userModel.findById(id).populate('lists');
 
         if (!user) {
             throw new NotFoundException('user not found')
         }
 
         return user;
+    }
+
+    async findByUsername(username: string): Promise<User> {
+        const user = await this.userModel.findOne({ username: username}).populate('lists')
+
+        if (!user) {
+            throw new NotFoundException('user not found')
+        }
+
+        return user;
+
     }
 
     /**

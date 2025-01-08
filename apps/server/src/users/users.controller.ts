@@ -18,12 +18,20 @@ export class UsersController {
         return this.usersService.findAll(query)
     }
 
-    @Get(':id')
+    @Get('/id/:id')
     async getUserById(
         @Param('id')
         id: string
     ): Promise<User> {
         return await this.usersService.findById(id)
+    }
+
+    @Get('/username/:username')
+    async getUserByUsername(
+        @Param('username')
+        username: string
+    ): Promise<User> {
+        return await this.usersService.findByUsername(username)
     }
 
     @Post('/batch')
