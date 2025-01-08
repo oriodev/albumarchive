@@ -23,7 +23,7 @@ export interface User {
   followers?: string[];
 }
 
-export enum Type {
+export enum AlbumType {
   LISTENED = "Listened",
   TOLISTEN = "To Listen",
   CUSTOM = "Custom",
@@ -34,7 +34,7 @@ export interface List {
   name: string;
   slug: string;
   description: string;
-  type: Type;
+  type: AlbumType;
   user: string;
   albums: string[];
 }
@@ -42,7 +42,7 @@ export interface List {
 export interface listToRender {
   id: string;
   name: string;
-  type: Type;
+  type: AlbumType;
   url: string;
   icon: LucideIcon;
   description: string;
@@ -51,4 +51,17 @@ export interface listToRender {
 export enum Dialogs {
   delete = "delete",
   edit = "edit",
+}
+
+export enum NotificationType {
+  FRIENDREQUEST = "friendRequest",
+}
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  receiverId: string;
+  senderId: string;
+  message: string;
+  timestamp?: Date;
 }

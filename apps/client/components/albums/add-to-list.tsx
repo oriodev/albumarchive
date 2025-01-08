@@ -40,7 +40,7 @@ import { getAlbumByTitle } from "@/api/albums.api";
 import { addAlbumToList } from "@/api/list.api";
 
 // TYPES.
-import { Album, Type } from "@/types";
+import { Album, AlbumType } from "@/types";
 import { useParams } from "next/navigation";
 import { slugify } from "@/utils/global.utils";
 
@@ -61,7 +61,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [albumInLists, setAlbumInLists] = React.useState<{
-    [key: string]: { isInList: boolean; type: Type };
+    [key: string]: { isInList: boolean; type: AlbumType };
   }>({});
 
   // USE EFFECT.

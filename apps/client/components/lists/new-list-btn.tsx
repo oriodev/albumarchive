@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { listToRender, Type } from "@/types";
+import { listToRender, AlbumType } from "@/types";
 import { slugify } from "@/utils/global.utils";
 import { useUser } from "@/utils/providers/UserProvider";
 import { Headphones, PlusCircleIcon } from "lucide-react";
@@ -41,7 +41,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
       name: newListName,
       slug: slugify(newListName),
       description: "",
-      type: Type.CUSTOM,
+      type: AlbumType.CUSTOM,
       user: user?._id,
       albums: [],
     };

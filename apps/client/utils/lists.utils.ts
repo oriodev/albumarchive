@@ -1,6 +1,6 @@
 import { createAlbum } from "@/api/albums.api";
 import { removeAlbumFromList } from "@/api/list.api";
-import { Album, List, Type, User } from "@/types";
+import { Album, AlbumType, List, User } from "@/types";
 
 /**
  * checks whether the album is in a list
@@ -19,12 +19,12 @@ export const isAlbumInList = (list: List, album: Album): boolean => {
  * find out what lists an album is in.
  * @param {List[]} lists All lists from that user.
  * @param {Album} album An album.
- * @returns {Promise<{ [key: string]: { isInList: boolean; type: Type } }>} all lists the album is in with their type.
+ * @returns {Promise<{ [key: string]: { isInList: boolean; type: AlbumType } }>} all lists the album is in with their type.
  */
 export const findListsAlbumIsIn = async (
   lists: List[],
   album: Album,
-): Promise<{ [key: string]: { isInList: boolean; type: Type } }> => {
+): Promise<{ [key: string]: { isInList: boolean; type: AlbumType } }> => {
   const results = await Promise.all(
     lists.map(async (list) => {
       if (list._id && album._id) {
@@ -42,7 +42,7 @@ export const findListsAlbumIsIn = async (
       }
       return acc;
     },
-    {} as { [key: string]: { isInList: boolean; type: Type } },
+    {} as { [key: string]: { isInList: boolean; type: AlbumType } },
   );
 
   return albumStatusMap;
@@ -131,7 +131,7 @@ export const shouldWeDeleteFromList = async (
   selectedList: List | null,
   album: Album,
   lists: List[],
-  albumInLists: { [key: string]: { isInList: boolean; type: Type } },
+  albumInLists: { [key: string]: { isInList: boolean; type: AlbumType } },
 ): Promise<{ type: string; id: string } | null> => {
   // if we are adding to 'listened' and the album already in 'to listen':
   if (selectedList?.type === "Listened") {

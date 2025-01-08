@@ -1,6 +1,6 @@
 "use server";
 
-import { List, Type } from "@/types";
+import { List, AlbumType } from "@/types";
 import { getSession } from "./session.api";
 import { getUserId } from "./user.api";
 
@@ -11,7 +11,7 @@ export const generateNewUserLists = async () => {
     name: "Listened",
     slug: "listened",
     description: "Every album you have listened to!",
-    type: Type.LISTENED,
+    type: AlbumType.LISTENED,
     user: userId,
     albums: [],
   };
@@ -20,7 +20,7 @@ export const generateNewUserLists = async () => {
     name: "To Listen",
     slug: "to-listen",
     description: "Albums you want to listen to!",
-    type: Type.TOLISTEN,
+    type: AlbumType.TOLISTEN,
     user: userId,
     albums: [],
   };
