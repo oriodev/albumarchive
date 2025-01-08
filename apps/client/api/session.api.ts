@@ -28,7 +28,7 @@ export const getSession = async () => {
       return sessionCookie.value;
     }
 
-    return { error: "no valid session" };
+    return null;
   } catch (error) {
     console.log(error);
   }

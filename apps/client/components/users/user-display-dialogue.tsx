@@ -98,6 +98,14 @@ export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
     return;
   };
 
+  const handleRequestFollow = async () => {
+    toast({
+      title: "Request to follow not yet implemented",
+      description: "Sorry",
+    });
+    return;
+  };
+
   const ViewableProfile = () => {
     return (
       <div className="flex gap-2">
@@ -121,7 +129,7 @@ export function UserDisplayDialogue({ user }: UserDisplayDialogueProps) {
           Visit Profile
         </Button>
 
-        <Button onClick={handleFollow}>Request Follow</Button>
+        <Button onClick={handleRequestFollow}>Request Follow</Button>
       </div>
     );
   };
