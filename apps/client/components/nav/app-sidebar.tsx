@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { Album, Disc, Headphones, LifeBuoy, Send, User } from "lucide-react";
+import {
+  Album,
+  CloudLightning,
+  Headphones,
+  LifeBuoy,
+  Send,
+  User,
+} from "lucide-react";
 
 import { NavLists } from "@/components/nav/nav-lists";
 import { NavSecondary } from "@/components/nav/nav-secondary";
@@ -58,16 +65,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     navMain: [
       {
-        title: "pages",
+        title: "Discover",
         isActive: true,
         items: [
           {
-            title: "albums",
+            title: "Activity",
+            url: "/central/activity",
+            icon: CloudLightning,
+          },
+          {
+            title: "Albums",
             url: "/central/albums",
             icon: Album,
           },
           {
-            title: "users",
+            title: "Users",
             url: "/central/users",
             icon: User,
           },
@@ -96,12 +108,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-6 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Disc className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                <div className="grid flex-1 text-left text-2xl leading-tight">
                   <span className="truncate font-semibold">Album Archive</span>
-                  <span className="truncate text-xs">welcome :)</span>
+                  <span className="truncate text-xs">savour your music.</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -117,7 +126,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <Link href={item.url}>{item.title}</Link>
+                      <div>
+                        {item.icon && <item.icon />}
+                        <Link href={item.url}>{item.title}</Link>
+                      </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -125,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-        <NavLists lists={data.lists || []} title="lists" setLists={setLists} />
+        <NavLists lists={data.lists || []} title="Lists" setLists={setLists} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

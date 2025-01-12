@@ -11,18 +11,18 @@ export const getUserDetails = async () => {
 
 /**
  * Check if the current user is following a given user.
- * @param currentUserId the current user that's logged in.
- * @param user the user we want to check if we are following.
+ * @param currentUserId the one doing the following
+ * @param user the one being followed (or not)
  */
 export const checkIfFollowing = (
-  currentUserId: string,
-  user: User,
+  currentUserId: string | undefined,
+  user: User | null,
 ): boolean => {
-  if (!user.following || !currentUserId) {
+  if (!user || !user.followers || !currentUserId) {
     return false;
   }
 
-  return user.following.includes(currentUserId);
+  return user.followers.includes(currentUserId);
 };
 
 /**

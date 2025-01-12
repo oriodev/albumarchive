@@ -211,12 +211,13 @@ export const updateUser = async (id: string, updatedUser: Partial<User>) => {
 /**
  * Follow a user.
  * @param userId the id of the user you want to follow.
+ * @param currentUserId the id of the user following.
  */
-export const followUser = async (userId: string) => {
+export const followUser = async (userId: string, currentUserId: string) => {
   try {
     const token = await getSession();
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/follow`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/${currentUserId}/follow`,
     );
 
     const response = await fetch(url, {
@@ -240,13 +241,14 @@ export const followUser = async (userId: string) => {
 
 /**
  * Unfollow a user.
- * @param userId the id of the user you want to follow.
+ * @param userId the id of the user you want to unfollow.
+ * @param currentUserId the id of the user unfollowing.
  */
-export const unfollowUser = async (userId: string) => {
+export const unfollowUser = async (userId: string, currentUserId: string) => {
   try {
     const token = await getSession();
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/unfollow`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/users/${userId}/${currentUserId}/unfollow`,
     );
 
     const response = await fetch(url, {

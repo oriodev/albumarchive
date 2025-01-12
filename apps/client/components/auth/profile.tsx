@@ -47,7 +47,7 @@ export function Profile() {
   const DisplayProfile = () => {
     return (
       <div className="flex flex-col items-center">
-        <div className="flex flex-col gap-5 w-1/3">
+        <div className="flex flex-col gap-5 w-1/3 md:w-1/2">
           {/* TOP SECTION */}
           <div className="flex items-center gap-3">
             {/* PROFILE PIC */}
@@ -71,7 +71,7 @@ export function Profile() {
             <p>{profileData?.description || "no description"}</p>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex lg:justify-end">
             <Button onClick={() => router.push("/central/profile/editing")}>
               Edit Profile
             </Button>

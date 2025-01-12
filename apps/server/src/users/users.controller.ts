@@ -56,16 +56,13 @@ export class UsersController {
         return this.usersService.editById(user, id)
     }
 
-    @Post(':id/follow')
-    async followUser(@Param('id') userId: string, @Req() req) {
-      const currentUserId = req.user.id;
-
+    @Post(':userId/:currentUserId/follow')
+    async followUser(@Param('userId') userId: string, @Param('currentUserId') currentUserId: string) {
       return this.usersService.followUser(currentUserId, userId);
     }
   
-    @Delete(':id/unfollow')
-    async unfollowUser(@Param('id') userId: string, @Req() req) {
-      const currentUserId = req.user.id;
+    @Delete(':userId/:currentUserId/unfollow')
+    async unfollowUser(@Param('userId') userId: string, @Param('currentUserId') currentUserId: string) {
       return this.usersService.unfollowUser(currentUserId, userId);
     }
 }

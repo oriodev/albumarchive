@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 
-export function ListLoadingState() {
+export function ListLoadingState({ albumCount }: { albumCount: number }) {
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-2">
@@ -8,7 +8,11 @@ export function ListLoadingState() {
         <Skeleton className="h-4 w-[250px]" />
       </div>
 
-      <Skeleton className="h-[350px] w-[350px] rounded-xl" />
+      <div className="flex gap-2">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Skeleton key={index} className="h-[350px] w-[350px] rounded-xl" />
+        ))}
+      </div>
     </div>
   );
 }

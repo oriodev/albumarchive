@@ -43,8 +43,6 @@ export default function Page() {
     setShowMoreBtn(false);
   };
 
-  console.log("albums: ", albums);
-
   return (
     <>
       <p className="text-2xl pl-3">Albums.</p>

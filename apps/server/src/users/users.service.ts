@@ -116,6 +116,16 @@ export class UsersService {
     }
 
     async followUser(currentUserId: string, userId: string) {
+        // SEBASTIAN IS ALLOWING CASPAR TO FOLLOW HIM.
+
+        // CASPAR IS FOLLOWING SEBASTIAN.
+
+        // CASPAR.
+        console.log('currentUserId: ', currentUserId)
+
+        // SEBASTIAN.
+        console.log('userId: ', userId)
+
         await this.userModel.updateOne(
           { _id: currentUserId },
           { $addToSet: { following: userId } }

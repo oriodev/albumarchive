@@ -58,7 +58,7 @@ export default function Page({
 
   // LOADING STATE.
   if (loading) {
-    return <ListLoadingState />;
+    return <ListLoadingState albumCount={5} />;
   }
 
   // NO LIST STATE.

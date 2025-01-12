@@ -55,13 +55,16 @@ export enum Dialogs {
 
 export enum NotificationType {
   FRIENDREQUEST = "friendRequest",
+  ALBUMREC = "albumRec",
+  LISTLIKE = "listlike",
 }
 
 export interface Notification {
-  id: string;
+  _id?: string;
+  sender: string;
+  receiver: string;
   type: NotificationType;
-  receiverId: string;
-  senderId: string;
-  message: string;
+  albumId?: string;
+  listId?: string;
   timestamp?: Date;
 }
