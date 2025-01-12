@@ -70,7 +70,7 @@ export default function Page({
   if (list.albums.length < 1) {
     return (
       <div className="flex flex-col gap-2">
-        <p className="text-xl">There are no lists here yet.</p>
+        <p className="text-xl">There are no albums here yet.</p>
         <Button
           className="w-1/5"
           onClick={() => router.push("/central/albums")}

@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { List } from './schemas/list.schema';
-import mongoose, { ObjectId, Types } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { AlbumService } from '../album/album.service';
 import { User } from 'src/auth/schemas/user.schema';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class ListService {
@@ -14,6 +15,33 @@ export class ListService {
         private userModel: mongoose.Model<User>,
         private albumService: AlbumService
     ) {}
+
+    async findAll(query: Query): Promise<{ lists: List[]; total: number }> {
+        const resPerPage = 3;
+        const currentPage = Number(query.page) || 1;
+        const skip = resPerPage * (currentPage - 1);
+    
+        const search = query.search ? {
+            $or: [
+                { name: { $regex: query.search, $options: 'i' } }
+            ]
+        } : {};
+    
+        const exclusion = {
+            name: { $nin: ['Listened', 'To Listen'] }
+        };
+    
+        const total = await this.listModel.countDocuments({ ...search, ...exclusion }).exec();
+    
+        const lists = await this.listModel
+            .find({ ...search, ...exclusion })
+            .limit(resPerPage)
+            .skip(skip);
+    
+        return { lists, total };
+    }
+    
+    
 
     async findById(id: string): Promise<List> {
 

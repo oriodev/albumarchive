@@ -4,6 +4,29 @@ import { List, AlbumType } from "@/types";
 import { getSession } from "./session.api";
 import { getUserId } from "./user.api";
 
+export const getAllLists = async (search: string = "", page: string = "1") => {
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/all`);
+  url.searchParams.append("search", search);
+  url.searchParams.append("page", page);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+  console.log("data: ", data);
+  return data;
+};
+
 export const generateNewUserLists = async () => {
   const userId = await getUserId();
 

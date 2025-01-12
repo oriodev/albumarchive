@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { Query } from 'express-serve-static-core';
+import { Album } from 'src/album/schemas/album.schema';
 
 
 @Injectable()
@@ -11,12 +12,14 @@ export class DiscogsApiService {
 
     constructor(private readonly httpService: HttpService) {}
 
-    async searchAlbum(query: Query): Promise<any> {
+    async searchAlbum(query: Query): Promise<{albums: Album[], total: number}> {
         try {
             const response = await firstValueFrom(this.httpService.get(this.searchUrl, {
                 params: {
                     q: query.search,
                     type: 'release',
+                    page: query.page,
+                    per_page: 10
                 },
                 headers: {
                     Authorization: this.authHeaderTokens
@@ -24,7 +27,7 @@ export class DiscogsApiService {
             }));
 
             const uniqueAlbums = new Set();
-            const formattedResponse = [];
+            const formattedResponse: Album[] = [];
 
             response.data.results.forEach((album) => {
                 const [albumArtist, albumTitle] = album.title.split(' - ').map(part => part.trim());
@@ -39,12 +42,15 @@ export class DiscogsApiService {
                         genre: album.genre,
                         coverImage: album.cover_image,
                         releaseDate: album.year,
-                        overallRating: null
+                        overallRating: null,
+                        reviews: null
                     })
                 }
             })
 
-            return formattedResponse;
+            const total = response.data.pagination.pages
+
+            return {albums: formattedResponse, total};
         } catch (error) {
             console.error('Error fetching album:', error);
             throw new Error('Failed to fetch album data');

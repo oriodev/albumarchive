@@ -4,9 +4,17 @@ import { CreateListDto } from './dto/create-list.dto';
 import { List } from './schemas/list.schema';
 import { UpdateListDto } from './dto/update-list.dto';
 
+import { Query as ExpressQuery } from 'express-serve-static-core';
+
 @Controller('list')
 export class ListController {
     constructor(private listService: ListService) {}
+
+
+    @Get('/all')
+    async getAllLists(@Query() query: ExpressQuery): Promise<{ lists: List[]; total: number }> {
+        return await this.listService.findAll(query)
+    }
 
     @Get()
     async getListByName(@Query('user') user: string, @Query('slug') slug: string): Promise<List> {

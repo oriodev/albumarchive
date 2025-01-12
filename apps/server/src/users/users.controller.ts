@@ -14,7 +14,7 @@ export class UsersController {
     }
 
     @Get('/all')
-    findAll(@Query() query: ExpressQuery) {
+    findAll(@Query() query: ExpressQuery): Promise<{ users: User[]; total: number }> {
         return this.usersService.findAll(query)
     }
 

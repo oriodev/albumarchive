@@ -1,10 +1,14 @@
 import { getSession } from "./session.api";
 
-export const getAlbumsFromDiscogs = async (search: string = "") => {
+export const getAlbumsFromDiscogs = async (
+  search: string = "",
+  page: string = "1",
+) => {
   const token = await getSession();
 
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/discogs`);
   url.searchParams.append("search", search);
+  url.searchParams.append("page", page);
 
   try {
     const response = await fetch(url, {

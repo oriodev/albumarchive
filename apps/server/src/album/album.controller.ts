@@ -34,7 +34,7 @@ export class AlbumController {
     }
 
     @Get()
-    async getAllAlbums(@Query() query: ExpressQuery): Promise<Album[]> {
+    async getAllAlbums(@Query() query: ExpressQuery): Promise<{ albums: Album[]; total: number }> {
         return await this.albumService.findAll(query)
     }
 

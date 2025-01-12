@@ -14,7 +14,7 @@ export class UsersService {
         private listModel: Model<List>
       ) {}  
       
-      async findAll(query: Query): Promise<User[]> {
+      async findAll(query: Query): Promise<{ users: User[]; total: number }> {
         const resPerPage = 10
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
@@ -28,12 +28,14 @@ export class UsersService {
              ]
               } : {}
       
+        const total = await this.userModel.countDocuments({ ...search }).exec();
+
         const users = await this.userModel
                       .find({ ...search })
                       .limit(resPerPage)
                       .skip(skip);
       
-        return users;
+        return { users, total };
       }
 
       async findById(id: string): Promise<User> {

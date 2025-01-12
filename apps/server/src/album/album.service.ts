@@ -13,7 +13,7 @@ export class AlbumService {
     ) {}
 
 
-    async findAll(query: Query): Promise<Album[]> {
+    async findAll(query: Query): Promise<{ albums: Album[]; total: number }> {
 
         const resPerPage = 10
         const currentPage = Number(query.page) || 1
@@ -32,12 +32,14 @@ export class AlbumService {
             ]
         } : {}
 
+        const total = await this.albumModel.countDocuments({ ...search }).exec();
+    
         const albums = await this.albumModel
-                .find({ ...search })
-                .limit(resPerPage)
-                .skip(skip);
-
-        return albums;
+            .find({ ...search })
+            .limit(resPerPage)
+            .skip(skip);
+    
+        return { albums, total };
     }
 
     async create(album: Album): Promise<Album> {

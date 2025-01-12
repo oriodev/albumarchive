@@ -6,6 +6,7 @@ import {
   CloudLightning,
   Headphones,
   LifeBuoy,
+  List,
   Send,
   User,
 } from "lucide-react";
@@ -77,6 +78,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: "Albums",
             url: "/central/albums",
             icon: Album,
+          },
+          {
+            title: "Lists",
+            url: "/central/discover",
+            icon: List,
           },
           {
             title: "Users",
