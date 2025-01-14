@@ -68,3 +68,10 @@ export interface Notification {
   listId?: string;
   timestamp?: Date;
 }
+
+export interface Rating {
+  _id?: string;
+  album: string;
+  user: string;
+  rating: number;
+}

@@ -11,7 +11,6 @@ import {
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Button } from "../ui/button";
-import RatingStars from "./rating-stars";
 import { AddToList } from "./add-to-list";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect, useState } from "react";
@@ -19,6 +18,8 @@ import { isAlbumInToListen, removeAlbum } from "@/utils/lists.utils";
 import { useToast } from "@/hooks/use-toast";
 import { useParams } from "next/navigation";
 import { slugify } from "@/utils/global.utils";
+import StarRating from "./star-rating";
+import { getAlbumRating } from "@/api/ratings.api";
 
 interface AlbumDialogueProps {
   album: Album;
@@ -31,11 +32,14 @@ export function AlbumDialogue({
   setAlbums,
   albums,
 }: AlbumDialogueProps) {
+  // HOOKS.
   const { user } = useUser();
   const { toast } = useToast();
   const params = useParams();
 
+  // STATES.
   const [showToListen, setShowToListen] = useState(false);
+  const [albumRating, setAlbumRating] = useState(0);
 
   useEffect(() => {
     const getBooleans = async () => {
@@ -44,8 +48,20 @@ export function AlbumDialogue({
       setShowToListen(toListen);
     };
 
+    const fetchAlbumRating = async () => {
+      if (!album._id) {
+        return;
+      }
+
+      const fetchedAlbumRating = await getAlbumRating(album._id);
+      if (fetchedAlbumRating) {
+        setAlbumRating(fetchedAlbumRating);
+      }
+    };
+
     getBooleans();
-  }, [user, album]);
+    fetchAlbumRating();
+  }, [user, album, setAlbumRating]);
 
   const handleHaveListened = () => {
     if (!user?.lists) {
@@ -123,7 +139,12 @@ export function AlbumDialogue({
 
             <div>
               <p>Overall Rating</p>
-              <RatingStars rating={album.overallRating} centered={false} />
+              <p className="font-bold">{albumRating}</p>
+            </div>
+
+            <div>
+              <p>Your Rating</p>
+              <StarRating album={album} />
             </div>
 
             {/* <div>

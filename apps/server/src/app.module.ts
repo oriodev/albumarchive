@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { NotificationsModule } from './notifications/notifications.module';
+import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { NotificationsModule } from './notifications/notifications.module';
     DiscogsApiModule,
     ListModule,
     JwtModule,
-    NotificationsModule
+    NotificationsModule,
+    RatingsModule
   ],
   controllers: [AppController],
   providers: [

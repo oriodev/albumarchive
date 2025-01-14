@@ -41,8 +41,6 @@ export class ListService {
         return { lists, total };
     }
     
-    
-
     async findById(id: string): Promise<List> {
 
         const isValidId = mongoose.isValidObjectId(id)
