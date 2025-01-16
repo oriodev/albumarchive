@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function UserDisplayCard({ user }: { user: User }) {
   return (
-    <Card>
+    <Card className="hover:cursor-pointer transition-transform transform hover:scale-105">
       <CardHeader className="relative h-64 m-2"></CardHeader>
       <CardContent>
         <CardTitle>{user.username}</CardTitle>

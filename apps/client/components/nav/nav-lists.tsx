@@ -83,7 +83,14 @@ export function NavLists({
 
       <SidebarGroup className="group-data-[collapsible=icon]:hidden">
         <div className="flex justify-between">
-          <SidebarGroupLabel>{title}</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            <Link
+              href={"/central/lists"}
+              className="transition-transform transform hover:scale-105"
+            >
+              {title}
+            </Link>
+          </SidebarGroupLabel>
           <NewListBtn setLists={setLists} lists={lists} />
         </div>
 

@@ -15,6 +15,11 @@ export class LikesController {
         async getTotalLikes(@Param('listId') listId): Promise<number> {
             return await this.likesService.getListLikes(listId)
         }
+
+        @Get(':userId/user')
+        async getAllLikedLists(@Param('userId') userId): Promise<string[]> {
+            return await this.likesService.getUserLikedLists(userId)
+        }
         
         @Post()
         async createLike(@Body() like: Likes): Promise<Likes> {

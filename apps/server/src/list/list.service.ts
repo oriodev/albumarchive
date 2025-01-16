@@ -5,6 +5,7 @@ import mongoose, { ObjectId } from 'mongoose';
 import { AlbumService } from '../album/album.service';
 import { User } from 'src/auth/schemas/user.schema';
 import { Query } from 'express-serve-static-core';
+import { Likes } from 'src/likes/schemas/likes.schema';
 
 @Injectable()
 export class ListService {
@@ -13,6 +14,8 @@ export class ListService {
         private listModel: mongoose.Model<List>,
         @InjectModel('User')
         private userModel: mongoose.Model<User>,
+        @InjectModel('Likes')
+        private likesModel: mongoose.Model<Likes>,
         private albumService: AlbumService
     ) {}
 
@@ -37,7 +40,7 @@ export class ListService {
             { $match: { ...search, ...exclusion } },
             {
                 $lookup: {
-                    from: 'likes', // The name of the likes collection
+                    from: 'likes',
                     localField: '_id',
                     foreignField: 'list',
                     as: 'likes'
@@ -45,24 +48,61 @@ export class ListService {
             },
             {
                 $addFields: {
-                    totalLikes: { $size: '$likes' } // Count the number of likes for each list
+                    totalLikes: { $size: '$likes' }
                 }
             },
             {
                 $project: {
-                    likes: 0 // Exclude the likes array from the final output
+                    likes: 0
                 }
             },
             {
-                $skip: skip // Skip the documents for pagination
+                $skip: skip
             },
             {
-                $limit: resPerPage // Limit the number of documents returned
+                $limit: resPerPage
             }
         ]);
     
         return { lists, total };
     }
+
+    async getListById(listId: string): Promise<List> {
+        const isValidId = mongoose.isValidObjectId(listId);
+    
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id');
+        }
+    
+        const list = await this.listModel.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(listId) } }, 
+            {
+                $lookup: {
+                    from: 'likes', 
+                    localField: '_id',
+                    foreignField: 'list',
+                    as: 'likes'
+                }
+            },
+            {
+                $addFields: {
+                    totalLikes: { $size: '$likes' }
+                }
+            },
+            {
+                $project: {
+                    likes: 0
+                }
+            }
+        ]);
+    
+        if (list.length === 0) {
+            throw new NotFoundException('List not found');
+        }
+    
+        return list[0];
+    }
+    
     
     async findById(id: string): Promise<List> {
 
@@ -205,4 +245,56 @@ export class ListService {
             { new: true }
         )
     }
+
+async getTrendingLists(): Promise<List[]> {
+    const trendingListsWithLikes = await this.likesModel.aggregate([
+        {
+            $group: {
+                _id: "$list",
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { count: -1 }
+        },
+        {
+            $limit: 10
+        },
+        {
+            $lookup: {
+                from: 'lists',
+                localField: '_id', 
+                foreignField: '_id',
+                as: 'list'
+            }
+        },
+        {
+            $unwind: '$list'
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'list.user', 
+                foreignField: '_id',
+                as: 'user'
+            }
+        },
+        {
+            $unwind: '$user'
+        },
+        {
+            $match: {
+                'user.private': false
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: { $mergeObjects: ["$list", { totalLikes: "$count" }] }
+            }
+        }
+    ]);
+
+    return trendingListsWithLikes;
+}
+
 }

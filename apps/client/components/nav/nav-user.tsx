@@ -21,6 +21,7 @@ import {
 import { deleteSession } from "@/api/session.api";
 import { useRouter } from "next/navigation";
 import { getUsernameInitial } from "@/utils/user.utils";
+import { useUser } from "@/utils/providers/UserProvider";
 
 export function NavUser({
   user,
@@ -32,11 +33,13 @@ export function NavUser({
   };
 }) {
   const router = useRouter();
+  const { setUser } = useUser();
   const { isMobile } = useSidebar();
 
   const handleLogout = async () => {
     try {
       await deleteSession();
+      setUser(null);
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);

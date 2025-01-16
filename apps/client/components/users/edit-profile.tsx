@@ -16,6 +16,7 @@ import { updateUser } from "@/api/user.api";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect } from "react";
+import { Button } from "../ui/button";
 
 type FormData = z.infer<typeof editUserSchema>;
 
@@ -71,13 +72,24 @@ export function EditingProfile({}) {
               </FormItem>
             )}
           />
-          {/* SUBMIT BUTTON */}
-          <button
-            type="submit"
-            className="mt-4 bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
-          >
-            Save Changes
-          </button>
+          <div className="flex w-full space-x-2">
+            {/* SUBMIT BUTTON */}
+            <Button
+              type="submit"
+              className="mt-4 w-1/2 bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
+            >
+              Save Changes
+            </Button>
+
+            {/* DISCARD BUTTON */}
+            <Button
+              type="button"
+              onClick={() => router.push("/central/profile")}
+              className="mt-4 w-1/2 bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
+            >
+              Discard Changes
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </div>

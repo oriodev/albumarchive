@@ -23,6 +23,7 @@ export default function Page({
 }) {
   // HOOKS.
   const { user: currentUser } = useUser();
+  const router = useRouter();
 
   // USESTATES.
   const [user, setUser] = useState<User | null>(null);
@@ -42,15 +43,16 @@ export default function Page({
     userFollowsCurrentUser,
   );
 
-  // HOOKS.
-  const router = useRouter();
-
   // FETCH USER.
   useEffect(() => {
     const fetchUser = async () => {
       const slug = (await params).username;
 
       const fetchedUser = await getUserByUsername(slug.toLowerCase());
+
+      if (fetchedUser?.username === currentUser?.username) {
+        router.push("/central/profile");
+      }
 
       if (!fetchedUser) {
         router.replace("/central/not-found");
@@ -60,7 +62,7 @@ export default function Page({
     };
 
     fetchUser();
-  }, [params, router]);
+  }, [params, router, currentUser]);
 
   // SET THE FOLLOW DATA.
   useEffect(() => {

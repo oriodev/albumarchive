@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { UserProvider } from "@/utils/providers/UserProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { WebsocketProvider } from "@/utils/providers/WebsocketProvider";
 
@@ -31,9 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
-        <UserProvider>
-          <WebsocketProvider>{children}</WebsocketProvider>
-        </UserProvider>
+        <WebsocketProvider>{children}</WebsocketProvider>
         <Toaster />
       </body>
     </html>

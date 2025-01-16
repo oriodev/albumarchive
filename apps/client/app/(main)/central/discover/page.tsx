@@ -1,7 +1,7 @@
 "use client";
 
 // API CALLS.
-import { getAllLists } from "@/api/list.api";
+import { getAllLists, getTrendingLists } from "@/api/list.api";
 
 // TYPES.
 import { List } from "@/types";
@@ -10,16 +10,18 @@ import { List } from "@/types";
 import { useEffect, useState } from "react";
 
 // COMPONENTS.
-
 import { SearchBar } from "@/components/albums/search-form";
 import { ListCard } from "@/components/lists/list-card";
 import { FullPagination } from "@/components/nav/full-pagination";
+import { ListScrollDisplay } from "@/components/lists/list-scroll-display";
 
 export default function Page() {
   const [lists, setLists] = useState<List[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+
+  const [trendingLists, setTrendingLists] = useState<List[]>([]);
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -29,6 +31,9 @@ export default function Page() {
         setLists(fetchedLists.lists);
         setTotal(fetchedLists.total);
       }
+
+      const fetchedTrendingLists = await getTrendingLists();
+      if (fetchedTrendingLists) setTrendingLists(fetchedTrendingLists);
     };
 
     fetchLists();
@@ -44,7 +49,15 @@ export default function Page() {
 
   return (
     <>
-      <p className="text-2xl pl-3">Lists.</p>
+      <p className="text-2xl pl-3">Discover.</p>
+
+      {/* LISTS YOU HAVE LIKED. */}
+      <div className="flex flex-col gap-1">
+        <h2 className="text-2xl pl-3">Trending Lists</h2>
+        <ListScrollDisplay lists={trendingLists || []} />
+      </div>
+
+      <h2 className="text-2xl pl-3">Search Lists</h2>
       <form onSubmit={handleSubmit}>
         <SearchBar
           searchQuery={searchQuery}

@@ -5,11 +5,35 @@ import { getSession } from "./session.api";
 import { getUserId } from "./user.api";
 
 export const getAllLists = async (search: string = "", page: string = "1") => {
+  try {
+    const token = await getSession();
+
+    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/all`);
+    url.searchParams.append("search", search);
+    url.searchParams.append("page", page);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getListById = async (listId: string) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/all`);
-  url.searchParams.append("search", search);
-  url.searchParams.append("page", page);
+  const url = new URL(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/${listId}/id`,
+  );
 
   const response = await fetch(url, {
     method: "GET",
@@ -23,7 +47,26 @@ export const getAllLists = async (search: string = "", page: string = "1") => {
   }
 
   const data = await response.json();
-  console.log("data: ", data);
+  return data;
+};
+
+export const getTrendingLists = async () => {
+  const token = await getSession();
+
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/trending`);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
   return data;
 };
 

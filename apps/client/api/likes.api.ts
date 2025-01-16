@@ -127,3 +127,36 @@ export const deleteLike = async (id: string): Promise<Likes | null> => {
     throw error;
   }
 };
+
+/**
+ * get specific like for a user and list.
+ * @param userId string
+ * @param listId string
+ * @returns Promise<Likes | null>
+ */
+export const getUserLikedLists = async (userId: string): Promise<string[]> => {
+  try {
+    const token = await getSession();
+
+    const url = new URL(`${baseUrl}/${userId}/user`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("response: ", response);
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching like:", error);
+    throw error;
+  }
+};

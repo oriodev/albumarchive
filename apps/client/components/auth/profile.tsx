@@ -14,6 +14,7 @@ import { FollowPreview } from "../users/follow-preview";
 import { getUsersBatch } from "@/api/user.api";
 import { getUsernameInitial } from "@/utils/user.utils";
 import { FallbackProfile } from "../users/fallback-profile";
+import { Badge } from "../ui/badge";
 
 export function Profile() {
   const { user } = useUser();
@@ -49,20 +50,26 @@ export function Profile() {
       <div className="flex flex-col items-center">
         <div className="flex flex-col gap-5 w-1/3 md:w-1/2">
           {/* TOP SECTION */}
-          <div className="flex items-center gap-3">
-            {/* PROFILE PIC */}
-            <div>
-              <Avatar className="w-16 h-16 text-3xl">
-                <AvatarImage src="/" />
-                <AvatarFallback>{initial}</AvatarFallback>
-              </Avatar>
+          <div className="flex flex-wrap gap-3 items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* PROFILE PIC */}
+              <div>
+                <Avatar className="w-16 h-16 text-3xl">
+                  <AvatarImage src="/" />
+                  <AvatarFallback>{initial}</AvatarFallback>
+                </Avatar>
+              </div>
+
+              {/* NAME AND EMAIL */}
+              <div>
+                <p className="text-3xl font-bold">{profileData?.username}</p>
+                <p>{profileData?.email}</p>
+              </div>
             </div>
 
-            {/* NAME AND EMAIL */}
-            <div>
-              <p className="text-3xl font-bold">{profileData?.username}</p>
-              <p>{profileData?.email}</p>
-            </div>
+            <Badge className="text-md">
+              {user?.private ? "Private" : "Public"}
+            </Badge>
           </div>
 
           {/* BIO SECTION */}

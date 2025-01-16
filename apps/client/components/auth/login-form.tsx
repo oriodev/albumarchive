@@ -131,17 +131,22 @@ export function LoginForm() {
               <Button type="submit" className="w-full">
                 Login
               </Button>
-
-              {/* THE REST */}
-              <Button variant="outline" className="w-full">
-                Login with Google
-              </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline">
-                Sign up
-              </Link>
+            <div>
+              {/* NO ACCOUNT? */}
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="underline">
+                  Sign up
+                </Link>
+              </div>
+
+              {/* BACK TO HOME */}
+              <div className="mt-4 text-center text-sm">
+                <Link href="/" className="underline">
+                  Back to homepage
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>

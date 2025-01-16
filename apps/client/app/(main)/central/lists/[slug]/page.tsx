@@ -19,9 +19,6 @@ import { LikeList } from "@/components/lists/like-list";
 import ListLayoutSwitch from "@/components/lists/list-layout-switch";
 import ListList from "@/components/lists/list-list";
 
-// 7. add different methods of album sorting.
-// 8. add a page of all the users lists.
-
 export default function Page({
   params,
 }: {

@@ -11,6 +11,7 @@ import { ListLoadingState } from "@/components/lists/list-loading-state";
 
 // TYPES.
 import { Album, List, User } from "@/types";
+import { useUser } from "@/utils/providers/UserProvider";
 import Link from "next/link";
 
 // HOOKS.
@@ -24,7 +25,7 @@ export default function Page({
   params: Promise<{ username: string; listname: string }>;
 }) {
   // HOOKS
-  //   const { user: currentUser } = useUser();
+  const { user: currentUser } = useUser();
   const router = useRouter();
 
   // USESTATES.
@@ -62,6 +63,10 @@ export default function Page({
         }
 
         const fetchedList = await getList(slug.toLowerCase(), user._id);
+
+        if (user.username === currentUser?.username) {
+          router.push(`/central/lists/${fetchedList.slug}`);
+        }
 
         if (!fetchedList) {
           router.replace("/central/not-found");

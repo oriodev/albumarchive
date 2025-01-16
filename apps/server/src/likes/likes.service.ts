@@ -80,4 +80,25 @@ export class LikesService {
     
         return likes;
     }
+
+    /**
+     * Get all lists a user has liked.
+     * @param userId 
+     * @returns 
+     */
+    async getUserLikedLists(userId: string): Promise<string[]> {
+        const isValidId = mongoose.isValidObjectId(userId);
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id');
+        }
+
+        const likes = await this.likesModel.find({ user: userId }).select('list').exec();
+
+        const likedLists = likes.map(like => like.list.toString());
+
+        return likedLists;
+    }
+
 }
+

@@ -42,7 +42,7 @@ export function EditList({ slug }: { slug: string }) {
         )[0];
 
         if (!fetchedList) {
-          router.push("/central"); // TODO: SEND TO LISTS PAGE.
+          router.push("/central/lists");
         }
 
         setList(fetchedList);

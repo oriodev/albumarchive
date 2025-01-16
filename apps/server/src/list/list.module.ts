@@ -8,12 +8,14 @@ import { AlbumModule } from 'src/album/album.module';
 import { AlbumSchema } from 'src/album/schemas/album.schema';
 import { AlbumService } from 'src/album/album.service';
 import { UserSchema } from 'src/auth/schemas/user.schema';
+import { LikesSchema } from 'src/likes/schemas/likes.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'List', schema: ListSchema }]),
     MongooseModule.forFeature([{ name: 'Album', schema: AlbumSchema }]),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: 'Likes', schema: LikesSchema }]),
     UsersModule,
     AlbumModule
   ],

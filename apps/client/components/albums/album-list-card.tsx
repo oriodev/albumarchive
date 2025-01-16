@@ -13,7 +13,7 @@ import { AlbumBadges } from "./album-badges";
 
 export function AlbumListCard({ album }: { album: Album }) {
   return (
-    <Card className="flex">
+    <Card className="flex hover:cursor-pointer transition-transform transform hover:scale-95">
       <div className="mr-4 relative w-[150px] h-[150px]">
         {/* Set width and height to the same value */}
         <Image

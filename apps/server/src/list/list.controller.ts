@@ -16,6 +16,16 @@ export class ListController {
         return await this.listService.findAll(query)
     }
 
+    @Get('/trending')
+    async getTrendingLists(): Promise<List[]> {
+        return await this.listService.getTrendingLists()
+    }
+
+    @Get(':id/id')
+    async getListById(@Param('id') id: string): Promise<List> {
+        return await this.listService.getListById(id)
+    }
+
     @Get()
     async getListByName(@Query('user') user: string, @Query('slug') slug: string): Promise<List> {
         return await this.listService.findBySlug(user, slug);

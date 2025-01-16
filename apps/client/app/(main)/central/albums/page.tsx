@@ -20,7 +20,6 @@ export default function Page() {
 
   // ON PAGE OPEN.
   useEffect(() => {
-    console.log("is this being called here?");
     const fetchAlbums = async () => {
       if (discogs) {
         const getDiscogsResponse = await getAlbumsFromDiscogs(
@@ -78,7 +77,6 @@ export default function Page() {
 
   // ON GET MORE.
   const handleMore = async () => {
-    console.log("handling more");
     // const getDiscogsResponse = await getAlbumsFromDiscogs(
     //   searchQuery,
     //   currentPage.toString(),
@@ -90,7 +88,6 @@ export default function Page() {
     // setTotal(getDiscogsResponse.total);
 
     setShowMoreBtn(false);
-    console.log("end of handling more");
   };
 
   return (
@@ -111,6 +108,7 @@ export default function Page() {
               album={album}
               setAlbums={setAlbums}
               albums={albums}
+              layoutType="Grid"
             />
           </div>
         ))}

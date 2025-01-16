@@ -70,8 +70,6 @@ export const getUser = async (id: string) => {
     if (response.status === 200) {
       const user = await response.json();
 
-      console.log("user: ", user);
-
       return {
         _id: user._id,
         username: user.username,

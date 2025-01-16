@@ -69,6 +69,10 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      spacing: {
+        "scrollbar-hidden":
+          "scrollbar-width: none; &::-webkit-scrollbar { display: none; }",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

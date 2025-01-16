@@ -9,12 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { truncateString } from "@/utils/global.utils";
-import RatingStars from "./rating-stars";
 import { AlbumBadges } from "./album-badges";
 
 export function AlbumCard({ album }: { album: Album }) {
+  console.log(album.title, album.overallRating);
   return (
-    <Card>
+    <Card className="hover:cursor-pointer transition-transform transform hover:scale-105">
       <CardHeader className="relative h-64 m-2">
         <Image
           alt={album.title}
@@ -25,9 +25,7 @@ export function AlbumCard({ album }: { album: Album }) {
         />
       </CardHeader>
       <CardContent className="flex flex-col gap-1">
-        <CardDescription>
-          <RatingStars rating={album.overallRating} centered={true} />
-        </CardDescription>
+        <CardDescription></CardDescription>
         <CardTitle>{truncateString(album.title, 25)}</CardTitle>
         <p>{truncateString(album.artist, 25)}</p>
         <AlbumBadges album={album} />

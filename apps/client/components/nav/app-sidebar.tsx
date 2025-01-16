@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/central">
                 <div className="grid flex-1 text-left text-2xl leading-tight">
                   <span className="truncate font-semibold">Album Archive</span>
                   <span className="truncate text-xs">savour your music.</span>
