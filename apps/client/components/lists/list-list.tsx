@@ -1,7 +1,7 @@
 import { Album } from "@/types";
 import { AlbumDialogue } from "../albums/album-dialogue";
 
-export default function ListGrid({
+export default function ListList({
   albums,
   setAlbums,
   layoutType,
@@ -11,7 +11,7 @@ export default function ListGrid({
   layoutType: string;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+    <div className="flex flex-col gap-3">
       {albums.map((album: Album) => (
         <div key={`${album.title}+${album.artist}+${album.genre}`}>
           <AlbumDialogue

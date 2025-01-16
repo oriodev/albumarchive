@@ -43,6 +43,7 @@ import { addAlbumToList } from "@/api/list.api";
 import { Album, AlbumType } from "@/types";
 import { useParams } from "next/navigation";
 import { slugify } from "@/utils/global.utils";
+import { makeUpdatedUser } from "@/utils/user.utils";
 
 interface AddToListProps {
   album: Album;
@@ -53,7 +54,7 @@ interface AddToListProps {
 export function AddToList({ album, setAlbums, albums }: AddToListProps) {
   // HOOKS.
   const { toast } = useToast();
-  const { user } = useUser();
+  const { user, updateUserInfo } = useUser();
   const lists = useMemo(() => user?.lists || [], [user]);
   const params = useParams();
 
@@ -76,6 +77,10 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
 
   // HANDLE ADDING TO LIST.
   const onAddToList = async (listId: string) => {
+    if (!user) {
+      return;
+    }
+
     // IS ALBUM IN LOCAL DATABASE?
 
     const albumInLocal = await getAlbumByTitle(album.title);
@@ -131,6 +136,17 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
         updateState,
       );
 
+      // UPDATE THE LIST IN THE USER PROVIDER.
+      const updatedUser = makeUpdatedUser(
+        user,
+        selectedList?._id,
+        albumFromLocal._id,
+      );
+
+      if (!updatedUser) return;
+
+      updateUserInfo(updatedUser);
+
       toast({
         title: `Removed ${album.title} from ${selectedList?.name}`,
       });
@@ -185,6 +201,18 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
 
     await addAlbumToList(listId, albumFromLocal._id);
 
+    // UPDATE THE LIST IN THE USER PROVIDER.
+    const updatedUser = makeUpdatedUser(
+      user,
+      selectedList?._id,
+      albumFromLocal._id,
+    );
+
+    if (!updatedUser) return;
+
+    updateUserInfo(updatedUser);
+
+    // SEND TOAST.
     toast({
       title: `Added ${albumFromLocal.title} to ${selectedList?.name}`,
     });

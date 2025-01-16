@@ -1,13 +1,26 @@
 "use client";
 
+// HOOKS.
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/providers/UserProvider";
-import { Album, List } from "@/types";
-import { getAlbumById } from "@/api/albums.api";
+
+// TYPES.
+import { Album, AlbumType, List } from "@/types";
+
+// COMPONENTS.
 import ListGrid from "@/components/lists/list-grid";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { ListLoadingState } from "@/components/lists/list-loading-state";
+
+// API.
+import { getAlbumById } from "@/api/albums.api";
+import { LikeList } from "@/components/lists/like-list";
+import ListLayoutSwitch from "@/components/lists/list-layout-switch";
+import ListList from "@/components/lists/list-list";
+
+// 7. add different methods of album sorting.
+// 8. add a page of all the users lists.
 
 export default function Page({
   params,
@@ -19,6 +32,7 @@ export default function Page({
   const [list, setList] = useState<List>();
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [layoutType, setLayoutType] = useState("Grid");
 
   // HOOKS.
   const router = useRouter();
@@ -32,6 +46,10 @@ export default function Page({
         const fetchedList = user.lists.filter(
           (list) => list.slug.toLowerCase() === slug.toLowerCase(),
         )[0];
+
+        if (!fetchedList) {
+          setLoading(false);
+        }
 
         setList(fetchedList);
       }
@@ -71,6 +89,12 @@ export default function Page({
     return (
       <div className="flex flex-col gap-2">
         <p className="text-xl">There are no albums here yet.</p>
+        {
+          !(
+            list.type === AlbumType.LISTENED || list.type === AlbumType.TOLISTEN
+          )
+        }
+        {/* fix this ^^^ */}
         <Button
           className="w-1/5"
           onClick={() => router.push("/central/albums")}
@@ -83,10 +107,49 @@ export default function Page({
 
   // NORMAL LIST STATE.
   return (
-    <div>
-      <h1 className="text-2xl">{list.name}</h1>
-      <p className="italic">{list.description}</p>
-      <ListGrid albums={albums} setAlbums={setAlbums} />
+    // TOTAL.
+    <div className="flex flex-col gap-5">
+      {/* HEADER. */}
+      <div className="flex flex-col flex-wrap gap-2">
+        {/* NAME AND DESCRIPTION. */}
+        <div>
+          <h1 className="text-2xl">{list.name}</h1>
+          <p className="italic">{list.description}</p>
+        </div>
+
+        {/* BAR. */}
+        <div className="flex flex-wrap gap-3">
+          {!(
+            list.type === AlbumType.LISTENED || list.type === AlbumType.TOLISTEN
+          ) && <LikeList list={list} clickable={false} />}
+          <ListLayoutSwitch
+            layoutType={layoutType}
+            setLayoutType={setLayoutType}
+          />
+        </div>
+      </div>
+
+      {/* ALBUMS. */}
+      {layoutType === "Grid" ? (
+        <ListGrid
+          albums={albums}
+          setAlbums={setAlbums}
+          layoutType={layoutType}
+        />
+      ) : (
+        <ListList
+          albums={albums}
+          setAlbums={setAlbums}
+          layoutType={layoutType}
+        />
+      )}
     </div>
+
+    // <div className="">
+    //   <div className="">
+
+    //   </div>
+
+    // </div>
   );
 }

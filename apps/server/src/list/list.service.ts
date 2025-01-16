@@ -33,10 +33,33 @@ export class ListService {
     
         const total = await this.listModel.countDocuments({ ...search, ...exclusion }).exec();
     
-        const lists = await this.listModel
-            .find({ ...search, ...exclusion })
-            .limit(resPerPage)
-            .skip(skip);
+        const lists = await this.listModel.aggregate([
+            { $match: { ...search, ...exclusion } },
+            {
+                $lookup: {
+                    from: 'likes', // The name of the likes collection
+                    localField: '_id',
+                    foreignField: 'list',
+                    as: 'likes'
+                }
+            },
+            {
+                $addFields: {
+                    totalLikes: { $size: '$likes' } // Count the number of likes for each list
+                }
+            },
+            {
+                $project: {
+                    likes: 0 // Exclude the likes array from the final output
+                }
+            },
+            {
+                $skip: skip // Skip the documents for pagination
+            },
+            {
+                $limit: resPerPage // Limit the number of documents returned
+            }
+        ]);
     
         return { lists, total };
     }

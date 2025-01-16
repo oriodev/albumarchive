@@ -20,17 +20,20 @@ import { useParams } from "next/navigation";
 import { slugify } from "@/utils/global.utils";
 import StarRating from "./star-rating";
 import { getAlbumRating } from "@/api/ratings.api";
+import { AlbumListCard } from "./album-list-card";
 
 interface AlbumDialogueProps {
   album: Album;
   setAlbums: (albums: Album[]) => void;
   albums: Album[];
+  layoutType: string;
 }
 
 export function AlbumDialogue({
   album,
   setAlbums,
   albums,
+  layoutType,
 }: AlbumDialogueProps) {
   // HOOKS.
   const { user } = useUser();
@@ -95,7 +98,11 @@ export function AlbumDialogue({
   return (
     <Dialog>
       <DialogTrigger className="w-full">
-        <AlbumCard album={album} />
+        {layoutType === "Grid" ? (
+          <AlbumCard album={album} />
+        ) : (
+          <AlbumListCard album={album} />
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

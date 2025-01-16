@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // TYPES.
 import { Notification, User } from "@/types";
 import { Button } from "../ui/button";
-import { Trash } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { removeNotification } from "@/api/notifications.api";
 import { ImageFallback } from "../image-fallback";
 
@@ -53,7 +53,7 @@ export function RecCard({
               <Button>Decline</Button>
             </div>
             <div className="hover:cursor-pointer flex items-center justify-center w-8 h-8 rounded">
-              <Trash onClick={() => handleRemoveNotification()} size={20} />
+              <Trash2 onClick={() => handleRemoveNotification()} size={20} />
             </div>
           </CardContent>
         </div>

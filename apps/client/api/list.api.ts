@@ -63,8 +63,6 @@ export const createList = async (list: List) => {
 
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list`);
 
-  console.log("api list: ", list);
-
   const response = await fetch(url, {
     method: "POST",
     headers: {

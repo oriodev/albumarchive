@@ -1,7 +1,7 @@
 "use client";
 
-import { Edit, Folder, MoreHorizontal, Trash2 } from "lucide-react";
-
+// COMPONENTS.
+import { Edit, Folder, MoreHorizontal, Share, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,14 +18,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
-import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useState } from "react";
-import { DeleteDialog } from "./delete-dialog";
-import Link from "next/link";
-import { Dialogs, listToRender } from "@/types";
 import NewListBtn from "../lists/new-list-btn";
-import { EditDialog } from "./edit-dialog";
+// import { DeleteDialog } from "./delete-dialog";
+
+import Link from "next/link";
+import { listToRender } from "@/types";
+import { useRouter } from "next/navigation";
+import { deleteList } from "@/api/list.api";
+import { useUser } from "@/utils/providers/UserProvider";
+import { useToast } from "@/hooks/use-toast";
+import { slugify } from "@/utils/global.utils";
 
 export function NavLists({
   lists,
@@ -36,13 +38,49 @@ export function NavLists({
   title: string;
   setLists: React.Dispatch<React.SetStateAction<listToRender[]>>;
 }) {
+  // HOOKS.
+  const router = useRouter();
+  const { user, updateUserInfo } = useUser();
+  const { toast } = useToast();
+
+  // STATES.
   const { isMobile } = useSidebar();
-  const [dialog, setDialog] = useState<Dialogs>();
-  const [itemToHandle, setItemToHandle] = useState<listToRender>();
+
+  const handleDelete = async (id: string) => {
+    if (!user?.lists) return null;
+
+    if (id) {
+      // UPDATE USER PROVIDER.
+      const updatedLists = user.lists.filter((list) => !(list._id === id));
+      updateUserInfo({ lists: updatedLists });
+
+      await deleteList(id);
+      router.push("/central/lists/listened");
+    }
+
+    return null;
+  };
+
+  const handleShare = async (name: string) => {
+    try {
+      if (!user) return null;
+      const shareUrl = `www.albumarchive.com/central/users/${user.username}/${slugify(name)}`;
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "List url saved to clipboard",
+        description: shareUrl,
+      });
+    } catch {
+      toast({
+        title: "Share failed",
+      });
+    }
+  };
 
   return (
-    <AlertDialog>
+    <>
       {/* SIDEBAR. */}
+
       <SidebarGroup className="group-data-[collapsible=icon]:hidden">
         <div className="flex justify-between">
           <SidebarGroupLabel>{title}</SidebarGroupLabel>
@@ -75,43 +113,41 @@ export function NavLists({
                   align={isMobile ? "end" : "start"}
                 >
                   {/* VIEW LIST. */}
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(item.url);
+                    }}
+                  >
                     <Folder className="text-muted-foreground" />
                     <span>View List</span>
                   </DropdownMenuItem>
 
                   {item.type !== "Listened" && item.type !== "To Listen" && (
                     <>
-                      {/* EDIT LIST. */}
-                      <AlertDialogTrigger asChild>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            // TRIGGER THE MENU OPENINGs.
-                            setItemToHandle(item);
-                            setDialog(Dialogs.edit);
-                          }}
-                        >
-                          <Edit className="text-muted-foreground" />
-                          <span>Edit List</span>
-                        </DropdownMenuItem>
-                      </AlertDialogTrigger>
-
                       {/* SEPARATOR. */}
                       <DropdownMenuSeparator />
 
+                      {/* EDIT LIST. */}
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push(`${item.url}/editing`);
+                        }}
+                      >
+                        <Edit className="text-muted-foreground" />
+                        <span>Edit List</span>
+                      </DropdownMenuItem>
+
                       {/* DELETE LIST. */}
-                      <AlertDialogTrigger asChild>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            // TRIGGER THE MENU OPENINGs.
-                            setItemToHandle(item);
-                            setDialog(Dialogs.delete);
-                          }}
-                        >
-                          <Trash2 className="text-muted-foreground" />
-                          <span>Delete List</span>
-                        </DropdownMenuItem>
-                      </AlertDialogTrigger>
+                      <DropdownMenuItem onClick={() => handleDelete(item.id)}>
+                        <Trash2 className="text-muted-foreground" />
+                        <span>Delete List</span>
+                      </DropdownMenuItem>
+
+                      {/* SHARE LIST. */}
+                      <DropdownMenuItem onClick={() => handleShare(item.name)}>
+                        <Share className="text-muted-foreground" />
+                        <span>Share List</span>
+                      </DropdownMenuItem>
                     </>
                   )}
 
@@ -132,17 +168,6 @@ export function NavLists({
           )}
         </SidebarMenu>
       </SidebarGroup>
-
-      {/* DELETE DIALOG CONTENT. */}
-      {dialog === Dialogs.delete ? (
-        <DeleteDialog itemToDelete={itemToHandle} setLists={setLists} />
-      ) : (
-        <EditDialog
-          itemToEdit={itemToHandle}
-          setLists={setLists}
-          lists={lists}
-        />
-      )}
-    </AlertDialog>
+    </>
   );
 }

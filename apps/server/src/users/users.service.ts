@@ -39,21 +39,64 @@ export class UsersService {
       }
 
       async findById(id: string): Promise<User> {
-
-        const isValidId = mongoose.isValidObjectId(id)
-
+        const isValidId = mongoose.isValidObjectId(id);
+    
         if (!isValidId) {
-            throw new BadRequestException('please enter a valid mongo id')
+            throw new BadRequestException('please enter a valid mongo id');
         }
-
-        const user = await this.userModel.findById(id).populate('lists');
-
-        if (!user) {
-            throw new NotFoundException('user not found')
+    
+        const user = await this.userModel.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(id) } },
+            {
+                $lookup: {
+                    from: 'lists',
+                    localField: 'lists',
+                    foreignField: '_id',
+                    as: 'lists'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$lists',
+                    preserveNullAndEmptyArrays: true 
+                }
+            },
+            {
+                $lookup: {
+                    from: 'likes',
+                    localField: 'lists._id',
+                    foreignField: 'list',
+                    as: 'likes'
+                }
+            },
+            {
+                $addFields: {
+                    'lists.totalLikes': { $size: '$likes' }
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    username: { $first: '$username' },
+                    email: { $first: '$email' },
+                    description: { $first: '$description' },
+                    password: { $first: '$password' },
+                    private: { $first: '$private' },
+                    lists: { $push: '$lists' },
+                    followers: { $first: '$followers' },
+                    following: { $first: '$following' }
+                }
+            }
+        ]);
+    
+        if (!user || user.length === 0) {
+            throw new NotFoundException('user not found');
         }
-
-        return user;
+    
+        return user[0];
     }
+    
+    
 
     async findByUsername(username: string): Promise<User> {
         const user = await this.userModel.findOne({ username: username}).populate('lists')
@@ -118,16 +161,6 @@ export class UsersService {
     }
 
     async followUser(currentUserId: string, userId: string) {
-        // SEBASTIAN IS ALLOWING CASPAR TO FOLLOW HIM.
-
-        // CASPAR IS FOLLOWING SEBASTIAN.
-
-        // CASPAR.
-        console.log('currentUserId: ', currentUserId)
-
-        // SEBASTIAN.
-        console.log('userId: ', userId)
-
         await this.userModel.updateOne(
           { _id: currentUserId },
           { $addToSet: { following: userId } }

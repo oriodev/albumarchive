@@ -39,3 +39,35 @@ export const getUsernameInitial = (profileData: User | null): string => {
 
   return initial;
 };
+
+/**
+ * returns updated user to use to update the user provider
+ * @param prevUser user
+ * @param listId string
+ * @param albumId string
+ * @returns an updated user or null.
+ */
+export const makeUpdatedUser = (
+  prevUser: User,
+  listId: string,
+  albumId: string,
+) => {
+  if (prevUser && prevUser.lists) {
+    const updatedLists = prevUser.lists.map((list) => {
+      if (list._id === listId) {
+        const albumIndex = list.albums.indexOf(albumId);
+        if (albumIndex === -1) {
+          return { ...list, albums: [...list.albums, albumId] };
+        } else {
+          return {
+            ...list,
+            albums: list.albums.filter((id) => id !== albumId),
+          };
+        }
+      }
+      return list;
+    });
+    return { ...prevUser, lists: updatedLists };
+  }
+  return null;
+};

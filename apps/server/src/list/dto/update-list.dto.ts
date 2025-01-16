@@ -25,4 +25,7 @@ export class UpdateListDto {
 
     @IsOptional()
     readonly albums: [mongoose.Schema.Types.ObjectId]
+
+    @IsOptional()
+    readonly likes: number
 }

@@ -23,7 +23,6 @@ export const getAllUsers = async (search: string = "", page: string = "1") => {
     }
 
     const data = await response.json();
-    console.log("data: ", data);
     return data;
   } catch (error) {
     console.log("error: ", error);
@@ -70,6 +69,8 @@ export const getUser = async (id: string) => {
 
     if (response.status === 200) {
       const user = await response.json();
+
+      console.log("user: ", user);
 
       return {
         _id: user._id,

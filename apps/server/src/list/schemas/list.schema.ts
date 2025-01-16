@@ -29,6 +29,9 @@ export class List {
 
     @Prop()
     albums: [mongoose.Schema.Types.ObjectId];
+
+    @Prop()
+    likes: number
 }
 
 export const ListSchema = SchemaFactory.createForClass(List)

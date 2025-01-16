@@ -9,8 +9,8 @@ export const editListSchema = z.object({
     .max(50, {
       message: "list name must be a maximum of 50 characters",
     })
-    .regex(/^[a-zA-Z0-9]+$/, {
-      message: "list name must be alphanumeric",
+    .regex(/^(?!\s*$)[a-zA-Z0-9\s]+$/, {
+      message: "list name must be alphanumeric and cannot be only spaces",
     }),
   description: z
     .string()

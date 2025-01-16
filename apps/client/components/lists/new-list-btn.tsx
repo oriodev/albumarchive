@@ -17,11 +17,11 @@ interface NewListBtnProps {
 }
 
 export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
-  const { user } = useUser();
+  const { user, updateUserInfo } = useUser();
   const router = useRouter();
 
   const handleCreateNewList = async () => {
-    if (!user?._id) {
+    if (!user?._id || !user?.lists) {
       throw new Error("no user");
     }
 
@@ -44,9 +44,14 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
       type: AlbumType.CUSTOM,
       user: user?._id,
       albums: [],
+      likes: 0,
     };
 
     const list = await createList(newList);
+
+    // UPDATE USER PROVIDER.
+    const updatedLists = [...user.lists, list];
+    updateUserInfo({ lists: updatedLists });
 
     const listToRender: listToRender = {
       id: list.id,
@@ -59,7 +64,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
 
     if (list) {
       setLists((prev) => [...prev, listToRender]);
-      router.push(`/central/lists/${list.slug}`);
+      router.push(`/central/lists/${list.slug}/editing`);
     } else {
       throw new Error("could not create list");
     }

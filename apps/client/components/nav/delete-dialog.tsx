@@ -14,17 +14,17 @@ import { listToRender } from "@/types";
 import { useRouter } from "next/navigation";
 
 interface DeleteDialogProps {
-  itemToDelete: { id: string; type: string } | undefined;
+  itemToDelete: string | undefined;
   setLists: React.Dispatch<React.SetStateAction<listToRender[]>>;
 }
 
-export function DeleteDialog({ itemToDelete, setLists }: DeleteDialogProps) {
+export function DeleteDialog({ itemToDelete }: DeleteDialogProps) {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
     if (id) {
       await deleteList(id);
-      setLists((prev) => prev.filter((item) => item.id !== id));
+      // setLists((prev) => prev.filter((item) => item.id !== id));
       router.push("/central/lists/listened");
     }
 
@@ -51,7 +51,7 @@ export function DeleteDialog({ itemToDelete, setLists }: DeleteDialogProps) {
         <AlertDialogAction
           onClick={() => {
             if (itemToDelete) {
-              handleDelete(itemToDelete.id);
+              handleDelete(itemToDelete);
             }
           }}
         >

@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 
-export function ListLoadingState({ albumCount }: { albumCount: number }) {
+export function ListLoadingState({ albumCount = 3 }: { albumCount?: number }) {
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-2">

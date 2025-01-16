@@ -4,11 +4,14 @@ import { getAlbumById } from "@/api/albums.api";
 // API CALLS.
 import { getList } from "@/api/list.api";
 import { getUserByUsername } from "@/api/user.api";
-import ListGrid from "@/components/lists/list-grid";
+import { LikeList } from "@/components/lists/like-list";
+import { ListAlbumDisplay } from "@/components/lists/list-album-display";
+import ListLayoutSwitch from "@/components/lists/list-layout-switch";
 import { ListLoadingState } from "@/components/lists/list-loading-state";
 
 // TYPES.
 import { Album, List, User } from "@/types";
+import Link from "next/link";
 
 // HOOKS.
 // import { useUser } from "@/utils/providers/UserProvider";
@@ -29,6 +32,7 @@ export default function Page({
   const [list, setList] = useState<List | null>(null);
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [layoutType, setLayoutType] = useState("Grid");
 
   // FETCH USER.
   useEffect(() => {
@@ -94,10 +98,40 @@ export default function Page({
   }
 
   return (
-    <div>
-      <h1 className="text-2xl">{list.name}</h1>
-      <p className="italic">{list.description}</p>
-      <ListGrid albums={albums} setAlbums={setAlbums} />
+    <div className="flex flex-col gap-5">
+      {/* HEADER. */}
+      <div className="flex flex-col flex-wrap gap-2">
+        {/* NAME AND DESCRIPTION. */}
+        <div>
+          {/* HEADING */}
+          <div className="flex flex-wrap gap-2">
+            <h1 className="text-2xl">{list.name} </h1>
+            <Link href={`/central/users/${user?.username}`}>
+              <p className="text-2xl hover:text-rose-700 transition-colors duration-200">
+                {" "}
+                by {user?.username || "idk"}
+              </p>
+            </Link>
+          </div>
+          <p className="italic">{list.description}</p>
+        </div>
+
+        {/* BAR. */}
+        <div className="flex flex-wrap gap-2">
+          <LikeList list={list} clickable={true} />
+          <ListLayoutSwitch
+            layoutType={layoutType}
+            setLayoutType={setLayoutType}
+          />
+        </div>
+      </div>
+
+      {/* ALBUMS. */}
+      <ListAlbumDisplay
+        albums={albums}
+        setAlbums={setAlbums}
+        layoutType={layoutType}
+      />
     </div>
   );
 }

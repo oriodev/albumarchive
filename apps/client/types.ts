@@ -37,6 +37,7 @@ export interface List {
   type: AlbumType;
   user: string;
   albums: string[];
+  totalLikes?: number;
 }
 
 export interface listToRender {
@@ -74,4 +75,10 @@ export interface Rating {
   album: string;
   user: string;
   rating: number;
+}
+
+export interface Likes {
+  _id?: string;
+  user: string;
+  list: string;
 }
