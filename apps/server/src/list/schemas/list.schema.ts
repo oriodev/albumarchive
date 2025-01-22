@@ -27,7 +27,7 @@ export class List {
     @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
     user: Types.ObjectId;
 
-    @Prop()
+    @Prop({ type: [SchemaTypes.ObjectId], ref: 'Album' })
     albums: [mongoose.Schema.Types.ObjectId];
 
     @Prop()

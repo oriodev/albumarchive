@@ -16,3 +16,12 @@ export const slugify = (str: string) => {
     .replace(/^-+/, "") // Trim hyphens from start
     .replace(/-+$/, ""); // Trim hyphens from end
 };
+
+/**
+ * capitalises the first letter in a string
+ * @param value string
+ * @returns
+ */
+export const capitalizeFirstLetter = (value: string) => {
+  return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+};

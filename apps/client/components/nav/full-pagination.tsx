@@ -18,8 +18,6 @@ export function FullPagination({
   total: number;
   resPerPage: number;
 }) {
-  console.log("total: ", total);
-
   const totalPages = Math.ceil(total / resPerPage);
 
   const handleNextPage = () => {

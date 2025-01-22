@@ -108,4 +108,39 @@ export class RatingsService {
 
         return ratings[0].averageRating;
     }
+
+    async getRatingsCount(albumId: string): Promise<{}> {
+        const isValidId = mongoose.isValidObjectId(albumId);
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongodb ID');
+        }
+
+        const totalRatings = await this.ratingsModel.aggregate([
+            { $match: { album: new mongoose.Types.ObjectId(albumId) } },
+            {
+                $group: {
+                    _id: "$rating",
+                    count: { $count: {} }
+                }
+            }
+        ]);
+
+        const ratings = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            total: 0
+        };
+        
+        totalRatings.forEach(rating => {
+            ratings[rating._id] = rating.count;
+        });
+        
+        ratings.total = totalRatings.reduce((sum, rating) => sum + rating.count, 0);
+        
+        return ratings;
+    }
 }

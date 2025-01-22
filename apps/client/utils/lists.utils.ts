@@ -1,6 +1,8 @@
-import { createAlbum } from "@/api/albums.api";
-import { removeAlbumFromList } from "@/api/list.api";
+import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
+import { addAlbumToList, removeAlbumFromList } from "@/api/list.api";
 import { Album, AlbumType, List, User } from "@/types";
+import { makeUpdatedUser } from "./user.utils";
+import { slugify } from "./global.utils";
 
 /**
  * checks whether the album is in a list
@@ -58,7 +60,6 @@ export const getListFromId = (lists: List[], listId: string): List | null => {
   const selectedList = lists.filter((list) => list._id === listId);
 
   if (selectedList.length > 1) {
-    console.log("selectedList is bigger than 1 somehow");
     return null;
   }
 
@@ -139,7 +140,6 @@ export const shouldWeDeleteFromList = async (
 
     if (toListen._id && toListen._id in albumInLists) {
       if (!album._id) {
-        console.log("no album for some reason");
         return null;
       }
 
@@ -153,7 +153,6 @@ export const shouldWeDeleteFromList = async (
 
     if (listened._id && listened._id in albumInLists) {
       if (!album._id) {
-        console.log("no album for some reason");
         return null;
       }
 
@@ -201,18 +200,144 @@ export const addAlbumToLocalDb = async (album: Album): Promise<Album> => {
 export const removeAlbum = async (
   listToDeleteFromId: string,
   albumId: string,
-  albums: Album[],
-  setAlbums: (albums: Album[]) => void,
   updateState: boolean,
+  albums?: Album[],
+  setAlbums?: (albums: Album[]) => void,
 ) => {
   await removeAlbumFromList(listToDeleteFromId, albumId);
 
-  console.log("updateState: ", updateState);
-
-  if (updateState) {
+  if (updateState && albums && setAlbums) {
     const updatedAlbums = albums.filter(
       (existingAlbum) => existingAlbum._id !== albumId,
     );
     setAlbums(updatedAlbums);
   }
+};
+
+/**
+ * handles the logic of switching between listened and to listen.
+ * @param selectedList the list we are adding to
+ * @param album the album we are adding to a list
+ * @param lists all of the users lists
+ * @param albumInLists the lists that the album is in
+ * @param slug the page slug
+ * @param albums
+ * @param setAlbums
+ * @returns
+ */
+export const handleListenedToListenSwitch = async (
+  selectedList: List,
+  album: Album,
+  lists: List[],
+  albumInLists: {
+    [key: string]: { isInList: boolean; type: AlbumType };
+  },
+  slug: string,
+  user: User,
+  updateUserInfo: (update: Partial<User>) => void,
+  albums?: Album[],
+  setAlbums?: (albums: Album[]) => void,
+) => {
+  if (!selectedList._id || !album._id) return null;
+
+  // CHECK IF NEED TO DELETE FROM A LIST.
+  const listToDeleteFrom = await shouldWeDeleteFromList(
+    selectedList,
+    album,
+    lists,
+    albumInLists,
+  );
+
+  if (!listToDeleteFrom) return null;
+
+  // HANDLING DELETION.
+  const updateState =
+    listToDeleteFrom.type === "toListen"
+      ? slug === "to-listen"
+      : slug === "listened";
+
+  removeAlbum(listToDeleteFrom.id, album._id, updateState, albums, setAlbums);
+
+  // // ADD TO THE NEW LIST.
+  await addAlbumToList(selectedList._id, album._id);
+
+  // UPDATE IN USER PROVIDER.
+  const deletionUpdate = makeUpdatedUser(user, listToDeleteFrom.id, album._id);
+
+  if (!deletionUpdate) return;
+
+  const additionUpdate = makeUpdatedUser(
+    deletionUpdate,
+    selectedList._id,
+    album._id,
+  );
+
+  if (!additionUpdate) return;
+
+  updateUserInfo(additionUpdate);
+
+  // RETURN TOAST
+  return {
+    title: "title",
+    description: "description",
+  };
+};
+
+/**
+ * returns album from local db and adds it to local db if necessary
+ * @param album
+ * @returns album or null
+ */
+export const getLocalDatabaseAlbum = async (
+  album: Album,
+): Promise<Album | null> => {
+  const albumInLocal = await getAlbumByTitle(album.title);
+  if (!albumInLocal) await addAlbumToLocalDb(album);
+  const albumFromLocal = await getAlbumByTitle(album.title);
+
+  if (!albumFromLocal) return null;
+  return albumFromLocal;
+};
+
+/**
+ *
+ * @param list
+ * @param albumInLists
+ * @param slug
+ * @param album
+ * @param albums
+ * @param setAlbums
+ * @returns
+ */
+export const deleteAlbumFromList = async (
+  list: List,
+  albumInLists: { [key: string]: { isInList: boolean; type: AlbumType } },
+  slug: string,
+  album: Album,
+  user: User,
+  updateUserInfo: (update: Partial<User>) => void,
+  albums: Album[] | undefined,
+  setAlbums: ((albums: Album[]) => void) | undefined,
+) => {
+  if (!list._id) return;
+  const isAlbumInList = list?._id in albumInLists;
+
+  if (isAlbumInList && album._id) {
+    const updateState = slugify(list.name) === slug;
+
+    removeAlbum(list?._id, album._id, updateState, albums, setAlbums);
+
+    // UPDATE THE LIST IN THE USER PROVIDER.
+    const updatedUser = makeUpdatedUser(user, list?._id, album._id);
+
+    if (!updatedUser) return;
+
+    updateUserInfo(updatedUser);
+
+    return {
+      title: `Removed ${album.title} from ${list?.name}`,
+    };
+  }
+
+  return null;
 };

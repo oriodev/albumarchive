@@ -36,6 +36,14 @@ export class ListController {
         return await this.listService.isAlbumInList(list, album)
     }
 
+    // @Get(':genre/genre')
+    // async getListsByGenre(
+    //     @Param('genre')
+    //     genre: string
+    // ): Promise<List[]> {
+    //     return await this.listService.getListsByGenre(genre)
+    // }
+
     @Post()
     async createList(@Body() list: CreateListDto): Promise<List> {
         return await this.listService.create(list)

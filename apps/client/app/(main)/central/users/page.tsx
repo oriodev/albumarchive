@@ -1,7 +1,7 @@
 "use client";
 
 import { getAllUsers } from "@/api/user.api";
-import { SearchBar } from "@/components/albums/search-form";
+import { SearchBar } from "@/components/albums/search-bar";
 import { FullPagination } from "@/components/nav/full-pagination";
 import { UserDisplayDialogue } from "@/components/users/user-display-dialogue";
 import { User } from "@/types";

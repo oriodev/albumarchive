@@ -80,10 +80,14 @@ export function FollowButton({ user }: { user: User | null }) {
       return;
     }
 
+    const followRequestNotificationPayload = {
+      sender: currentUser._id,
+      receiver: user._id,
+      type: NotificationType.FRIENDREQUEST,
+    };
+
     const sendFollowRequest = await sendNotification(
-      currentUser._id,
-      user._id,
-      NotificationType.FRIENDREQUEST,
+      followRequestNotificationPayload,
     );
 
     if (!sendFollowRequest) {

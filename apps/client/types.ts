@@ -58,6 +58,7 @@ export enum NotificationType {
   FRIENDREQUEST = "friendRequest",
   ALBUMREC = "albumRec",
   LISTLIKE = "listlike",
+  RESPONSE = "response",
 }
 
 export interface Notification {
@@ -67,6 +68,7 @@ export interface Notification {
   type: NotificationType;
   albumId?: string;
   listId?: string;
+  message?: string;
   timestamp?: Date;
 }
 
@@ -75,6 +77,15 @@ export interface Rating {
   album: string;
   user: string;
   rating: number;
+}
+
+export interface RatingsCount {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  total: number;
 }
 
 export interface Likes {

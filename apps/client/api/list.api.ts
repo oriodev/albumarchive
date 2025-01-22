@@ -51,23 +51,27 @@ export const getListById = async (listId: string) => {
 };
 
 export const getTrendingLists = async () => {
-  const token = await getSession();
+  try {
+    const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/trending`);
+    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/trending`);
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch {
     return null;
   }
-
-  const data = await response.json();
-  return data;
 };
 
 export const generateNewUserLists = async () => {

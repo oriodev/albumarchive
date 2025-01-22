@@ -84,7 +84,7 @@ export default function Page({
   // EMPTY LIST STATE.
   if (list.albums.length < 1) {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 justify-center items-center h-full">
         <p className="text-xl">There are no albums here yet.</p>
         {
           !(

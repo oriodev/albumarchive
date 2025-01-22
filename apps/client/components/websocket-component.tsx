@@ -17,11 +17,13 @@ export function WebsocketComponent() {
       return;
     }
 
-    const store = await sendNotification(
-      user?._id,
-      "676c36114bcb0152801f52fa",
-      NotificationType.FRIENDREQUEST,
-    );
+    const notificationPayload = {
+      sender: user?._id,
+      receiver: "676c36114bcb0152801f52fa",
+      type: NotificationType.FRIENDREQUEST,
+    };
+
+    const store = await sendNotification(notificationPayload);
 
     console.log("store: ", store);
 

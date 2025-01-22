@@ -12,6 +12,7 @@ import { slugify, truncateString } from "@/utils/global.utils";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/api/user.api";
+import Image from "next/image";
 
 export function ListCard({ list }: { list: List }) {
   const router = useRouter();
@@ -27,8 +28,6 @@ export function ListCard({ list }: { list: List }) {
     router.push(`/central/users/${user?.username}/${listUrl}`);
   };
 
-  console.log("list: ", list.name, list.totalLikes);
-
   const listText = list.totalLikes === 1 ? "like" : "likes";
   const albumText = list.albums
     ? list.albums.length === 1
@@ -39,9 +38,16 @@ export function ListCard({ list }: { list: List }) {
   return (
     <Card
       onClick={handleLink}
-      className="hover:cursor-pointer transition-transform transform hover:scale-105"
+      className="flex flex-col gap-5 hover:cursor-pointer transition-transform transform hover:scale-105"
     >
-      <CardHeader className="relative h-64 m-2"></CardHeader>
+      <CardHeader className="relative">
+        <Image
+          src="/listfallback.png"
+          width={500}
+          height={500}
+          alt="list fallback image"
+        />
+      </CardHeader>
       <CardContent className="flex flex-col gap-1">
         <CardTitle>{truncateString(list.name, 25)}</CardTitle>
         <CardDescription className="flex flex-wrap gap-2">

@@ -1,6 +1,5 @@
-import { Album } from "@/types";
+// COMPONENTS.
 import Image from "next/image";
-
 import { AlbumCard } from "@/components/albums/album-card";
 import {
   Dialog,
@@ -11,22 +10,40 @@ import {
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Button } from "../ui/button";
-import { AddToList } from "./add-to-list";
-import { useUser } from "@/utils/providers/UserProvider";
-import { useEffect, useState } from "react";
-import { isAlbumInToListen, removeAlbum } from "@/utils/lists.utils";
-import { useToast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
-import { slugify } from "@/utils/global.utils";
-import StarRating from "./star-rating";
-import { getAlbumRating } from "@/api/ratings.api";
 import { AlbumListCard } from "./album-list-card";
+import ViewStarRating from "./viewStarRating";
+
+// TYPES.
+import { Album } from "@/types";
+
+// API CALLS.
+import { AddToList } from "./add-to-list";
+import { getAlbumRating } from "@/api/ratings.api";
+import { addAlbumToList } from "@/api/list.api";
+
+// UTILS.
+import { useUser } from "@/utils/providers/UserProvider";
+import {
+  getLocalDatabaseAlbum,
+  isAlbumInToListen,
+  removeAlbum,
+} from "@/utils/lists.utils";
+import { slugify } from "@/utils/global.utils";
+import { makeUpdatedUser } from "@/utils/user.utils";
+
+// HOOKS.
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useParams, useRouter } from "next/navigation";
+import { Badge } from "../ui/badge";
+import GenreDisplay from "./genre-display";
 
 interface AlbumDialogueProps {
   album: Album;
-  setAlbums: (albums: Album[]) => void;
-  albums: Album[];
+  setAlbums?: (albums: Album[]) => void;
+  albums?: Album[];
   layoutType: string;
+  local: boolean;
 }
 
 export function AlbumDialogue({
@@ -34,11 +51,13 @@ export function AlbumDialogue({
   setAlbums,
   albums,
   layoutType,
+  local,
 }: AlbumDialogueProps) {
   // HOOKS.
-  const { user } = useUser();
+  const { user, updateUserInfo } = useUser();
   const { toast } = useToast();
   const params = useParams();
+  const router = useRouter();
 
   // STATES.
   const [showToListen, setShowToListen] = useState(false);
@@ -66,33 +85,59 @@ export function AlbumDialogue({
     fetchAlbumRating();
   }, [user, album, setAlbumRating]);
 
-  const handleHaveListened = () => {
-    if (!user?.lists) {
-      throw new Error("no user lists");
-    }
+  const handleHaveListened = async () => {
+    if (!user?.lists) return;
+    // remove it from to listen
 
-    const toListen = user?.lists.filter((list) => list.name === "To Listen")[0];
-    const toListenId = toListen._id;
-
-    if (!toListenId) {
-      throw new Error("no to listen id");
-    }
-
-    if (!album._id) {
-      throw new Error("no album id");
-    }
-
+    const toListenList = user?.lists.filter(
+      (list) => list.name === "To Listen",
+    )[0];
+    const listenedList = user?.lists.filter(
+      (list) => list.name === "Listened",
+    )[0];
     const slug = Array.isArray(params.slug)
       ? params.slug[0]
       : params.slug || "";
-    const updateState = slugify(toListen.name) === slug;
 
-    removeAlbum(toListenId, album._id, albums, setAlbums, updateState);
+    const updateState = slugify(toListenList.name) === slug;
+
+    if (!toListenList._id || !album._id || !listenedList._id) return;
+
+    await removeAlbum(
+      toListenList._id,
+      album._id,
+      updateState,
+      albums,
+      setAlbums,
+    );
+    await addAlbumToList(listenedList._id, album._id);
+
+    // UPDATE IN USER PROVIDER.
+    const deletionUpdate = makeUpdatedUser(user, toListenList._id, album._id);
+
+    if (!deletionUpdate) return;
+
+    const additionUpdate = makeUpdatedUser(
+      deletionUpdate,
+      listenedList._id,
+      album._id,
+    );
+
+    if (!additionUpdate) return;
+
+    updateUserInfo(additionUpdate);
 
     toast({
       title: "Moved To Listened",
       description: "Congrats on listening to a new album <3",
     });
+  };
+
+  const handleFullAlbum = async () => {
+    const localAlbum = await getLocalDatabaseAlbum(album);
+    if (!localAlbum) return;
+
+    router.push(`/central/albums/${localAlbum._id}`);
   };
 
   return (
@@ -111,53 +156,39 @@ export function AlbumDialogue({
           </VisuallyHidden.Root>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div className="flex gap-5">
+        <div className="flex gap-7">
           {/* LEFT SIDE */}
           <div>
             <Image
               alt={album.title}
               src={album.coverImage}
-              width={400}
-              height={400}
+              width={300}
+              height={300}
             />
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="text-l flex flex-col gap-2 w-1/3">
+          <div className="text-l flex flex-col gap-4 w-1/3">
             <div>
-              <p>Title</p>
-              <p className="font-bold">{album.title}</p>
+              <p className="font-bold text-3xl">{album.title}</p>
+              <p className="text-xl">{album.artist}</p>
             </div>
 
             <div>
-              <p>Artist</p>
-              <p className="font-bold">{album.artist}</p>
+              <Badge className="text-lg bg-rose-900 text-white hover:bg-rose-800">
+                Released {album?.releaseDate || "Unknown"}
+              </Badge>
             </div>
 
-            <div>
-              <p>Genre</p>
-              <p className="font-bold">{album.genre.join(", ")}</p>
-            </div>
+            {local && (
+              <>
+                <div>
+                  <ViewStarRating rating={albumRating} centered={false} />
+                </div>
+              </>
+            )}
 
-            <div>
-              <p>Release Year</p>
-              <p className="font-bold">{album.releaseDate || "Unknown"}</p>
-            </div>
-
-            <div>
-              <p>Overall Rating</p>
-              <p className="font-bold">{albumRating}</p>
-            </div>
-
-            <div>
-              <p>Your Rating</p>
-              <StarRating album={album} />
-            </div>
-
-            {/* <div>
-              <p>Tags</p>
-              <AlbumBadges album={album} />
-            </div> */}
+            <GenreDisplay album={album} />
           </div>
         </div>
 
@@ -172,7 +203,9 @@ export function AlbumDialogue({
               Finished Listening
             </Button>
           )}
-          <Button className="w-full">Reviews</Button>
+          <Button className="w-full" onClick={handleFullAlbum}>
+            See Full Album
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

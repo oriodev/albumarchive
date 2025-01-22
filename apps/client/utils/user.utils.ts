@@ -56,6 +56,7 @@ export const makeUpdatedUser = (
     const updatedLists = prevUser.lists.map((list) => {
       if (list._id === listId) {
         const albumIndex = list.albums.indexOf(albumId);
+
         if (albumIndex === -1) {
           return { ...list, albums: [...list.albums, albumId] };
         } else {
@@ -65,7 +66,7 @@ export const makeUpdatedUser = (
           };
         }
       }
-      return list;
+      return { ...list, albums: [...list.albums] };
     });
     return { ...prevUser, lists: updatedLists };
   }

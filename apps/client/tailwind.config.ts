@@ -73,6 +73,10 @@ export default {
         "scrollbar-hidden":
           "scrollbar-width: none; &::-webkit-scrollbar { display: none; }",
       },
+      scale: {
+        98: "0.98",
+        97: "0.97",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

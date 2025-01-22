@@ -23,7 +23,7 @@ import NewListBtn from "../lists/new-list-btn";
 
 import Link from "next/link";
 import { listToRender } from "@/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { deleteList } from "@/api/list.api";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -40,6 +40,7 @@ export function NavLists({
 }) {
   // HOOKS.
   const router = useRouter();
+  const pathname = usePathname();
   const { user, updateUserInfo } = useUser();
   const { toast } = useToast();
 
@@ -51,11 +52,17 @@ export function NavLists({
 
     if (id) {
       // UPDATE USER PROVIDER.
+      const listToDelete = user.lists.filter((list) => list._id === id)[0];
       const updatedLists = user.lists.filter((list) => !(list._id === id));
       updateUserInfo({ lists: updatedLists });
 
       await deleteList(id);
-      router.push("/central/lists/listened");
+
+      const path = pathname.split("/");
+
+      if (path[path.length - 1] === listToDelete.slug) {
+        router.push("/central/lists/listened");
+      }
     }
 
     return null;

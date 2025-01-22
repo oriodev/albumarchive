@@ -6,6 +6,7 @@ import { AlbumService } from '../album/album.service';
 import { User } from 'src/auth/schemas/user.schema';
 import { Query } from 'express-serve-static-core';
 import { Likes } from 'src/likes/schemas/likes.schema';
+import { Album } from 'src/album/schemas/album.schema';
 
 @Injectable()
 export class ListService {
@@ -16,6 +17,8 @@ export class ListService {
         private userModel: mongoose.Model<User>,
         @InjectModel('Likes')
         private likesModel: mongoose.Model<Likes>,
+        @InjectModel('Album')
+        private albumModel: mongoose.Model<Album>,
         private albumService: AlbumService
     ) {}
 
@@ -246,55 +249,74 @@ export class ListService {
         )
     }
 
-async getTrendingLists(): Promise<List[]> {
-    const trendingListsWithLikes = await this.likesModel.aggregate([
-        {
-            $group: {
-                _id: "$list",
-                count: { $sum: 1 }
+    async getTrendingLists(): Promise<List[]> {
+        const trendingListsWithLikes = await this.likesModel.aggregate([
+            {
+                $group: {
+                    _id: "$list",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { count: -1 }
+            },
+            {
+                $limit: 10
+            },
+            {
+                $lookup: {
+                    from: 'lists',
+                    localField: '_id', 
+                    foreignField: '_id',
+                    as: 'list'
+                }
+            },
+            {
+                $unwind: '$list'
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'list.user', 
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: '$user'
+            },
+            {
+                $match: {
+                    'user.private': false
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: { $mergeObjects: ["$list", { totalLikes: "$count" }] }
+                }
             }
-        },
-        {
-            $sort: { count: -1 }
-        },
-        {
-            $limit: 10
-        },
-        {
-            $lookup: {
-                from: 'lists',
-                localField: '_id', 
-                foreignField: '_id',
-                as: 'list'
-            }
-        },
-        {
-            $unwind: '$list'
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'list.user', 
-                foreignField: '_id',
-                as: 'user'
-            }
-        },
-        {
-            $unwind: '$user'
-        },
-        {
-            $match: {
-                'user.private': false
-            }
-        },
-        {
-            $replaceRoot: {
-                newRoot: { $mergeObjects: ["$list", { totalLikes: "$count" }] }
-            }
-        }
-    ]);
+        ]);
 
-    return trendingListsWithLikes;
-}
+        return trendingListsWithLikes;
+    }
+
+    // async getListsByGenre(genre: string): Promise<List[]> {
+       
+    //     const lists = await this.listModel.aggregate([
+    //         {
+    //             $lookup: {
+    //               from: 'albums', // The name of the albums collection
+    //               localField: 'albums', // Field from the lists collection
+    //               foreignField: '_id', // Field from the albums collection
+    //               as: 'albums', // Output array field
+    //             },
+    //           },
+    //     ])
+
+    //     console.log('lists: ', lists)
+
+    //     return lists
+
+    // }
 
 }

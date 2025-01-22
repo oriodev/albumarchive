@@ -25,6 +25,9 @@ export class Notification {
 
     @Prop({ required: false, type: SchemaTypes.ObjectId, ref: 'List' })
     listId: string
+
+    @Prop({ required: false})
+    message: string
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification)

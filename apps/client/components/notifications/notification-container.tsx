@@ -65,7 +65,7 @@ export function NotificationContainer({
       );
 
       setSenders(senderMap);
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false);
     };
 
     fetchNotifications();

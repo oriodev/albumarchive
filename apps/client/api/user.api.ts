@@ -79,12 +79,13 @@ export const getUser = async (id: string) => {
         lists: user.lists,
         following: user.following,
         followers: user.followers,
-      };
+      } as User;
     }
 
     return null;
   } catch (error) {
     console.log("error: ", error);
+    return null;
   }
 };
 

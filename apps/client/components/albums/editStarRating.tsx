@@ -18,7 +18,7 @@ import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 
-export default function StarRating({ album }: { album: Album }) {
+export default function EditStarRating({ album }: { album: Album }) {
   // STATES.
   const [rating, setRating] = useState<number>(0);
   const [ratingId, setRatingId] = useState<string | null>(null);
@@ -54,6 +54,8 @@ export default function StarRating({ album }: { album: Album }) {
   };
 
   const handleClick = async (index: number) => {
+    setRating(index);
+
     if (!user?._id || !album._id) {
       return; // toast?
     }
@@ -92,15 +94,14 @@ export default function StarRating({ album }: { album: Album }) {
     <div className="flex items-center cursor-pointer">
       {[1, 2, 3, 4, 5].map((index) => (
         <Star
+          strokeWidth={0}
+          size={50}
           key={index}
           onMouseEnter={() => handleMouseEnter(index)}
           onMouseLeave={handleMouseLeave}
           onClick={() => handleClick(index)}
-          className={`h-6 w-6 transition-colors duration-200 ${
-            index <= (hoveredRating || rating)
-              ? "text-yellow-500"
-              : "text-gray-400"
-          }`}
+          fill={index <= (hoveredRating || rating) ? "#fcd34d" : "grey"}
+          className={`transition-colors duration-200`}
         />
       ))}
     </div>

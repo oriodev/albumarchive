@@ -15,6 +15,11 @@ export class RatingsController {
     async getTotalRating(@Param('albumId') albumId): Promise<number> {
         return await this.ratingsService.getAlbumRating(albumId)
     }
+
+    @Get(':albumId/total')
+    async getNumberOfRatings(@Param('albumId') albumId): Promise<{}> {
+        return await this.ratingsService.getRatingsCount(albumId)
+    }
     
     @Post()
     async createList(@Body() rating: Ratings): Promise<Ratings> {

@@ -23,32 +23,32 @@ import {
 // UTILS.
 import { cn } from "@/lib/utils";
 import {
-  addAlbumToLocalDb,
-  shouldWeDeleteFromList,
   findListsAlbumIsIn,
   getListFromId,
-  removeAlbum,
+  handleListenedToListenSwitch,
+  getLocalDatabaseAlbum,
+  deleteAlbumFromList,
 } from "@/utils/lists.utils";
 
 // HOOKS.
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect, useMemo } from "react";
+import { useParams } from "next/navigation";
 
 // API CALLS.
-import { getAlbumByTitle } from "@/api/albums.api";
 import { addAlbumToList } from "@/api/list.api";
+
+// UTILS.
+import { makeUpdatedUser } from "@/utils/user.utils";
 
 // TYPES.
 import { Album, AlbumType } from "@/types";
-import { useParams } from "next/navigation";
-import { slugify } from "@/utils/global.utils";
-import { makeUpdatedUser } from "@/utils/user.utils";
 
 interface AddToListProps {
   album: Album;
-  setAlbums: (albums: Album[]) => void;
-  albums: Album[];
+  setAlbums?: (albums: Album[]) => void;
+  albums?: Album[];
 }
 
 export function AddToList({ album, setAlbums, albums }: AddToListProps) {
@@ -76,132 +76,61 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
   }, [album, lists]);
 
   // HANDLE ADDING TO LIST.
+
   const onAddToList = async (listId: string) => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
     // IS ALBUM IN LOCAL DATABASE?
-
-    const albumInLocal = await getAlbumByTitle(album.title);
-
-    if (!albumInLocal) {
-      await addAlbumToLocalDb(album);
-    }
-
-    const albumFromLocal = await getAlbumByTitle(album.title);
-
-    if (!albumFromLocal) {
-      throw new Error("album is not in local db for some reason");
-    }
-
-    // THROW AN ERROR IF THERE'S NO ALBUM ID.
-
-    if (!albumFromLocal._id) {
-      toast({
-        title: "Album does not exist somehow",
-        description: "idk either tbh",
-      });
-      return;
-    }
+    const albumFromLocal = await getLocalDatabaseAlbum(album);
+    if (!albumFromLocal?._id) return;
 
     // GRAB THE FULL LIST.
-
     const selectedList = getListFromId(lists, listId);
+    if (!selectedList?._id) return;
 
-    if (!selectedList?._id) {
-      toast({
-        title: "List does not exist somehow",
-        description: "idk either tbh",
-      });
-      return;
-    }
-
+    // GRAB THE SLUG.
     const slug = Array.isArray(params.slug)
       ? params.slug[0]
       : params.slug || "";
 
     // ARE WE DELETING FROM LIST?
+    const checkDeleteAlbumFromList = await deleteAlbumFromList(
+      selectedList,
+      albumInLists,
+      slug,
+      album,
+      user,
+      updateUserInfo,
+      albums,
+      setAlbums,
+    );
 
-    const isAlbumInList = selectedList?._id in albumInLists;
-
-    if (isAlbumInList) {
-      const updateState = slugify(selectedList.name) === slug;
-
-      removeAlbum(
-        selectedList?._id,
-        albumFromLocal._id,
-        albums,
-        setAlbums,
-        updateState,
-      );
-
-      // UPDATE THE LIST IN THE USER PROVIDER.
-      const updatedUser = makeUpdatedUser(
-        user,
-        selectedList?._id,
-        albumFromLocal._id,
-      );
-
-      if (!updatedUser) return;
-
-      updateUserInfo(updatedUser);
-
-      toast({
-        title: `Removed ${album.title} from ${selectedList?.name}`,
-      });
-
+    if (checkDeleteAlbumFromList) {
+      toast(checkDeleteAlbumFromList);
       return;
     }
 
-    // HANDLING DELETING LIST FROM LISTENED/TO LISTEN.
-
-    const listToDeleteFrom = await shouldWeDeleteFromList(
+    // HANDLE SWITCHING.
+    const switchResults = await handleListenedToListenSwitch(
       selectedList,
-      album,
+      albumFromLocal,
       lists,
       albumInLists,
+      slug,
+      user,
+      updateUserInfo,
+      albums,
+      setAlbums,
     );
 
-    if (listToDeleteFrom?.type === "toListen") {
-      const updateState = slug === "to-listen";
-
-      removeAlbum(
-        listToDeleteFrom.id,
-        albumFromLocal._id,
-        albums,
-        setAlbums,
-        updateState,
-      );
-
-      toast({
-        title: "Moved To Listened",
-        description: "Congrats on listening to a new album <3",
-      });
+    if (switchResults) {
+      toast(switchResults);
+      return;
     }
 
-    if (listToDeleteFrom?.type === "listened") {
-      const updateState = slug === "listened";
-
-      removeAlbum(
-        listToDeleteFrom.id,
-        albumFromLocal._id,
-        albums,
-        setAlbums,
-        updateState,
-      );
-
-      toast({
-        title: "Moved To To Listen",
-        description: "Guess u didn't listen to that album yet huh",
-      });
-    }
-
-    // ACTUALLY ADDING THE ALBUM TO THE LIST.
-
+    // ADD ALBUM TO DATABASE.
     await addAlbumToList(listId, albumFromLocal._id);
 
-    // UPDATE THE LIST IN THE USER PROVIDER.
     const updatedUser = makeUpdatedUser(
       user,
       selectedList?._id,

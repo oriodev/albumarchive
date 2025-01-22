@@ -16,7 +16,6 @@ export class AlbumController {
         return this.albumService.create(album)
     }
     
-    
     @Get('/by-title/')
     async getAlbumByTitle(
         @Query('title')
@@ -31,6 +30,22 @@ export class AlbumController {
         id: string
     ): Promise<Album> {
         return await this.albumService.findById(id)
+    }
+
+    @Get(':artist/artist')
+    async getAlbumsByArtist(
+        @Param('artist')
+        artistName: string
+    ): Promise<Album[]> {
+        return await this.albumService.findByArtist(artistName)
+    }
+
+    @Get(':genre/genre')
+    async getAlbumsByGenre(
+        @Param('genre')
+        genre: string
+    ): Promise<Album[]> {
+        return await this.albumService.findByGenre(genre)
     }
 
     @Get()

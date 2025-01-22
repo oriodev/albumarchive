@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Album } from './schemas/album.schema';
 import { Query } from 'express-serve-static-core';
+import { Ratings } from 'src/ratings/schemas/ratings.schema';
+import { List } from 'src/list/schemas/list.schema';
 
 
 @Injectable()
@@ -10,12 +12,18 @@ export class AlbumService {
     constructor(
         @InjectModel(Album.name)
         private albumModel: mongoose.Model<Album>
+
+        // @InjectModel("Ratings")
+        // private ratingsModel: mongoose.Model<Ratings>
+
+        // @InjectModel("List")
+        // private listModel: mongoose.Model<List>
     ) {}
 
 
     async findAll(query: Query): Promise<{ albums: Album[]; total: number }> {
 
-        const resPerPage = 10
+        const resPerPage = 25
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
 
@@ -99,4 +107,17 @@ export class AlbumService {
 
         return await this.albumModel.findByIdAndDelete(id)
     }
+
+    async findByArtist(artistName: string): Promise<Album[]> {
+        const albums = await this.albumModel.find({ artist: artistName })
+
+        return albums
+    }
+
+    async findByGenre(genre: string): Promise<Album[]> {
+        const albums = await this.albumModel.find({ genre }).limit(25).sort({ rating: -1 })
+
+        return albums
+    }
 }
+

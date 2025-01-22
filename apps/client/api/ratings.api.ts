@@ -1,4 +1,4 @@
-import { Rating } from "@/types";
+import { Rating, RatingsCount } from "@/types";
 import { getSession } from "./session.api";
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/ratings`;
@@ -63,6 +63,38 @@ export const getAlbumRating = async (
     }
 
     const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating rating:", error);
+    throw error;
+  }
+};
+
+/**
+ * get number of rating for an album.
+ * @param albumId string
+ * @returns Promise<number | null>
+ */
+export const getRatingsCount = async (
+  albumId: string,
+): Promise<RatingsCount | null> => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${baseUrl}/${albumId}/total`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
     return data;
   } catch (error) {
     console.error("Error updating rating:", error);

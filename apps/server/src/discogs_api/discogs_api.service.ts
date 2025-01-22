@@ -19,7 +19,7 @@ export class DiscogsApiService {
                     q: query.search,
                     type: 'release',
                     page: query.page,
-                    per_page: 10
+                    per_page: 25
                 },
                 headers: {
                     Authorization: this.authHeaderTokens

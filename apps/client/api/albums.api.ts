@@ -67,6 +67,31 @@ export const getAlbumById = async (id: string) => {
   }
 };
 
+export const getAlbumsByArtist = async (artist: string) => {
+  try {
+    const token = await getSession();
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_BACKEND_API}/album/${artist}/artist`,
+    );
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+
 export const createAlbum = async (album: Album) => {
   const token = await getSession();
 
