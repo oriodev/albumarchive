@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { NotificationsModule } from './notifications/notifications.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { LikesModule } from './likes/likes.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -29,14 +30,15 @@ import { LikesModule } from './likes/likes.module';
     JwtModule,
     NotificationsModule,
     RatingsModule,
-    LikesModule
+    LikesModule,
+    ReviewsModule
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard
-    }
+    },
   ]
 })
 export class AppModule {}
