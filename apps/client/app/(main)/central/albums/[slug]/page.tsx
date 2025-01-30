@@ -55,7 +55,9 @@ export default function Page({
   const [showAddToListen, setShowAddToListen] = useState(false);
   const [albumsByArtist, setAlbumsByArtist] = useState<Album[] | null>(null);
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
+  const [totalReviews, setTotalReviews] = useState<number>(0);
   const [userReview, setUserReview] = useState<ReviewWithUser | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // FETCH USER.
   useEffect(() => {
@@ -148,7 +150,10 @@ export default function Page({
     const fetchReviews = async () => {
       if (!album?._id) return;
 
-      const fetchedReviews = await getAllReviews(album._id);
+      const fetchedReviews = await getAllReviews(
+        album._id,
+        currentPage.toString(),
+      );
 
       if (!fetchedReviews) return;
 
@@ -162,11 +167,12 @@ export default function Page({
         );
       }
 
+      setTotalReviews(fetchedReviews.total);
       setLoading(false);
     };
 
     fetchReviews();
-  }, [album, user, userReview]);
+  }, [album, user, userReview, currentPage]);
 
   const addToListen = async () => {
     if (!user || !album || !user.lists) return;
@@ -286,6 +292,9 @@ export default function Page({
                 reviews={reviews}
                 userReview={userReview}
                 ratingsCount={ratingsCount}
+                totalReviews={totalReviews}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
               />
             )}
           </div>

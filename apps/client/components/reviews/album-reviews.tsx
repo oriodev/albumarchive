@@ -4,27 +4,33 @@ import { Album, RatingsCount, ReviewWithUser } from "@/types";
 // COMPONENTS.
 import { ReviewDisplay } from "./review-display";
 import { RatingDisplay } from "@/components/reviews/rating-display";
+import { FullPagination } from "../nav/full-pagination";
 
 export function AlbumReviewsContainer({
   album,
   reviews,
   userReview,
   ratingsCount,
+  totalReviews,
+  currentPage,
+  setCurrentPage,
 }: {
   album: Album;
   reviews: ReviewWithUser[];
   userReview: ReviewWithUser | null;
   ratingsCount: RatingsCount | null;
+  totalReviews: number;
+  currentPage: number;
+  setCurrentPage: (currentPage: number) => void;
 }) {
   return (
     <div className="p-5 bg-zinc-900 rounded-lg w-full flex flex-col gap-7">
-      <p className="text-xl font-bold">Reviews</p>
+      <div className="flex flex-col gap-2">
+        <p className="text-xl font-bold">Reviews</p>
+        {ratingsCount && <RatingDisplay ratings={ratingsCount} />}
+      </div>
 
       <div className="flex flex-col gap-5">
-        {ratingsCount && <RatingDisplay ratings={ratingsCount} />}
-
-        {/* TRYING TO ADD FILTERING TO DIFF RATINGS */}
-
         {userReview && (
           <ReviewDisplay album={album} review={userReview} userReview={true} />
         )}
@@ -37,6 +43,13 @@ export function AlbumReviewsContainer({
             userReview={false}
           />
         ))}
+
+        <FullPagination
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          total={totalReviews}
+          resPerPage={10}
+        />
       </div>
     </div>
   );
