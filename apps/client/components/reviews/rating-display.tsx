@@ -11,12 +11,12 @@ export function RatingDisplay({ ratings }: { ratings: RatingsCount }) {
   };
 
   return (
-    <div className="lg:w-1/3 w-1/2">
+    <div className="md:w-1/2 w-full flex flex-col gap-1">
       {Object.entries(ratingPercentages).map(([rating, percentage]) => {
         return (
           <div key={rating} className="flex w-full gap-5 items-center">
             <p className="flex-shrink-0">{rating} stars</p>
-            <Progress value={percentage} />
+            <Progress value={percentage} className="h-5" />
           </div>
         );
       })}

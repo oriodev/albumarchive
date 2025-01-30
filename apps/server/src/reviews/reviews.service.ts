@@ -61,7 +61,7 @@ export class ReviewsService {
             .find({ album: query.albumId })
             .limit(resPerPage)
             .skip(skip)
-            .populate('user', 'rating')
+            .populate('rating user')
     
         return { reviews, total };
     }
@@ -74,28 +74,6 @@ export class ReviewsService {
     async findAllByUser(query: Query): Promise<{ reviews: Reviews[]; total: number }> {
 
         const resPerPage = 25
-        const currentPage = Number(query.page) || 1
-        const skip = resPerPage * (currentPage - 1)
-
-        const total = await this.reviewsModel.countDocuments({ user: query.userId }).exec();
-    
-        const reviews = await this.reviewsModel
-            .find({ user: query.userId })
-            .limit(resPerPage)
-            .skip(skip)
-            .populate('user', 'rating')
-    
-        return { reviews, total };
-    }
-
-    /**
-     * get all reviews for an album by rating
-     * @param query 
-     * @returns 
-     */
-    async findAllByRating(query: Query): Promise<{ reviews: Reviews[]; total: number }> {
-
-        const resPerPage = 10
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
 

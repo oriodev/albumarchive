@@ -113,6 +113,8 @@ export default function Page({
       const artistName = album.artist;
       const fetchedAlbumsByArtist = await getAlbumsByArtist(artistName);
 
+      if (!fetchedAlbumsByArtist) return;
+
       const filteredArtists = fetchedAlbumsByArtist.filter(
         (fetchedAlbum: Album) => fetchedAlbum._id !== album._id,
       );

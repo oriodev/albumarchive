@@ -35,7 +35,6 @@ export const getReview = async (
     }
 
     const data = await response.json();
-    console.log("reviews: ", data);
     return data;
   } catch (error) {
     console.error("Error updating rating:", error);

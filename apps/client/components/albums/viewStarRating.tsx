@@ -13,7 +13,7 @@ export default function ViewStarRating({
   let half: boolean = false;
 
   if (rating) {
-    const splitNumber = rating.toString().split(".");
+    const splitNumber = rating.toFixed(1).split(".");
     const first = parseInt(splitNumber[0]);
     const second = parseInt(splitNumber[1]);
 
@@ -62,7 +62,7 @@ export default function ViewStarRating({
       </div>
       {ratingsCount && (
         <>
-          <p className="text-3xl font-bold">{rating}</p>
+          <p className="text-3xl font-bold">{rating.toFixed(1)}</p>
 
           <div>
             <p className="text-md italic text-gray-200">
