@@ -21,6 +21,7 @@ export interface User {
   lists?: List[];
   following?: string[];
   followers?: string[];
+  reviews?: Review[];
 }
 
 export enum AlbumType {
@@ -92,4 +93,17 @@ export interface Likes {
   _id?: string;
   user: string;
   list: string;
+}
+
+export interface Review {
+  _id?: string;
+  user: string;
+  album: string;
+  vibes: string[];
+  reviewText: string;
+  rating: Rating;
+}
+
+export interface ReviewWithUser extends Omit<Review, "user"> {
+  user: User;
 }

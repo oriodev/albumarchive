@@ -1,7 +1,7 @@
 import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
 import { addAlbumToList, removeAlbumFromList } from "@/api/list.api";
 import { Album, AlbumType, List, User } from "@/types";
-import { makeUpdatedUser } from "./user.utils";
+import { makeUpdatedAlbumInListUser } from "./user.utils";
 import { slugify } from "./global.utils";
 
 /**
@@ -59,11 +59,11 @@ export const findListsAlbumIsIn = async (
 export const getListFromId = (lists: List[], listId: string): List | null => {
   const selectedList = lists.filter((list) => list._id === listId);
 
-  if (selectedList.length > 1) {
-    return null;
+  if (selectedList.length === 1) {
+    return selectedList[0];
   }
 
-  return selectedList[0];
+  return null;
 };
 
 /**
@@ -262,11 +262,15 @@ export const handleListenedToListenSwitch = async (
   await addAlbumToList(selectedList._id, album._id);
 
   // UPDATE IN USER PROVIDER.
-  const deletionUpdate = makeUpdatedUser(user, listToDeleteFrom.id, album._id);
+  const deletionUpdate = makeUpdatedAlbumInListUser(
+    user,
+    listToDeleteFrom.id,
+    album._id,
+  );
 
   if (!deletionUpdate) return;
 
-  const additionUpdate = makeUpdatedUser(
+  const additionUpdate = makeUpdatedAlbumInListUser(
     deletionUpdate,
     selectedList._id,
     album._id,
@@ -328,7 +332,7 @@ export const deleteAlbumFromList = async (
     removeAlbum(list?._id, album._id, updateState, albums, setAlbums);
 
     // UPDATE THE LIST IN THE USER PROVIDER.
-    const updatedUser = makeUpdatedUser(user, list?._id, album._id);
+    const updatedUser = makeUpdatedAlbumInListUser(user, list?._id, album._id);
 
     if (!updatedUser) return;
 

@@ -2,12 +2,15 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Ratings } from './schemas/ratings.schema';
 import mongoose, { mongo } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Reviews } from 'src/reviews/schemas/reviews.schema';
 
 @Injectable()
 export class RatingsService {
     constructor(
         @InjectModel(Ratings.name)
         private ratingsModel: mongoose.Model<Ratings>,
+        @InjectModel('Reviews')
+        private reviewsModel: mongoose.Model<Reviews>
     ) {}
 
     
@@ -46,6 +49,10 @@ export class RatingsService {
         const data = Object.assign(rating)
         const res = await this.ratingsModel.create(data)
 
+        await this.reviewsModel.findOneAndUpdate({ user: rating.user, album: rating.album}, {
+            rating: res.id
+        })
+
         return res
     }
 
@@ -62,12 +69,20 @@ export class RatingsService {
             throw new BadRequestException('please enter a valid mongodb id')
         }
 
-        return await this.ratingsModel.findByIdAndUpdate(id, {
+        const res = await this.ratingsModel.findByIdAndUpdate(id, {
             rating: updatedRating
         },
         { new: true,
           runValidators: true
          })
+
+         if (!res.rating) {
+             await this.reviewsModel.findOneAndUpdate({ user: res.user, album: res.album}, {
+                rating: res.id
+            })
+         }
+
+         return res
     }
 
     /**

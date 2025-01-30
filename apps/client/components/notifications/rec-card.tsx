@@ -23,7 +23,7 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { sendNotification } from "@/utils/notifications.utils";
 import { addAlbumToList } from "@/api/list.api";
 import { useToast } from "@/hooks/use-toast";
-import { makeUpdatedUser } from "@/utils/user.utils";
+import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
 
 export function RecCard({
   notification,
@@ -118,7 +118,11 @@ export function RecCard({
 
     // UPDATE IN USER PROVIDER.
 
-    const additionUpdate = makeUpdatedUser(user, toListen._id, album._id);
+    const additionUpdate = makeUpdatedAlbumInListUser(
+      user,
+      toListen._id,
+      album._id,
+    );
 
     if (!additionUpdate) return;
 

@@ -35,6 +35,10 @@ export function ListCard({ list }: { list: List }) {
       : "albums"
     : 0;
 
+  if (!list.albums) {
+    return <div></div>;
+  }
+
   return (
     <Card
       onClick={handleLink}

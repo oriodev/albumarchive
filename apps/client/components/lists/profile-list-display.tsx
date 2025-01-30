@@ -19,7 +19,7 @@ export function ProfileListDisplay({
         {title}: {count}
       </h2>
       <div className="flex gap-2">
-        <ListScrollDisplay lists={lists || []} />
+        <ListScrollDisplay lists={lists} />
       </div>
 
       {!lists && <p>none yet!</p>}

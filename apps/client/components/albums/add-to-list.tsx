@@ -40,7 +40,7 @@ import { useParams } from "next/navigation";
 import { addAlbumToList } from "@/api/list.api";
 
 // UTILS.
-import { makeUpdatedUser } from "@/utils/user.utils";
+import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
 
 // TYPES.
 import { Album, AlbumType } from "@/types";
@@ -131,7 +131,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
     // ADD ALBUM TO DATABASE.
     await addAlbumToList(listId, albumFromLocal._id);
 
-    const updatedUser = makeUpdatedUser(
+    const updatedUser = makeUpdatedAlbumInListUser(
       user,
       selectedList?._id,
       albumFromLocal._id,

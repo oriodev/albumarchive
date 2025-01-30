@@ -29,7 +29,7 @@ import {
   removeAlbum,
 } from "@/utils/lists.utils";
 import { slugify } from "@/utils/global.utils";
-import { makeUpdatedUser } from "@/utils/user.utils";
+import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
 
 // HOOKS.
 import { useEffect, useState } from "react";
@@ -113,11 +113,15 @@ export function AlbumDialogue({
     await addAlbumToList(listenedList._id, album._id);
 
     // UPDATE IN USER PROVIDER.
-    const deletionUpdate = makeUpdatedUser(user, toListenList._id, album._id);
+    const deletionUpdate = makeUpdatedAlbumInListUser(
+      user,
+      toListenList._id,
+      album._id,
+    );
 
     if (!deletionUpdate) return;
 
-    const additionUpdate = makeUpdatedUser(
+    const additionUpdate = makeUpdatedAlbumInListUser(
       deletionUpdate,
       listenedList._id,
       album._id,

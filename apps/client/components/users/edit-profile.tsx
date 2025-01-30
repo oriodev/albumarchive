@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect } from "react";
 import { Button } from "../ui/button";
+import { CldUploadButton } from "next-cloudinary";
 
 type FormData = z.infer<typeof editUserSchema>;
 
@@ -56,6 +57,8 @@ export function EditingProfile({}) {
           onSubmit={handleSubmit(onSubmit)}
           className="grid gap-4 py-4 w-1/2"
         >
+          <CldUploadButton uploadPreset="<Upload Preset>" />
+
           {/* DESCRIPTION FIELD */}
           <FormField
             control={control}

@@ -79,6 +79,7 @@ export const getUser = async (id: string) => {
         lists: user.lists,
         following: user.following,
         followers: user.followers,
+        reviews: user.reviews,
       } as User;
     }
 
@@ -115,6 +116,7 @@ export const getUserByUsername = async (username: string) => {
         lists: user.lists,
         following: user.following,
         followers: user.followers,
+        reviews: user.reviews,
       };
     }
 

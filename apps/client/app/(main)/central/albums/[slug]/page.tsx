@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 // TYPES.
-import { Album, RatingsCount } from "@/types";
+import { Album, RatingsCount, ReviewWithUser } from "@/types";
 
 // UTILS.
 import {
@@ -28,11 +28,14 @@ import {
   isAlbumInToListen,
 } from "@/utils/lists.utils";
 import { useUser } from "@/utils/providers/UserProvider";
-import { makeUpdatedUser } from "@/utils/user.utils";
+import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
 import { AlbumScrollDisplay } from "@/components/albums/album-scroll-display";
 import { FallbackAlbumPage } from "@/components/albums/fallback-album-page";
 import { AlbumRecDialogue } from "@/components/album recs/album-rec-dialogue";
 import GenreDisplay from "@/components/albums/genre-display";
+import { AlbumReviewsContainer } from "@/components/reviews/album-reviews";
+import { AddReviewDialogue } from "@/components/reviews/add-review-dialogue";
+import { getAllReviews, getReview } from "@/api/reviews.api";
 
 export default function Page({
   params,
@@ -51,6 +54,8 @@ export default function Page({
   const [ratingsCount, setRatingsCount] = useState<RatingsCount | null>(null);
   const [showAddToListen, setShowAddToListen] = useState(false);
   const [albumsByArtist, setAlbumsByArtist] = useState<Album[] | null>(null);
+  const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
+  const [userReview, setUserReview] = useState<ReviewWithUser | null>(null);
 
   // FETCH USER.
   useEffect(() => {
@@ -111,7 +116,6 @@ export default function Page({
       );
 
       if (filteredArtists.length === 0) {
-        setLoading(false);
         return;
       }
 
@@ -125,6 +129,44 @@ export default function Page({
     fetchAlbumsByArtist();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [album, user]);
+
+  // FETCH REVIEWS.
+
+  useEffect(() => {
+    const fetchUserReview = async () => {
+      if (!album?._id || !user?._id) return;
+
+      const fetchedUserReview = await getReview(user._id, album._id);
+
+      if (fetchedUserReview) setUserReview({ ...fetchedUserReview, user });
+    };
+
+    fetchUserReview();
+  }, [album, user]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!album?._id) return;
+
+      const fetchedReviews = await getAllReviews(album._id);
+
+      if (!fetchedReviews) return;
+
+      if (!userReview) setReviews(fetchedReviews.reviews);
+
+      if (userReview) {
+        setReviews(
+          fetchedReviews.reviews.filter(
+            (review: ReviewWithUser) => review.user._id !== user?._id,
+          ),
+        );
+      }
+
+      setLoading(false);
+    };
+
+    fetchReviews();
+  }, [album, user, userReview]);
 
   const addToListen = async () => {
     if (!user || !album || !user.lists) return;
@@ -144,7 +186,7 @@ export default function Page({
     // ADD ALBUM TO TO LISTEN..
     await addAlbumToList(toListen._id, albumFromLocal._id);
 
-    const updatedUser = makeUpdatedUser(
+    const updatedUser = makeUpdatedAlbumInListUser(
       user,
       toListen?._id,
       albumFromLocal._id,
@@ -216,22 +258,8 @@ export default function Page({
                 )}
 
                 {album && <AlbumRecDialogue album={album} />}
+                {album && !userReview && <AddReviewDialogue album={album} />}
               </div>
-            </div>
-          </div>
-
-          {/* RATING AND REVIEWS */}
-          <div className="flex flex-wrap lg:flex-nowrap gap-5 justify-center lg:justify-normal">
-            {/* RATING */}
-            <div className="gap-2 bg-zinc-900 rounded-lg p-5">
-              <p className="text-xl font-bold">Rate This Album</p>
-              {album && <StarRating album={album} />}
-            </div>
-
-            {/* REVIEWS. */}
-            <div className="p-5 bg-zinc-900 rounded-lg w-full">
-              <p className="text-xl font-bold">Reviews</p>
-              <p>hello</p>
             </div>
           </div>
 
@@ -242,6 +270,25 @@ export default function Page({
               <AlbumScrollDisplay albums={albumsByArtist} />
             </div>
           )}
+
+          {/* RATING AND REVIEWS */}
+          <div className="flex flex-wrap lg:flex-nowrap gap-5 justify-center lg:justify-normal">
+            {/* RATING */}
+            <div className="gap-2 bg-zinc-900 rounded-lg p-5 h-[130px]">
+              <p className="text-xl font-bold">Rate This Album</p>
+              {album && <StarRating album={album} />}
+            </div>
+
+            {/* REVIEWS. */}
+            {album && ratingsCount && (
+              <AlbumReviewsContainer
+                album={album}
+                reviews={reviews}
+                userReview={userReview}
+                ratingsCount={ratingsCount}
+              />
+            )}
+          </div>
         </div>
       ) : (
         <FallbackAlbumPage />

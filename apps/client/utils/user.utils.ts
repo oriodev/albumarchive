@@ -6,6 +6,7 @@ import { User } from "@/types";
 export const getUserDetails = async () => {
   const id = await getUserId();
   const user = await getUser(id);
+
   return user;
 };
 
@@ -47,7 +48,7 @@ export const getUsernameInitial = (profileData: User | null): string => {
  * @param albumId string
  * @returns an updated user or null.
  */
-export const makeUpdatedUser = (
+export const makeUpdatedAlbumInListUser = (
   prevUser: User,
   listId: string,
   albumId: string,

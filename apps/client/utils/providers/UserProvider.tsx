@@ -30,6 +30,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (!user) {
         try {
           const userDetails = await getUserDetails();
+
           if (userDetails) {
             setUser(userDetails);
           }

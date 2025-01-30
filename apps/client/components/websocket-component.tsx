@@ -12,6 +12,19 @@ export function WebsocketComponent() {
   const [messages, setMessages] = useState<string>("");
   const { user } = useUser();
 
+  const sendLiveNotification = (recipientUserId: string) => {
+    if (!socket) {
+      console.log("no socket");
+      return;
+    }
+
+    const notification = {
+      message: "New message received!",
+      userId: recipientUserId,
+    };
+    socket.emit("sendNotification", notification);
+  };
+
   const sendMyNotification = async () => {
     if (!user?._id) {
       return;
@@ -53,7 +66,9 @@ export function WebsocketComponent() {
     <div>
       <p>websocket component</p>
       <p>{messages}</p>
-      <Button onClick={sendMyNotification}></Button>
+      <Button onClick={() => sendLiveNotification(user?._id || "")}>
+        send notification
+      </Button>
     </div>
   );
 }

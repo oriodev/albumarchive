@@ -15,6 +15,7 @@ import { getUsersBatch } from "@/api/user.api";
 import { getUsernameInitial } from "@/utils/user.utils";
 import { FallbackProfile } from "../users/fallback-profile";
 import { Badge } from "../ui/badge";
+import { ReviewDisplayWithAlbum } from "../reviews/review-display-with-album";
 
 export function Profile() {
   const { user } = useUser();
@@ -85,6 +86,16 @@ export function Profile() {
           </div>
           <FollowPreview title="following" users={following} />
           <FollowPreview title="followers" users={followers} />
+
+          {user?.reviews && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-2xl">reviews : {user?.reviews.length} </h2>
+
+              {user.reviews.map((review, index) => (
+                <ReviewDisplayWithAlbum key={index} review={review} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     );

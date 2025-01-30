@@ -16,7 +16,10 @@ export class Reviews {
     vibes: string[]
 
     @Prop({ min: 1, max: 5000 })
-    reviewText: string[]
+    reviewText: string
+
+    @Prop({ type: SchemaTypes.ObjectId, ref: 'Ratings' })
+    rating: mongoose.Schema.Types.ObjectId;
 }
 
 export const ReviewsSchema = SchemaFactory.createForClass(Reviews)

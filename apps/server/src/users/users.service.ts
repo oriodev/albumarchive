@@ -75,6 +75,14 @@ export class UsersService {
                 }
             },
             {
+                $lookup: {
+                    from: 'reviews',
+                    localField: 'reviews',
+                    foreignField: '_id',
+                    as: 'reviews'
+                }
+            },
+            {
                 $group: {
                     _id: '$_id',
                     username: { $first: '$username' },
@@ -84,7 +92,8 @@ export class UsersService {
                     private: { $first: '$private' },
                     lists: { $push: '$lists' },
                     followers: { $first: '$followers' },
-                    following: { $first: '$following' }
+                    following: { $first: '$following' },
+                    reviews: { $first: '$reviews'}
                 }
             }
         ]);
@@ -99,13 +108,65 @@ export class UsersService {
     
 
     async findByUsername(username: string): Promise<User> {
-        const user = await this.userModel.findOne({ username: username}).populate('lists')
+
+        const user = await this.userModel.aggregate([
+            { $match: { username } },
+            {
+                $lookup: {
+                    from: 'lists',
+                    localField: 'lists',
+                    foreignField: '_id',
+                    as: 'lists'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$lists',
+                    preserveNullAndEmptyArrays: true 
+                }
+            },
+            {
+                $lookup: {
+                    from: 'likes',
+                    localField: 'lists._id',
+                    foreignField: 'list',
+                    as: 'likes'
+                }
+            },
+            {
+                $addFields: {
+                    'lists.totalLikes': { $size: '$likes' }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'reviews',
+                    localField: 'reviews',
+                    foreignField: '_id',
+                    as: 'reviews'
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    username: { $first: '$username' },
+                    email: { $first: '$email' },
+                    description: { $first: '$description' },
+                    password: { $first: '$password' },
+                    private: { $first: '$private' },
+                    lists: { $push: '$lists' },
+                    followers: { $first: '$followers' },
+                    following: { $first: '$following' },
+                    reviews: { $first: '$reviews'}
+                }
+            }
+        ]);
 
         if (!user) {
             throw new NotFoundException('user not found')
         }
 
-        return user;
+        return user[0];
 
     }
 

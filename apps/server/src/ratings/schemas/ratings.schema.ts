@@ -17,3 +17,4 @@ export class Ratings {
 
 export const RatingsSchema = SchemaFactory.createForClass(Ratings)
 RatingsSchema.index({ user: 1, album: 1 }, { unique: true});
+
