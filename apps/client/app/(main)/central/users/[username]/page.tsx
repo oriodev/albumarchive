@@ -1,20 +1,20 @@
 "use client";
 
 // COMPONENTS.
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FollowPreview } from "../../../../../components/users/follow-preview";
 
 import { useEffect, useState } from "react";
 // import { useUser } from "@/utils/providers/UserProvider";
 import { getUserByUsername, getUsersBatch } from "@/api/user.api";
 import { User } from "@/types";
-import { checkIfFollowing, getUsernameInitial } from "@/utils/user.utils";
+import { checkIfFollowing } from "@/utils/user.utils";
 import { FallbackProfile } from "@/components/users/fallback-profile";
 import { ProfileListDisplay } from "@/components/lists/profile-list-display";
 import { useRouter } from "next/navigation";
 import { FollowButton } from "@/components/users/follow-button";
 import { RemoveFollowerButton } from "@/components/users/remove-follower-button";
 import { useUser } from "@/utils/providers/UserProvider";
+import ProfileImage from "@/components/users/profile-image";
 
 export default function Page({
   params,
@@ -92,7 +92,7 @@ export default function Page({
     }
   }, [user, currentUser]);
 
-  const initial = getUsernameInitial(user);
+  console.log("user: ", user);
 
   return (
     <>
@@ -107,12 +107,7 @@ export default function Page({
               <div className="flex flex-wrap gap-3 items-center justify-between">
                 <div className="flex items-center gap-3">
                   {/* PROFILE PIC */}
-                  <div>
-                    <Avatar className="w-16 h-16 text-3xl">
-                      <AvatarImage src="/" />
-                      <AvatarFallback>{initial}</AvatarFallback>
-                    </Avatar>
-                  </div>
+                  {user && <ProfileImage user={user} />}
 
                   {/* NAME AND EMAIL */}
                   <div>

@@ -6,16 +6,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // COMPONENTS.
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
 import { FollowPreview } from "../users/follow-preview";
 
 // API CALLS.
 import { getUsersBatch } from "@/api/user.api";
-import { getUsernameInitial } from "@/utils/user.utils";
 import { FallbackProfile } from "../users/fallback-profile";
 import { Badge } from "../ui/badge";
-import { ReviewDisplayWithAlbum } from "../reviews/review-display-with-album";
+import ProfileImage from "../users/profile-image";
 
 export function Profile() {
   const { user } = useUser();
@@ -25,6 +23,8 @@ export function Profile() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFollowingMoreBtn, setShowFollowingMoreBtn] = useState(true);
+  const [showFollowersMoreBtn, setShowFollowersMoreBtn] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -44,7 +44,6 @@ export function Profile() {
   }, [user]);
 
   // SET INITIAL FOR PROFILE PIC FALLBACK
-  const initial = getUsernameInitial(profileData);
 
   const DisplayProfile = () => {
     return (
@@ -54,12 +53,7 @@ export function Profile() {
           <div className="flex flex-wrap gap-3 items-center justify-between">
             <div className="flex items-center gap-3">
               {/* PROFILE PIC */}
-              <div>
-                <Avatar className="w-16 h-16 text-3xl">
-                  <AvatarImage src="/" />
-                  <AvatarFallback>{initial}</AvatarFallback>
-                </Avatar>
-              </div>
+              {profileData && <ProfileImage user={profileData} />}
 
               {/* NAME AND EMAIL */}
               <div>
@@ -84,18 +78,18 @@ export function Profile() {
               Edit Profile
             </Button>
           </div>
-          <FollowPreview title="following" users={following} />
-          <FollowPreview title="followers" users={followers} />
-
-          {user?.reviews && (
-            <div className="flex flex-col gap-4">
-              <h2 className="text-2xl">reviews : {user?.reviews.length} </h2>
-
-              {user.reviews.map((review, index) => (
-                <ReviewDisplayWithAlbum key={index} review={review} />
-              ))}
-            </div>
-          )}
+          <FollowPreview
+            title="following"
+            users={following}
+            showMoreBtn={showFollowingMoreBtn}
+            setShowMoreBtn={setShowFollowingMoreBtn}
+          />
+          <FollowPreview
+            title="followers"
+            users={followers}
+            showMoreBtn={showFollowersMoreBtn}
+            setShowMoreBtn={setShowFollowersMoreBtn}
+          />
         </div>
       </div>
     );

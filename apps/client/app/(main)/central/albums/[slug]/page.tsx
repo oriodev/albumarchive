@@ -159,22 +159,18 @@ export default function Page({
 
       if (!fetchedReviews) return;
 
-      if (!userReview) setReviews(fetchedReviews.reviews);
-
-      if (userReview) {
-        setReviews(
-          fetchedReviews.reviews.filter(
-            (review: ReviewWithUser) => review.user._id !== user?._id,
-          ),
-        );
-      }
+      setReviews(
+        fetchedReviews.reviews.filter(
+          (review: ReviewWithUser) => review.user._id !== user?._id,
+        ),
+      );
 
       setTotalReviews(fetchedReviews.total);
       setLoading(false);
     };
 
     fetchReviews();
-  }, [album, user, userReview, currentPage]);
+  }, [album, user, currentPage]);
 
   const addToListen = async () => {
     if (!user || !album || !user.lists) return;

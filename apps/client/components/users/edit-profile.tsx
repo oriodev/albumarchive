@@ -15,16 +15,29 @@ import { Textarea } from "../ui/textarea";
 import { updateUser } from "@/api/user.api";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/providers/UserProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+// COMPONENTS.
+import {
+  CldImage,
+  CldUploadButton,
+  CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 import { Button } from "../ui/button";
-import { CldUploadButton } from "next-cloudinary";
+import { destroyImage } from "@/api/cloudinary.api";
 
 type FormData = z.infer<typeof editUserSchema>;
 
 export function EditingProfile({}) {
+  // HOOKS.
   const router = useRouter();
   const { user, updateUserInfo } = useUser();
 
+  // STATES.
+  const [imageUrl, setImageUrl] = useState("");
+  const [publicId, setPublicId] = useState("");
+
+  // FORM.
   const form = useForm<FormData>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
@@ -32,33 +45,82 @@ export function EditingProfile({}) {
     },
   });
 
+  // SET FORM DEFAULTS.
   useEffect(() => {
     if (user) {
       form.reset({ description: user.description });
     }
   }, [user, form]);
 
+  // FORM.
   const { handleSubmit, control } = form;
 
+  // ON SUBMIT.
   const onSubmit = async (data: FormData) => {
     if (!user?._id) {
       throw new Error("no user id");
     }
 
-    await updateUser(user?._id, data);
-    updateUserInfo({ description: data.description });
+    const userPayload = {
+      description: data.description,
+      profileImg: imageUrl,
+    };
+
+    await updateUser(user?._id, userPayload);
+    updateUserInfo(userPayload);
     router.push("/central/profile");
   };
 
+  // ON DISCARD.
+  const onDiscard = async () => {
+    console.log("public id: ", publicId);
+    if (imageUrl) await destroyImage(publicId);
+    router.push("/central/profile");
+  };
+
+  // ON UPLOAD.
+  const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
+    console.log(info);
+    if (imageUrl) await destroyImage(publicId);
+    setImageUrl(info.secure_url);
+    setPublicId(info.public_id);
+  };
+
+  console.log("user", user);
+
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
+      <div className="flex gap-5">
+        {imageUrl ||
+          (user?.profileImg && (
+            <CldImage
+              width="300"
+              height="300"
+              src={imageUrl || user?.profileImg}
+              sizes="100vw"
+              alt={user?.username || "profile picture"}
+            />
+          ))}
+        <CldUploadButton
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
+          onUpload={(result) => {
+            if (result.event === "success") {
+              if (!result.info) return;
+              onUpload(result.info as CloudinaryUploadWidgetInfo);
+            }
+          }}
+        >
+          <span className="bg-white text-black p-2 pl-5 pr-5 rounded-lg">
+            Upload Image
+          </span>
+        </CldUploadButton>
+      </div>
+
       <FormProvider {...form}>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid gap-4 py-4 w-1/2"
         >
-          <CldUploadButton uploadPreset="<Upload Preset>" />
-
           {/* DESCRIPTION FIELD */}
           <FormField
             control={control}
@@ -87,7 +149,7 @@ export function EditingProfile({}) {
             {/* DISCARD BUTTON */}
             <Button
               type="button"
-              onClick={() => router.push("/central/profile")}
+              onClick={onDiscard}
               className="mt-4 w-1/2 bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200"
             >
               Discard Changes

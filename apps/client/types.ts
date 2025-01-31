@@ -16,6 +16,7 @@ export interface User {
   username?: string;
   description?: string;
   email: string;
+  profileImg?: string;
   password?: string;
   private?: boolean;
   lists?: List[];

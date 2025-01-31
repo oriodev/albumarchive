@@ -15,6 +15,9 @@ export class User {
     @Prop({ required: false })
     description: string
 
+    @Prop({ required: false })
+    profileImg: string
+
     @Prop() 
     password: string
 

@@ -1,6 +1,5 @@
 // TYPES.
 import { Album, ReviewWithUser } from "@/types";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { VibesDisplay } from "./vibes-display";
 import ViewStarRating from "../albums/viewStarRating";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import { DeleteDialog } from "./delete-dialog";
 import { deleteReview } from "@/api/reviews.api";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
+import ProfileImage from "../users/profile-image";
 
 export function ReviewDisplay({
   review,
@@ -54,9 +54,7 @@ export function ReviewDisplay({
                 href={`/central/users/${review.user.username}`}
                 className="flex hover:cursor-pointer"
               >
-                <Avatar className="w-20 h-20 text-3xl">
-                  <AvatarImage src="/userfallback.png" className="rounded-lg" />
-                </Avatar>
+                {review.user && <ProfileImage user={review.user} />}
               </Link>
               <h1 className="font-bold text-center">{review.user.username}</h1>
             </div>

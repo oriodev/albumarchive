@@ -88,6 +88,7 @@ export class UsersService {
                     username: { $first: '$username' },
                     email: { $first: '$email' },
                     description: { $first: '$description' },
+                    profileImg: { $first: '$profileImg' },
                     password: { $first: '$password' },
                     private: { $first: '$private' },
                     lists: { $push: '$lists' },
@@ -152,6 +153,7 @@ export class UsersService {
                     username: { $first: '$username' },
                     email: { $first: '$email' },
                     description: { $first: '$description' },
+                    profileImg: { $first: '$profileImg' },
                     password: { $first: '$password' },
                     private: { $first: '$private' },
                     lists: { $push: '$lists' },
@@ -211,12 +213,14 @@ export class UsersService {
             throw new BadRequestException('please enter a valid mongo id')
         }
 
+
         await this.userModel.updateOne(
             { _id: id },
             { $set: user }
         )
 
         const updatedUser = await this.userModel.findById(id)
+
 
         return updatedUser
     }
