@@ -17,14 +17,12 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect, useState } from "react";
 
-// COMPONENTS.
-import {
-  CldImage,
-  CldUploadButton,
-  CloudinaryUploadWidgetInfo,
-} from "next-cloudinary";
-import { Button } from "../ui/button";
+import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import { destroyImage } from "@/api/cloudinary.api";
+
+// COMPONENTS.
+import { Button } from "../ui/button";
+import ImageUpload from "../image-upload";
 
 type FormData = z.infer<typeof editUserSchema>;
 
@@ -41,14 +39,14 @@ export function EditingProfile({}) {
   const form = useForm<FormData>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
-      description: user?.description,
+      description: user?.description || "",
     },
   });
 
   // SET FORM DEFAULTS.
   useEffect(() => {
     if (user) {
-      form.reset({ description: user.description });
+      form.reset({ description: user.description || "" });
     }
   }, [user, form]);
 
@@ -62,7 +60,7 @@ export function EditingProfile({}) {
     }
 
     const userPayload = {
-      description: data.description,
+      description: data.description || "",
       profileImg: imageUrl,
     };
 
@@ -80,41 +78,16 @@ export function EditingProfile({}) {
 
   // ON UPLOAD.
   const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
-    console.log(info);
     if (imageUrl) await destroyImage(publicId);
     setImageUrl(info.secure_url);
     setPublicId(info.public_id);
   };
 
-  console.log("user", user);
-
   return (
     <div className="flex flex-col items-center">
-      <div className="flex gap-5">
-        {imageUrl ||
-          (user?.profileImg && (
-            <CldImage
-              width="300"
-              height="300"
-              src={imageUrl || user?.profileImg}
-              sizes="100vw"
-              alt={user?.username || "profile picture"}
-            />
-          ))}
-        <CldUploadButton
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
-          onUpload={(result) => {
-            if (result.event === "success") {
-              if (!result.info) return;
-              onUpload(result.info as CloudinaryUploadWidgetInfo);
-            }
-          }}
-        >
-          <span className="bg-white text-black p-2 pl-5 pr-5 rounded-lg">
-            Upload Image
-          </span>
-        </CldUploadButton>
-      </div>
+      {user && (
+        <ImageUpload imageUrl={imageUrl} user={user} onUpload={onUpload} />
+      )}
 
       <FormProvider {...form}>
         <form

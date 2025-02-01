@@ -64,7 +64,7 @@ export default function Page() {
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
         total={total}
-        resPerPage={3}
+        resPerPage={5}
       />
     </>
   );

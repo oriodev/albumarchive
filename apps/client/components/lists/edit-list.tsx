@@ -21,6 +21,8 @@ import { Textarea } from "../ui/textarea";
 import { useUser } from "@/utils/providers/UserProvider";
 import { slugify } from "@/utils/global.utils";
 import { updateList } from "@/api/list.api";
+import ImageUpload from "../image-upload";
+import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 // SET FORM DATA TYPE.
 type FormData = z.infer<typeof editListSchema>;
@@ -32,6 +34,7 @@ export function EditList({ slug }: { slug: string }) {
 
   // STATES.
   const [list, setList] = useState<List | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   // GRAB LIST.
   useEffect(() => {
@@ -78,7 +81,9 @@ export function EditList({ slug }: { slug: string }) {
   const onSubmit = async (data: FormData) => {
     // CHECK IF NAME IS VALID.
     if (list?._id && user?.lists) {
-      const nameExists = user.lists.some((list) => list.name === data.name);
+      const nameExists =
+        data.name !== list.name &&
+        user.lists.some((list) => list.name === data.name);
 
       // SET NAME EXISTS ERROR.
       if (nameExists) {
@@ -106,6 +111,7 @@ export function EditList({ slug }: { slug: string }) {
         name: data.name,
         slug: slug,
         description: data.description,
+        listCoverImg: imageUrl,
       };
 
       // UPDATE THE LIST IN THE DATABASE.
@@ -123,9 +129,19 @@ export function EditList({ slug }: { slug: string }) {
     }
   };
 
+  // ON UPLOAD.
+  const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
+    setImageUrl(info.secure_url);
+  };
+
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-3xl">Edit {list?.name || "List"}</h2>
+
+      {list && (
+        <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
+      )}
+
       <FormProvider {...form}>
         <form
           onSubmit={handleSubmit(onSubmit)}

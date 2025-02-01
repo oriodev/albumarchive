@@ -12,7 +12,7 @@ import { slugify, truncateString } from "@/utils/global.utils";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/api/user.api";
-import Image from "next/image";
+import ListImage from "./list-image";
 
 export function ListCard({ list }: { list: List }) {
   const router = useRouter();
@@ -45,12 +45,7 @@ export function ListCard({ list }: { list: List }) {
       className="flex flex-col gap-5 hover:cursor-pointer transition-transform transform hover:scale-105"
     >
       <CardHeader className="relative">
-        <Image
-          src="/listfallback.png"
-          width={500}
-          height={500}
-          alt="list fallback image"
-        />
+        <ListImage list={list} size={300} />
       </CardHeader>
       <CardContent className="flex flex-col gap-1">
         <CardTitle>{truncateString(list.name, 25)}</CardTitle>

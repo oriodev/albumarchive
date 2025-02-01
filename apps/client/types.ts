@@ -36,6 +36,7 @@ export interface List {
   name: string;
   slug: string;
   description: string;
+  listCoverImg?: string;
   type: AlbumType;
   user: string;
   albums: string[];

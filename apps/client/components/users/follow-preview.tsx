@@ -8,7 +8,7 @@ import { FullPagination } from "../nav/full-pagination";
 
 export function FollowPreview({
   title,
-  users,
+  users = [],
 }: {
   title: string;
   users: User[];
@@ -18,18 +18,18 @@ export function FollowPreview({
   const router = useRouter();
   const resPerPage = 5;
 
-  const [cappedUsers, setCappedUsers] = useState<User[]>(
-    users.slice(0, resPerPage),
-  );
+  const [cappedUsers, setCappedUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   const count = users?.length || 0;
 
   useEffect(() => {
-    const startIndex = (currentPage - 1) * resPerPage;
-    const endIndex = startIndex + resPerPage;
+    if (users) {
+      const startIndex = (currentPage - 1) * resPerPage;
+      const endIndex = startIndex + resPerPage;
 
-    setCappedUsers(users.slice(startIndex, endIndex));
+      setCappedUsers(users.slice(startIndex, endIndex));
+    }
   }, [currentPage, users]);
 
   return (
@@ -49,16 +49,17 @@ export function FollowPreview({
               <UserImage user={user} size={150} />
             </div>
           ))}
+        {!users && <div>none yet!</div>}
       </div>
 
-      <FullPagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        total={users.length}
-        resPerPage={resPerPage}
-      />
-
-      {!users && <p>none yet!</p>}
+      {users && (
+        <FullPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          total={users.length}
+          resPerPage={resPerPage}
+        />
+      )}
     </div>
   );
 }

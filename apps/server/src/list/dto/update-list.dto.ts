@@ -17,6 +17,10 @@ export class UpdateListDto {
     readonly description: string
 
     @IsOptional()
+    @IsString()
+    readonly listCoverImg: string
+
+    @IsOptional()
     @IsEnum(Type)
     readonly type: Type
 

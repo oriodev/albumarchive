@@ -15,6 +15,10 @@ export class CreateListDto {
     @IsString()
     readonly description: string
 
+    @IsOptional()
+    @IsString()
+    readonly listCoverImg: string
+
     @IsNotEmpty()
     @IsEnum(Type)
     readonly type: Type

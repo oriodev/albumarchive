@@ -18,6 +18,9 @@ export class List {
     @Prop()
     description: string;
 
+    @Prop({ required: false })
+    listCoverImg: string
+
     @Prop()
     slug: string;
 

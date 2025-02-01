@@ -78,6 +78,7 @@ export function Profile() {
               Edit Profile
             </Button>
           </div>
+
           <FollowPreview
             title="following"
             users={following}

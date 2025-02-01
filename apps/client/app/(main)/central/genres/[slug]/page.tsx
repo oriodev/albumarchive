@@ -1,8 +1,7 @@
 "use client";
 
 import { getAlbumsByGenre } from "@/api/genre.api";
-import { AlbumScrollDisplay } from "@/components/albums/album-scroll-display";
-// import { ListScrollDisplay } from "@/components/lists/list-scroll-display";
+import { AlbumDialogue } from "@/components/albums/album-dialogue";
 import { Album } from "@/types";
 import { capitalizeFirstLetter } from "@/utils/global.utils";
 // HOOKS.
@@ -15,7 +14,6 @@ export default function Page({
 }) {
   const [genre, setGenre] = useState("");
   const [genreAlbums, setGenreAlbums] = useState<Album[] | null>(null);
-  // const [genreLists, setGenreLists] = useState<List[] | null>(null);
 
   useEffect(() => {
     const fetchGenre = async () => {
@@ -29,40 +27,27 @@ export default function Page({
       setGenreAlbums(fetchedGenreAlbums);
     };
 
-    // const fetchGenreLists = async () => {
-    //   if (!genre) return;
-    //   console.log("genre: ", genre);
-    //   const fetchedGenreLists = await getListsByGenre(genre);
-    //   if (!fetchedGenreLists) return;
-    //   // setGenreLists(fetchedGenreLists);
-    //   console.log("genre lists: ", fetchedGenreLists);
-    // };
-
     fetchGenre();
     fetchGenreAlbums();
-    // fetchGenreLists();
   }, [params, genre]);
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="font-bold text-3xl pl-3">{genre}</p>
+      <p className="font-bold text-3xl pl-3">
+        Popular {capitalizeFirstLetter(genre)} Albums
+      </p>
       {genreAlbums && (
-        <div>
-          <h2 className="text-2xl pl-3">
-            Popular {capitalizeFirstLetter(genre)} Albums
-          </h2>
-          <AlbumScrollDisplay albums={genreAlbums} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {genreAlbums.map((album: Album) => (
+            <div
+              className="flex-shrink-0"
+              key={`${album.title}+${album.artist}`}
+            >
+              <AlbumDialogue album={album} layoutType="Grid" local={true} />
+            </div>
+          ))}
         </div>
       )}
-      {/* 
-      {genreLists && (
-        <div>
-          <h2 className="text-2xl pl-3">
-            Popular {capitalizeFirstLetter(genre)} Albums
-          </h2>
-          <ListScrollDisplay lists={genreLists} />
-        </div>
-      )} */}
     </div>
   );
 }

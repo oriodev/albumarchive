@@ -23,7 +23,7 @@ export class ListService {
     ) {}
 
     async findAll(query: Query): Promise<{ lists: List[]; total: number }> {
-        const resPerPage = 3;
+        const resPerPage = 5;
         const currentPage = Number(query.page) || 1;
         const skip = resPerPage * (currentPage - 1);
     
@@ -168,6 +168,8 @@ export class ListService {
         if(!isValidId) {
             throw new BadRequestException('please enter a valid mongodb id')
         }
+
+        console.log('update', update)
 
         return await this.listModel.findByIdAndUpdate(id, update,  {
             new: true,
