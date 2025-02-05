@@ -4,71 +4,50 @@ import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useUser } from "@/utils/providers/UserProvider";
-import { NotificationType } from "@/types";
-import { sendNotification } from "@/utils/notifications.utils";
 
 export function WebsocketComponent() {
   const socket = useContext(WebsocketContext);
   const [messages, setMessages] = useState<string>("");
   const { user } = useUser();
 
-  const sendLiveNotification = (recipientUserId: string) => {
+  const notifOne = {
+    sender: user?._id,
+    receiver: "677ec13a017490543583fb1e",
+    type: "albumRec",
+    albumId: "sdfdsfdsf",
+    message: "sup broski ily <3",
+  };
+
+  const sendLiveNotification = () => {
     if (!socket) {
       console.log("no socket");
       return;
     }
 
-    const notification = {
-      message: "New message received!",
-      userId: recipientUserId,
-    };
-    socket.emit("sendNotification", notification);
+    console.log("notification: ", notifOne);
+    socket.emit("newNotification", notifOne);
   };
 
-  const sendMyNotification = async () => {
-    if (!user?._id) {
-      return;
+  // CONNECTING & LISTENING.
+  useEffect(() => {
+    if (user?._id && socket) {
+      socket.emit("registerUser", user._id);
     }
 
-    const notificationPayload = {
-      sender: user?._id,
-      receiver: "676c36114bcb0152801f52fa",
-      type: NotificationType.FRIENDREQUEST,
-    };
-
-    const store = await sendNotification(notificationPayload);
-
-    console.log("store: ", store);
-
-    socket?.emit("newNotification", "new friend request!");
-  };
-
-  useEffect(() => {
-    socket?.on("connect", () => {
-      console.log("connected");
-    });
-
     socket?.on("onNotification", (data) => {
-      console.log("onNotification received");
-      console.log("data: ", data);
-      console.log("data.content: ", data.content);
-      setMessages(data.content);
+      setMessages(data.message);
     });
 
     return () => {
-      console.log("unregistering");
-      socket?.off("connect");
-      socket?.off("onNotifications");
+      socket?.off("onNotification");
     };
-  }, []);
+  }, [socket, user]);
 
   return (
     <div>
       <p>websocket component</p>
       <p>{messages}</p>
-      <Button onClick={() => sendLiveNotification(user?._id || "")}>
-        send notification
-      </Button>
+      <Button onClick={() => sendLiveNotification()}>send notification</Button>
     </div>
   );
 }

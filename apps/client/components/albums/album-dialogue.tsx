@@ -140,7 +140,6 @@ export function AlbumDialogue({
   const handleFullAlbum = async () => {
     const localAlbum = await getLocalDatabaseAlbum(album);
     if (!localAlbum) return;
-
     router.push(`/central/albums/${localAlbum._id}`);
   };
 

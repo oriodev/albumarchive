@@ -1,6 +1,7 @@
 import { OnModuleInit } from "@nestjs/common";
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server } from "socket.io";
+import { Notification } from "./schemas/notifications.schema";
 
 @WebSocketGateway({
     cors: {
@@ -8,46 +9,40 @@ import { Server } from "socket.io";
     }
 })
 export class AppNotifications implements OnModuleInit {
-
     @WebSocketServer()
     server: Server
-    private users: Map<string, string> = new Map();
 
-    onHandleConnection(client: any) {
-        const userId = client.handshake.query.userId;
-        this.users.set(userId, client.id);
-        console.log('userId: ', userId)
-    }
-
-    handleDisconnect(client: any) {
-        this.users.forEach((socketId, userId) => {
-        if (socketId === client.id) {
-            this.users.delete(userId);
-        }
-        });
-    }
+    private userSockets: { [userId: string]: string } = {};
 
     onModuleInit() {
         this.server.on('connection', (socket) => {
-            console.log(socket.id)
-            console.log('connected')
+            console.log('connected: ', socket.id)
+
+            // STORE THE USER'S SOCKET.
+            socket.on('registerUser', (userId: string) => {
+                this.userSockets[userId] = socket.id;
+                console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
+            })
+
+            // REMOVE THE USER'S SOCKET.
+            socket.on('disconnect', () => {
+                for (const userId in this.userSockets) {
+                    if (this.userSockets[userId] === socket.id) {
+                        delete this.userSockets[userId];
+                        console.log(`User disconnected: ${userId}`);
+                        break;
+                    }
+                }
+            });
+
         })
     }
-
-    @SubscribeMessage('sendNotification')
-    handleNotification(client: any, payload: { message: string; userId: string }) {
-      const recipientSocketId = this.users.get(payload.userId);
-      if (recipientSocketId) {
-        // Send notification only to the specific user
-        this.server.to(recipientSocketId).emit('notification', payload);
-      }
-    }
  
-    @SubscribeMessage('sendNotification')
-    onNewNotification(client: any, payload: { message: string; userId: string }) {
-        const recipientSocketId = this.users.get(payload.userId);
-        if (recipientSocketId) {
-          this.server.to(recipientSocketId).emit('notification', payload);
-        }
-    }
+    @SubscribeMessage('newNotification')
+    onNewNotification(@MessageBody() notification: Notification) {
+        const receiver = notification.receiver.toString();
+        const receiverSocket = this.userSockets[receiver];
+
+        this.server.to(receiverSocket).emit('onNotification', notification)
+}
 }

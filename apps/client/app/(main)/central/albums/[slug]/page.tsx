@@ -4,19 +4,27 @@
 import { getAlbumById, getAlbumsByArtist } from "@/api/albums.api";
 import { addAlbumToList } from "@/api/list.api";
 import { getAlbumRating, getRatingsCount } from "@/api/ratings.api";
+import { getAllReviews, getReview } from "@/api/reviews.api";
 
 // COMPONENTS.
+import Image from "next/image";
 import { AddToList } from "@/components/albums/add-to-list";
 import ViewStarRating from "@/components/albums/viewStarRating";
 import StarRating from "@/components/albums/editStarRating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { AlbumScrollDisplay } from "@/components/albums/album-scroll-display";
+import { FallbackAlbumPage } from "@/components/albums/fallback-album-page";
+import { AlbumRecDialogue } from "@/components/album recs/album-rec-dialogue";
+import GenreDisplay from "@/components/albums/genre-display";
+import { AlbumReviewsContainer } from "@/components/reviews/album-reviews";
+import { AddReviewDialogue } from "@/components/reviews/add-review-dialogue";
 
 // HOOKS.
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/utils/providers/UserProvider";
+import { useToast } from "@/hooks/use-toast";
 
 // TYPES.
 import { Album, RatingsCount, ReviewWithUser } from "@/types";
@@ -27,15 +35,7 @@ import {
   isAlbumInListened,
   isAlbumInToListen,
 } from "@/utils/lists.utils";
-import { useUser } from "@/utils/providers/UserProvider";
 import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
-import { AlbumScrollDisplay } from "@/components/albums/album-scroll-display";
-import { FallbackAlbumPage } from "@/components/albums/fallback-album-page";
-import { AlbumRecDialogue } from "@/components/album recs/album-rec-dialogue";
-import GenreDisplay from "@/components/albums/genre-display";
-import { AlbumReviewsContainer } from "@/components/reviews/album-reviews";
-import { AddReviewDialogue } from "@/components/reviews/add-review-dialogue";
-import { getAllReviews, getReview } from "@/api/reviews.api";
 
 export default function Page({
   params,
@@ -48,106 +48,74 @@ export default function Page({
   const { toast } = useToast();
 
   // STATES.
-  const [loading, setLoading] = useState<boolean>(true);
   const [album, setAlbum] = useState<Album | null>(null);
   const [albumRating, setAlbumRating] = useState(0);
-  const [ratingsCount, setRatingsCount] = useState<RatingsCount | null>(null);
-  const [showAddToListen, setShowAddToListen] = useState(false);
   const [albumsByArtist, setAlbumsByArtist] = useState<Album[] | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [ratingsCount, setRatingsCount] = useState<RatingsCount | null>(null);
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
+  const [showAddToListen, setShowAddToListen] = useState(false);
   const [totalReviews, setTotalReviews] = useState<number>(0);
   const [userReview, setUserReview] = useState<ReviewWithUser | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  // FETCH USER.
+  // FETCH ALBUM.
   useEffect(() => {
     const fetchAlbum = async () => {
       const id = (await params).slug;
-
       const fetchedAlbum = await getAlbumById(id);
-
       if (!fetchedAlbum) {
-        router.replace("/central/not-found");
+        router.replace("/central/albums");
+      } else {
+        setAlbum(fetchedAlbum);
       }
-
-      setAlbum(fetchedAlbum);
     };
 
     fetchAlbum();
   }, [params, router]);
 
-  // FETCH ALBUM RATING.
+  // FETCH RATINGS AND ALBUMS BY ARTIST.
   useEffect(() => {
-    const fetchAlbumRating = async () => {
-      if (!album?._id) {
-        return;
-      }
+    const fetchAlbumData = async () => {
+      if (!album?._id) return;
 
-      const fetchedAlbumRating = await getAlbumRating(album._id);
-      if (fetchedAlbumRating) {
-        setAlbumRating(fetchedAlbumRating);
-      }
-    };
+      const [fetchedAlbumRating, fetchedRatingCount, fetchedAlbumsByArtist] =
+        await Promise.all([
+          getAlbumRating(album._id),
+          getRatingsCount(album._id),
+          getAlbumsByArtist(album.artist),
+        ]);
 
-    const fetchRatingCount = async () => {
-      if (!album?._id) {
-        return;
-      }
-
-      const fetchedRatingCount = await getRatingsCount(album._id);
-      if (fetchedRatingCount) setRatingsCount(fetchedRatingCount);
-    };
-
-    const getShowToListen = async () => {
-      if (!album || !user) return false;
-
-      const toListen = await isAlbumInToListen(user, album);
-      const listened = await isAlbumInListened(user, album);
-
-      setShowAddToListen(!(toListen || listened));
-    };
-
-    const fetchAlbumsByArtist = async () => {
-      if (!album) return;
-
-      const artistName = album.artist;
-      const fetchedAlbumsByArtist = await getAlbumsByArtist(artistName);
-
-      if (!fetchedAlbumsByArtist) return;
-
-      const filteredArtists = fetchedAlbumsByArtist.filter(
-        (fetchedAlbum: Album) => fetchedAlbum._id !== album._id,
+      setAlbumRating(fetchedAlbumRating || 0);
+      setRatingsCount(fetchedRatingCount);
+      setAlbumsByArtist(
+        fetchedAlbumsByArtist
+          ?.filter((a: Album) => a._id !== album._id)
+          .slice(0, 10) || [],
       );
-
-      if (filteredArtists.length === 0) {
-        return;
-      }
-
-      setAlbumsByArtist(filteredArtists.slice(0, 10));
-      setLoading(false);
+      setShowAddToListen(
+        !(
+          (await isAlbumInToListen(user, album)) ||
+          (await isAlbumInListened(user, album))
+        ),
+      );
     };
 
-    fetchAlbumRating();
-    fetchRatingCount();
-    getShowToListen();
-    fetchAlbumsByArtist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchAlbumData();
   }, [album, user]);
 
-  // FETCH REVIEWS.
-
+  // FETCH USER REVIEW.
   useEffect(() => {
     const fetchUserReview = async () => {
       if (!album?._id || !user?._id) return;
-
       const fetchedUserReview = await getReview(user._id, album._id);
-
       if (fetchedUserReview) setUserReview({ ...fetchedUserReview, user });
     };
 
     fetchUserReview();
   }, [album, user]);
 
+  // FETCH REVIEWS.
   useEffect(() => {
     const fetchReviews = async () => {
       if (!album?._id) return;
@@ -156,15 +124,9 @@ export default function Page({
         album._id,
         currentPage.toString(),
       );
-
       if (!fetchedReviews) return;
 
-      setReviews(
-        fetchedReviews.reviews.filter(
-          (review: ReviewWithUser) => review.user._id !== user?._id,
-        ),
-      );
-
+      setReviews(fetchedReviews.reviews);
       setTotalReviews(fetchedReviews.total);
       setLoading(false);
     };
@@ -172,6 +134,7 @@ export default function Page({
     fetchReviews();
   }, [album, user, currentPage]);
 
+  // ADD TO LISTEN.
   const addToListen = async () => {
     if (!user || !album || !user.lists) return;
 
@@ -206,15 +169,18 @@ export default function Page({
     });
   };
 
+  if (!album) {
+    return (
+      <div>
+        <FallbackAlbumPage />
+      </div>
+    );
+  }
+
   return (
     <>
-      {!album && (
-        <div>
-          <p>no album found</p>
-        </div>
-      )}
-
       {!loading ? (
+        // MAIN COMPONENT.
         <div className="p-5 flex flex-col gap-5">
           {/* TOP SECTION */}
           <div className="flex flex-wrap lg:flex-nowrap justify-center lg:justify-normal gap-5">
@@ -298,6 +264,7 @@ export default function Page({
           </div>
         </div>
       ) : (
+        // LOADING PAGE.
         <FallbackAlbumPage />
       )}
     </>

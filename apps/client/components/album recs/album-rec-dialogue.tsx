@@ -31,7 +31,7 @@ import { albumRecSchema } from "@/zod/album-rec-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Textarea } from "../ui/textarea";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { getUser } from "@/api/user.api";
 import {
@@ -39,11 +39,13 @@ import {
   sendNotification,
 } from "@/utils/notifications.utils";
 import { useToast } from "@/hooks/use-toast";
+import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 
 export function AlbumRecDialogue({ album }: { album: Album }) {
   // HOOKS.
   const { user } = useUser();
   const { toast } = useToast();
+  const socket = useContext(WebsocketContext);
 
   // STATES.
   const [users, setUsers] = useState<User[]>([]);
@@ -97,7 +99,7 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
       return;
     }
 
-    sendNotification(notificationPayload);
+    sendNotification(socket, notificationPayload);
 
     toast({
       title: "sent album rec",

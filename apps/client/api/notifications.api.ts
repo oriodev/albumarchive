@@ -1,5 +1,5 @@
 import { getSession } from "./session.api";
-import { Notification } from "@/types";
+import { Notification, NotificationPayload } from "@/types";
 
 /**
  * returns all notifications belonging to a given user.
@@ -36,7 +36,7 @@ export const getNotifications = async (id: string) => {
  * @param notification a notification. min: sender, receiver, type.
  * @returns
  */
-export const storeNotification = async (notification: Notification) => {
+export const storeNotification = async (notification: NotificationPayload) => {
   try {
     const token = await getSession();
 

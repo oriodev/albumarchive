@@ -1,35 +1,51 @@
 // TYPES.
-import { Notification, NotificationType } from "@/types";
+import { Notification, NotificationPayload, NotificationType } from "@/types";
 
 // API CALLS.
 import { getNotifications, storeNotification } from "@/api/notifications.api";
+import { Socket } from "socket.io-client";
 
 /**
- * store a notification in the db.
+ * send notification (websocket + store in db).
  * @param sender id of user sending the notification.
  * @param receiver id of user receiving the notification.
  * @param type type of notification.
  * @returns
  */
-export const sendNotification = async (payload: Notification) => {
+export const sendNotification = async (
+  socket: Socket | null,
+  payload: NotificationPayload,
+) => {
+  if (!socket) {
+    console.log("no socket");
+    return;
+  }
+
+  socket.emit("newNotification", payload);
+
   return await storeNotification(payload);
 };
 
+/**
+ * check if the user already has an album rec for that album from that user
+ * @param notification
+ * @returns
+ */
 export const checkNotification = async (
   notification: Notification,
 ): Promise<boolean> => {
   // check if the user has already sent a rec for that album to that user
 
   // get all album recs for notification.reciever
-  const allNotifications = await getNotifications(notification.receiver);
+  if (!notification.receiver._id) return false;
+
+  const allNotifications = await getNotifications(notification.receiver._id);
   const allAlbumRecs = allNotifications.filter(
     (notif: Notification) => notif.type === NotificationType.ALBUMREC,
   );
 
-  console.log("allAlbumRecs: ", allAlbumRecs);
-
   const matchingAlbum = allAlbumRecs.filter(
-    (rec: Notification) => rec.albumId === notification.albumId,
+    (rec: Notification) => rec.album?._id === notification.album?._id,
   );
 
   if (matchingAlbum.length < 1) return false;

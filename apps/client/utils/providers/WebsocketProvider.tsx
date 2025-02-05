@@ -16,6 +16,10 @@ export const WebsocketProvider = ({
     const newSocket = io(process.env.NEXT_PUBLIC_BACKEND_API);
     setSocket(newSocket);
 
+    newSocket.on("onNotification", () => {
+      console.log("connected");
+    });
+
     return () => {
       newSocket.disconnect();
     };

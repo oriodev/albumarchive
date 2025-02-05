@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { Reviews } from './schemas/reviews.schema';
 
@@ -14,8 +14,9 @@ export class ReviewsController {
     }
 
     @Get('/albums')
-    async getAllReviews(@Query() query: ExpressQuery): Promise<{ reviews: Reviews[]; total: number }> {
-        return await this.reviewsService.findAll(query)
+    async getAllReviews(@Query() query: ExpressQuery, @Request() req): Promise<{ reviews: Reviews[]; total: number }> {
+        const excludeUserId = req.user.id
+        return await this.reviewsService.findAll(query, excludeUserId)
     }
 
     @Get('/users')

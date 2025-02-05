@@ -31,6 +31,7 @@ import { slugify } from "@/utils/global.utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { listToRender } from "@/types";
+import { NavActivity } from "./nav-activity";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
@@ -132,10 +133,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <div>
-                        {item.icon && <item.icon />}
-                        <Link href={item.url}>{item.title}</Link>
-                      </div>
+                      {item.title === "Activity" ? (
+                        <NavActivity />
+                      ) : (
+                        <div>
+                          {item.icon && <item.icon />}
+                          <Link href={item.url}>{item.title}</Link>
+                        </div>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -144,6 +149,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
         <NavLists lists={data.lists || []} title="Lists" setLists={setLists} />
+
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

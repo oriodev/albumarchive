@@ -10,13 +10,12 @@ import {
 } from "@/components/ui/card";
 
 // TYPES.
-import { Album, Notification, NotificationType, User } from "@/types";
+import { Notification, NotificationType, User } from "@/types";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { removeNotification } from "@/api/notifications.api";
 import { ImageFallback } from "../image-fallback";
-import { useEffect, useState } from "react";
-import { getAlbumById } from "@/api/albums.api";
+import { useContext } from "react";
 import Image from "next/image";
 import { isAlbumInListened, isAlbumInToListen } from "@/utils/lists.utils";
 import { useUser } from "@/utils/providers/UserProvider";
@@ -24,6 +23,7 @@ import { sendNotification } from "@/utils/notifications.utils";
 import { addAlbumToList } from "@/api/list.api";
 import { useToast } from "@/hooks/use-toast";
 import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
+import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 
 export function RecCard({
   notification,
@@ -39,20 +39,7 @@ export function RecCard({
   // USE HOOKS.
   const { user, updateUserInfo } = useUser();
   const { toast } = useToast();
-
-  // USE STATE.
-  const [album, setAlbum] = useState<Album | null>(null);
-
-  useEffect(() => {
-    const fetchAlbum = async () => {
-      if (!notification.albumId) return;
-      const fetchedAlbum = await getAlbumById(notification.albumId);
-      if (!fetchedAlbum) return;
-      setAlbum(fetchedAlbum);
-    };
-
-    fetchAlbum();
-  }, [notification]);
+  const socket = useContext(WebsocketContext);
 
   //   HANDLE DELETE.
   const handleRemoveNotification = async () => {
@@ -73,35 +60,35 @@ export function RecCard({
   const handleDeclineNotification = async () => {
     handleRemoveNotification();
 
-    if (!album) return;
+    if (!notification.album) return;
 
     const returnNotificationPayload = {
       sender: notification.receiver,
       receiver: notification.sender,
       type: NotificationType.RESPONSE,
-      message: `${user?.username} doesn't want to listen to ${album.title} by ${album.artist}`,
+      message: `${user?.username} doesn't want to listen to ${notification.album.title} by ${notification.album.artist}`,
     };
 
-    await sendNotification(returnNotificationPayload);
+    await sendNotification(socket, returnNotificationPayload);
   };
 
   // HANDLE ACCEPT.
   const handleAcceptNotification = async () => {
-    if (!album || !user?.lists) return null;
+    if (!notification.album || !user?.lists) return null;
 
     const albumInListNotificationPayload = {
       sender: notification.receiver,
       receiver: notification.sender,
       type: NotificationType.RESPONSE,
-      message: `${user?.username} has already listened to ${album.title} by ${album.artist}`,
+      message: `${user?.username} has already listened to ${notification.album.title} by ${notification.album.artist}`,
     };
 
     const albumInLists =
-      (await isAlbumInListened(user, album)) ||
-      (await isAlbumInToListen(user, album));
+      (await isAlbumInListened(user, notification.album)) ||
+      (await isAlbumInToListen(user, notification.album));
 
     if (albumInLists) {
-      await sendNotification(albumInListNotificationPayload);
+      await sendNotification(socket, albumInListNotificationPayload);
 
       toast({
         title: "you already listened to this album",
@@ -112,16 +99,19 @@ export function RecCard({
     }
 
     const toListen = user.lists.filter((list) => list.type === "To Listen")[0];
-    if (!toListen._id || !album._id) return;
+    if (!toListen._id || !notification.album._id) return;
 
-    const addToListen = await addAlbumToList(toListen._id, album._id);
+    const addToListen = await addAlbumToList(
+      toListen._id,
+      notification.album._id,
+    );
 
     // UPDATE IN USER PROVIDER.
 
     const additionUpdate = makeUpdatedAlbumInListUser(
       user,
       toListen._id,
-      album._id,
+      notification.album._id,
     );
 
     if (!additionUpdate) return;
@@ -134,10 +124,10 @@ export function RecCard({
         sender: notification.receiver,
         receiver: notification.sender,
         type: NotificationType.RESPONSE,
-        message: `${user?.username} is going to listen to ${album.title} by ${album.artist}`,
+        message: `${user?.username} is going to listen to ${notification.album.title} by ${notification.album.artist}`,
       };
 
-      await sendNotification(addToListNotificationPayload);
+      await sendNotification(socket, addToListNotificationPayload);
     }
 
     toast({
@@ -151,10 +141,10 @@ export function RecCard({
     <div>
       <Card className="flex gap-5">
         <div className="mr-4 relative w-[200px]">
-          {album?.coverImage ? (
+          {notification.album?.coverImage ? (
             <Image
-              alt={album?.title || "album cover image"}
-              src={album?.coverImage || ""}
+              alt={notification.album?.title || "album cover image"}
+              src={notification.album?.coverImage || ""}
               width={200}
               height={200}
             />
@@ -165,7 +155,8 @@ export function RecCard({
         <div className="flex flex-col w-full">
           <CardHeader>
             <CardTitle>
-              {sender?.username} recommended {album?.title} by {album?.artist}!
+              {sender?.username} recommended {notification.album?.title} by{" "}
+              {notification.album?.artist}!
             </CardTitle>
             <CardDescription>{notification.message}</CardDescription>
           </CardHeader>

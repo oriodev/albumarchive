@@ -49,19 +49,22 @@ export class ReviewsService {
      * @param query 
      * @returns 
      */
-    async findAll(query: Query): Promise<{ reviews: Reviews[]; total: number }> {
+    async findAll(query: Query, excludeUserId: string): Promise<{ reviews: Reviews[]; total: number; }> {
 
         const resPerPage = 10
         const currentPage = Number(query.page) || 1
         const skip = resPerPage * (currentPage - 1)
 
-        const total = await this.reviewsModel.countDocuments({ album: query.albumId }).exec();
+        const total = await this.reviewsModel.countDocuments(
+            { album: query.albumId, ...(excludeUserId ? { user: { $ne: excludeUserId } } : {}) }
+            ).exec();
     
         const reviews = await this.reviewsModel
-            .find({ album: query.albumId })
+            .find({ album: query.albumId, ...(excludeUserId ? { user: { $ne: excludeUserId } } : {}) })
             .limit(resPerPage)
             .skip(skip)
             .populate('rating user')
+
     
         return { reviews, total };
     }

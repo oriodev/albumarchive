@@ -21,10 +21,10 @@ export class Notification {
     type: NotificationType;
 
     @Prop({ required: false, type: SchemaTypes.ObjectId, ref: 'Album' })
-    albumId: string
+    album: string
 
     @Prop({ required: false, type: SchemaTypes.ObjectId, ref: 'List' })
-    listId: string
+    list: string
 
     @Prop({ required: false})
     message: string

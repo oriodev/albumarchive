@@ -1,5 +1,5 @@
 // HOOKS.
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
 
@@ -11,11 +11,13 @@ import { checkIfFollowing } from "@/utils/user.utils";
 import { NotificationType, User } from "@/types";
 import { followUser, unfollowUser } from "@/api/user.api";
 import { sendNotification } from "@/utils/notifications.utils";
+import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 
 export function FollowButton({ user }: { user: User | null }) {
   // HOOKS.
   const { toast } = useToast();
   const { user: currentUser } = useUser();
+  const socket = useContext(WebsocketContext);
 
   // SET USER PRIVACY.
   const isPrivate = user?.private || false;
@@ -87,6 +89,7 @@ export function FollowButton({ user }: { user: User | null }) {
     };
 
     const sendFollowRequest = await sendNotification(
+      socket,
       followRequestNotificationPayload,
     );
 

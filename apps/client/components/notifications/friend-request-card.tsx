@@ -45,7 +45,12 @@ export function FriendRequestCard({
   // HANDLE ACCEPT.
   const handleAcceptNotification = async () => {
     console.log("accepting:", notification);
-    const follow = await followUser(notification.receiver, notification.sender);
+    if (!notification.receiver._id || !notification.sender._id) return;
+
+    const follow = await followUser(
+      notification.receiver._id,
+      notification.sender._id,
+    );
 
     if (!follow) {
       toast({
