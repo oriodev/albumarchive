@@ -2,7 +2,7 @@
 
 // COMPONENTS.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Notification, User } from "@/types";
+import { Notification } from "@/types";
 import { ImageFallback } from "../image-fallback";
 import { Trash2 } from "lucide-react";
 import { removeNotification } from "@/api/notifications.api";
@@ -15,19 +15,12 @@ export function ResponseCard({
   setNotifications: (
     notifications: Notification[] | ((prev: Notification[]) => Notification[]),
   ) => void;
-  sender?: User;
 }) {
   //   HANDLE DELETE.
   const handleRemoveNotification = async () => {
-    const id = notification._id;
-
-    if (!id) {
-      return null;
-    }
-
-    const removedNotification = await removeNotification(id);
+    const removedNotification = await removeNotification(notification._id);
     setNotifications((prevNotifications) =>
-      prevNotifications.filter((notif) => notif._id !== id),
+      prevNotifications.filter((notif) => notif._id !== notification._id),
     );
 
     return removedNotification;

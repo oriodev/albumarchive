@@ -58,10 +58,6 @@ export default function Page({
       const fetchList = async () => {
         const slug = (await params).listname;
 
-        if (!user?._id) {
-          return null;
-        }
-
         const fetchedList = await getList(slug.toLowerCase(), user._id);
 
         if (user.username === currentUser?.username) {
@@ -78,7 +74,7 @@ export default function Page({
 
       fetchList();
     }
-  }, [params, user, router]);
+  }, [params, user, currentUser, router]);
 
   useEffect(() => {
     const getFullAlbums = async () => {

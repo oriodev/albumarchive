@@ -1,7 +1,7 @@
 "use client";
 
 // TYPES.
-import { Notification, NotificationType, User } from "@/types";
+import { Notification, NotificationType } from "@/types";
 
 // COMPONENTS.
 
@@ -11,7 +11,6 @@ import { useUser } from "@/utils/providers/UserProvider";
 
 // API CALLS.
 import { getNotifications } from "@/api/notifications.api";
-import { getUser } from "@/api/user.api";
 import { Skeleton } from "../ui/skeleton";
 import { NotificationCardsDisplay } from "./notification-cards-display";
 
@@ -25,7 +24,6 @@ export function NotificationContainer({
   const [filteredNotifications, setFilteredNotifications] = useState<
     Notification[]
   >([]);
-  const [senders, setSenders] = useState<Record<string, User>>({});
   const [loading, setLoading] = useState<boolean>(true);
 
   // HOOKS.
@@ -34,10 +32,7 @@ export function NotificationContainer({
   // LOAD DATA.
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (!user?._id) {
-        return;
-      }
-
+      if (!user) return;
       setLoading(true);
 
       // SET NOTIFICATIONS FROM DB.
@@ -45,26 +40,6 @@ export function NotificationContainer({
       setNotifications(fetchedNotifications);
       setFilteredNotifications(fetchedNotifications);
 
-      // GET ALL THE USERS THAT SENT NOTIFICATIONS.
-      const senderPromises = fetchedNotifications.map(
-        async (notif: Notification) => {
-          const fetchedSender = await getUser(notif.sender);
-          return { id: notif.sender, user: fetchedSender };
-        },
-      );
-
-      const senderResults = await Promise.all(senderPromises);
-      const senderMap = senderResults.reduce(
-        (acc, { id, user }) => {
-          if (user) {
-            acc[id] = user;
-          }
-          return acc;
-        },
-        {} as Record<string, User>,
-      );
-
-      setSenders(senderMap);
       setLoading(false);
     };
 
@@ -110,7 +85,6 @@ export function NotificationContainer({
           <NotificationCardsDisplay
             notifications={filteredNotifications}
             setNotifications={setNotifications}
-            senders={senders}
           />
         )}
       </div>

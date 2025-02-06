@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // TYPES.
-import { Notification, User } from "@/types";
+import { Notification } from "@/types";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { removeNotification } from "@/api/notifications.api";
@@ -15,28 +15,20 @@ import { useToast } from "@/hooks/use-toast";
 export function FriendRequestCard({
   notification,
   setNotifications,
-  sender,
 }: {
   notification: Notification;
   setNotifications: (
     notifications: Notification[] | ((prev: Notification[]) => Notification[]),
   ) => void;
-  sender?: User;
 }) {
   // HOOKS.
   const { toast } = useToast();
 
   // HANDLE DELETE.
   const handleRemoveNotification = async () => {
-    const id = notification?._id;
-
-    if (!id) {
-      return null;
-    }
-
-    const removedNotification = await removeNotification(id);
+    const removedNotification = await removeNotification(notification._id);
     setNotifications((prevNotifications) =>
-      prevNotifications.filter((notif) => notif._id !== id),
+      prevNotifications.filter((notif) => notif._id !== notification._id),
     );
 
     return removedNotification;
@@ -44,8 +36,10 @@ export function FriendRequestCard({
 
   // HANDLE ACCEPT.
   const handleAcceptNotification = async () => {
-    console.log("accepting:", notification);
-    const follow = await followUser(notification.receiver, notification.sender);
+    const follow = await followUser(
+      notification.receiver._id,
+      notification.sender._id,
+    );
 
     if (!follow) {
       toast({
@@ -68,7 +62,9 @@ export function FriendRequestCard({
         </div>
         <div className="flex flex-col w-full">
           <CardHeader>
-            <CardTitle>{sender?.username} wants to follow you!</CardTitle>
+            <CardTitle>
+              {notification.sender.username} wants to follow you!
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-between">
             <div className="flex flex-wrap gap-2">

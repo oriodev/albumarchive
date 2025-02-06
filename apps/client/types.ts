@@ -11,18 +11,32 @@ export interface Album {
   reviews: string[];
 }
 
-export interface User {
-  _id?: string;
-  username?: string;
-  description?: string;
+export interface UserSignUp {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
+}
+
+export interface UserPayload {
+  username: string;
+  description: string;
   email: string;
   profileImg?: string;
   password?: string;
-  private?: boolean;
-  lists?: List[];
-  following?: string[];
-  followers?: string[];
-  reviews?: Review[];
+  private: boolean;
+  lists: List[];
+  following: string[];
+  followers: string[];
+  reviews: Review[];
+}
+
+export interface User extends UserPayload {
+  _id: string;
 }
 
 export enum AlbumType {
@@ -65,12 +79,22 @@ export enum NotificationType {
 }
 
 export interface Notification {
-  _id?: string;
+  _id: string;
+  sender: User;
+  receiver: User;
+  type: NotificationType;
+  album?: Album;
+  list?: List;
+  message?: string;
+  timestamp?: Date;
+}
+
+export interface NotificationPayload {
   sender: string;
   receiver: string;
   type: NotificationType;
-  albumId?: string;
-  listId?: string;
+  album?: string;
+  list?: string;
   message?: string;
   timestamp?: Date;
 }

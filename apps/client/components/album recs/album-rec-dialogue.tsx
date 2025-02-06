@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/popover-dialogue";
 
 // TYPES.
-import { Album, Notification, NotificationType, User } from "@/types";
+import { Album, NotificationPayload, NotificationType, User } from "@/types";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { albumRecSchema } from "@/zod/album-rec-schema";
@@ -77,13 +77,13 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
   });
 
   const handleSubmit = async (values: z.infer<typeof albumRecSchema>) => {
-    if (!user?._id) return;
+    if (!user) return;
 
-    const notificationPayload: Notification = {
+    const notificationPayload: NotificationPayload = {
       sender: user._id,
       receiver: values.user,
       type: NotificationType.ALBUMREC,
-      albumId: album._id,
+      album: album._id,
       message: values.message,
     };
 
@@ -164,7 +164,7 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
                                 key={user.username}
                                 value={user._id}
                                 onSelect={() => {
-                                  form.setValue("user", user._id || "");
+                                  form.setValue("user", user._id);
                                 }}
                               >
                                 {user.username}

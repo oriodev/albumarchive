@@ -55,7 +55,7 @@ export function EditingProfile({}) {
 
   // ON SUBMIT.
   const onSubmit = async (data: FormData) => {
-    if (!user?._id) {
+    if (!user) {
       throw new Error("no user id");
     }
 
@@ -64,7 +64,7 @@ export function EditingProfile({}) {
       profileImg: imageUrl,
     };
 
-    await updateUser(user?._id, userPayload);
+    await updateUser(user._id, userPayload);
     updateUserInfo(userPayload);
     router.push("/central/profile");
   };

@@ -3,7 +3,7 @@
 // COMPONENTS.
 
 // TYPES.
-import { Notification, NotificationType, User } from "@/types";
+import { Notification, NotificationType } from "@/types";
 import { FriendRequestCard } from "./friend-request-card";
 import { RecCard } from "./rec-card";
 import { ResponseCard } from "./response-card";
@@ -11,13 +11,11 @@ import { ResponseCard } from "./response-card";
 export function NotificationCardsDisplay({
   notifications,
   setNotifications,
-  senders,
 }: {
   notifications: Notification[];
   setNotifications: (
     notifications: Notification[] | ((prev: Notification[]) => Notification[]),
   ) => void;
-  senders: Record<string, User>;
 }) {
   return (
     <div className="flex flex-col gap-5">
@@ -27,7 +25,6 @@ export function NotificationCardsDisplay({
             <FriendRequestCard
               notification={notification}
               setNotifications={setNotifications}
-              sender={senders[notification.sender]}
             />
           )}
 
@@ -35,7 +32,6 @@ export function NotificationCardsDisplay({
             <RecCard
               notification={notification}
               setNotifications={setNotifications}
-              sender={senders[notification.sender]}
             />
           )}
 

@@ -16,7 +16,6 @@ export default function ImageUpload({
   list?: List;
   onUpload: (info: CloudinaryUploadWidgetInfo) => void;
 }) {
-  console.log("imageUrl: ", imageUrl);
   return (
     <div className="flex gap-5">
       {imageUrl ? (

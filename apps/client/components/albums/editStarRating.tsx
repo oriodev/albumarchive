@@ -30,7 +30,7 @@ export default function EditStarRating({ album }: { album: Album }) {
   // SET INITIAL DATA.
   useEffect(() => {
     const fetchRating = async () => {
-      if (!user?._id || !album._id) {
+      if (!user || !album._id) {
         return;
       }
 
@@ -56,7 +56,7 @@ export default function EditStarRating({ album }: { album: Album }) {
   const handleClick = async (index: number) => {
     setRating(index);
 
-    if (!user?._id || !album._id) {
+    if (!user || !album._id) {
       return; // toast?
     }
 
@@ -74,7 +74,7 @@ export default function EditStarRating({ album }: { album: Album }) {
     let response;
 
     const ratingPayload: Rating = {
-      user: user?._id,
+      user: user._id,
       album: album._id,
       rating: index,
     };

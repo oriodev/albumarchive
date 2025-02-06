@@ -39,7 +39,7 @@ export function EditList({ slug }: { slug: string }) {
   // GRAB LIST.
   useEffect(() => {
     const fetchList = async () => {
-      if (user && user._id && user.lists) {
+      if (user && user.lists) {
         const fetchedList = user.lists.filter(
           (list) => list.slug.toLowerCase() === slug.toLowerCase(),
         )[0];

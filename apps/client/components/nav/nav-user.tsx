@@ -22,16 +22,9 @@ import { deleteSession } from "@/api/session.api";
 import { useRouter } from "next/navigation";
 import { getUsernameInitial } from "@/utils/user.utils";
 import { useUser } from "@/utils/providers/UserProvider";
+import { User as UserType } from "@/types";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    username: string;
-    email: string;
-    profileImg: string;
-  };
-}) {
+export function NavUser({ user }: { user: UserType }) {
   const router = useRouter();
   const { setUser } = useUser();
   const { isMobile } = useSidebar();

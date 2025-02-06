@@ -138,7 +138,7 @@ export default function Page({
 
   useEffect(() => {
     const fetchUserReview = async () => {
-      if (!album?._id || !user?._id) return;
+      if (!album?._id || !user) return;
 
       const fetchedUserReview = await getReview(user._id, album._id);
 
@@ -150,7 +150,7 @@ export default function Page({
 
   useEffect(() => {
     const fetchReviews = async () => {
-      if (!album?._id) return;
+      if (!album?._id || !user) return;
 
       const fetchedReviews = await getAllReviews(
         album._id,
@@ -161,7 +161,7 @@ export default function Page({
 
       setReviews(
         fetchedReviews.reviews.filter(
-          (review: ReviewWithUser) => review.user._id !== user?._id,
+          (review: ReviewWithUser) => review.user._id !== user._id,
         ),
       );
 

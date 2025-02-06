@@ -1,5 +1,5 @@
 // TYPES.
-import { Notification, NotificationType } from "@/types";
+import { Notification, NotificationPayload, NotificationType } from "@/types";
 
 // API CALLS.
 import { getNotifications, storeNotification } from "@/api/notifications.api";
@@ -11,12 +11,12 @@ import { getNotifications, storeNotification } from "@/api/notifications.api";
  * @param type type of notification.
  * @returns
  */
-export const sendNotification = async (payload: Notification) => {
+export const sendNotification = async (payload: NotificationPayload) => {
   return await storeNotification(payload);
 };
 
 export const checkNotification = async (
-  notification: Notification,
+  notification: NotificationPayload,
 ): Promise<boolean> => {
   // check if the user has already sent a rec for that album to that user
 
@@ -26,16 +26,14 @@ export const checkNotification = async (
     (notif: Notification) => notif.type === NotificationType.ALBUMREC,
   );
 
-  console.log("allAlbumRecs: ", allAlbumRecs);
-
   const matchingAlbum = allAlbumRecs.filter(
-    (rec: Notification) => rec.albumId === notification.albumId,
+    (rec: Notification) => rec.album === notification.album,
   );
 
   if (matchingAlbum.length < 1) return false;
 
   const matchingUser = matchingAlbum.filter(
-    (rec: Notification) => rec.sender === notification.sender,
+    (rec: NotificationPayload) => rec.sender === notification.sender,
   );
 
   if (matchingUser < 1) return false;
