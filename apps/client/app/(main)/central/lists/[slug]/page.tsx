@@ -37,7 +37,7 @@ export default function Page({
   // GRAB THE FULL LIST.
   useEffect(() => {
     const fetchList = async () => {
-      if (user && user._id && user.lists) {
+      if (user && user.lists) {
         const slug = (await params).slug;
 
         const fetchedList = user.lists.filter(

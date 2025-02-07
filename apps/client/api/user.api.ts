@@ -70,18 +70,9 @@ export const getUser = async (id: string) => {
     if (response.status === 200) {
       const user = await response.json();
 
-      return {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        profileImg: user.profileImg,
-        private: user.private,
-        lists: user.lists,
-        following: user.following,
-        followers: user.followers,
-        reviews: user.reviews,
-      } as User;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...rest } = user;
+      return rest as User;
     }
 
     return null;
@@ -108,18 +99,9 @@ export const getUserByUsername = async (username: string) => {
     if (response.status === 200) {
       const user = await response.json();
 
-      return {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        profileImg: user.profileImg,
-        private: user.private,
-        lists: user.lists,
-        following: user.following,
-        followers: user.followers,
-        reviews: user.reviews,
-      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...rest } = user;
+      return rest as User;
     }
 
     return null;
@@ -146,17 +128,11 @@ export const getUsersBatch = async (ids: string[]) => {
     if (response.status === 201) {
       const users = await response.json();
 
-      return users.map((user: User) => ({
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        description: user.description,
-        profileImg: user.profileImg,
-        private: user.private,
-        lists: user.lists,
-        following: user.following,
-        followers: user.followers,
-      }));
+      return users.map((user: User) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...rest } = user;
+        return rest as User;
+      });
     }
 
     return null;

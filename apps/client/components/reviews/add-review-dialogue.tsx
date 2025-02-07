@@ -75,7 +75,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
   });
 
   const handleSubmit = async (values: z.infer<typeof createReviewSchema>) => {
-    if (!user?._id || !album?._id || !values.reviewText) return;
+    if (!user || !album?._id || !values.reviewText) return;
 
     const reviewPayload = {
       user: user._id,
@@ -84,6 +84,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
       reviewText: values.reviewText,
     };
 
+    // TODO: ADD RATING TO REVIEW.
     const createdReview = await createReview(reviewPayload);
 
     if (!createdReview?._id || !user.reviews) return;

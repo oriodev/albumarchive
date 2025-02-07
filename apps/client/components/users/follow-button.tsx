@@ -28,7 +28,7 @@ export function FollowButton({ user }: { user: User | null }) {
 
   // FOLLOW USER.
   const handleFollow = async () => {
-    if (!user?._id || !currentUser?._id) {
+    if (!user || !currentUser) {
       toast({
         title: "Could not follow user",
         description: "User id does not exist",
@@ -51,7 +51,7 @@ export function FollowButton({ user }: { user: User | null }) {
 
   // UNFOLLOW USER.
   const handleUnfollow = async () => {
-    if (!user?._id || !currentUser?._id) {
+    if (!user || !currentUser) {
       toast({
         title: "Could not unfollow user",
         description: "User id does not exist",
@@ -74,7 +74,7 @@ export function FollowButton({ user }: { user: User | null }) {
 
   // REQUEST FOLLOW.
   const handleRequestFollow = async () => {
-    if (!currentUser?._id || !user || !user._id) {
+    if (!currentUser?._id || !user) {
       toast({
         title: "Request failed.",
         description: "No user id.",

@@ -21,7 +21,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
   const router = useRouter();
 
   const handleCreateNewList = async () => {
-    if (!user?._id || !user?.lists) {
+    if (!user || !user?.lists) {
       throw new Error("no user");
     }
 
@@ -42,7 +42,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
       slug: slugify(newListName),
       description: "",
       type: AlbumType.CUSTOM,
-      user: user?._id,
+      user: user._id,
       albums: [],
       likes: 0,
     };

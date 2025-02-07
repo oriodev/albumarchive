@@ -4,7 +4,6 @@
 import { FollowPreview } from "../../../../../components/users/follow-preview";
 
 import { useEffect, useState } from "react";
-// import { useUser } from "@/utils/providers/UserProvider";
 import { getUserByUsername, getUsersBatch } from "@/api/user.api";
 import { User } from "@/types";
 import { checkIfFollowing } from "@/utils/user.utils";
@@ -68,10 +67,10 @@ export default function Page({
   useEffect(() => {
     if (user) {
       const setFollowData = async () => {
-        const followerData = await getUsersBatch(user.followers || []);
+        const followerData = await getUsersBatch(user.followers);
         setFollowers(followerData);
 
-        const followingData = await getUsersBatch(user.following || []);
+        const followingData = await getUsersBatch(user.following);
         setFollowing(followingData);
         setLoading(false);
       };
@@ -91,8 +90,6 @@ export default function Page({
       setUserIsFollowingCurrentUser(userFollowsCurrentUser);
     }
   }, [user, currentUser]);
-
-  console.log("user: ", user);
 
   return (
     <>
@@ -147,16 +144,8 @@ export default function Page({
                 />
 
                 {/* FOLLOW SECTION */}
-                <FollowPreview
-                  title="Following"
-                  users={following}
-                  disableSeeAll={true}
-                />
-                <FollowPreview
-                  title="Followers"
-                  users={followers}
-                  disableSeeAll={true}
-                />
+                <FollowPreview title="Following" users={following} />
+                <FollowPreview title="Followers" users={followers} />
               </div>
             )}
           </div>

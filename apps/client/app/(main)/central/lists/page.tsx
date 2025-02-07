@@ -23,7 +23,7 @@ export default function Page() {
   // GRAB LIKED LISTS.
   useEffect(() => {
     const fetchLikedLists = async () => {
-      if (!user?._id) return null;
+      if (!user) return null;
 
       const fetchedLikedLists = await getUserLikedLists(user._id);
 

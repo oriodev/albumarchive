@@ -25,7 +25,6 @@ export function NotificationCardsDisplay({
             <FriendRequestCard
               notification={notification}
               setNotifications={setNotifications}
-              sender={notification.sender}
             />
           )}
 
@@ -33,7 +32,6 @@ export function NotificationCardsDisplay({
             <RecCard
               notification={notification}
               setNotifications={setNotifications}
-              sender={notification.sender}
             />
           )}
 

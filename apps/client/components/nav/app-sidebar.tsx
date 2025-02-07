@@ -60,11 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [user]);
 
   const data = {
-    user: {
-      username: user?.username || "",
-      email: user?.email || "",
-      profileImg: user?.profileImg || "",
-    },
+    user: user,
     navMain: [
       {
         title: "Discover",
@@ -152,9 +148,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+      <SidebarFooter>{data.user && <NavUser user={data.user} />}</SidebarFooter>
     </Sidebar>
   );
 }

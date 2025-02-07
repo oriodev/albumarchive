@@ -1,5 +1,5 @@
 import { getSession } from "./session.api";
-import { Notification, NotificationPayload } from "@/types";
+import { NotificationPayload } from "@/types";
 
 /**
  * returns all notifications belonging to a given user.

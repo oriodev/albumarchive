@@ -76,7 +76,7 @@ export function EditReviewDialogue({ album, review }: EditReviewDialogueProps) {
   });
 
   const handleSubmit = async (values: z.infer<typeof createReviewSchema>) => {
-    if (!user?._id || !album?._id || !values.reviewText || !review?._id) return;
+    if (!user || !album?._id || !values.reviewText || !review?._id) return;
 
     const reviewPayload = {
       vibes: setVibes,

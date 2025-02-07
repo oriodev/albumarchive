@@ -107,7 +107,8 @@ export default function Page({
   // FETCH USER REVIEW.
   useEffect(() => {
     const fetchUserReview = async () => {
-      if (!album?._id || !user?._id) return;
+      if (!album?._id || !user) return;
+
       const fetchedUserReview = await getReview(user._id, album._id);
       if (fetchedUserReview) setUserReview({ ...fetchedUserReview, user });
     };
@@ -118,7 +119,7 @@ export default function Page({
   // FETCH REVIEWS.
   useEffect(() => {
     const fetchReviews = async () => {
-      if (!album?._id) return;
+      if (!album?._id || !user) return;
 
       const fetchedReviews = await getAllReviews(
         album._id,
@@ -126,7 +127,12 @@ export default function Page({
       );
       if (!fetchedReviews) return;
 
-      setReviews(fetchedReviews.reviews);
+      setReviews(
+        fetchedReviews.reviews.filter(
+          (review: ReviewWithUser) => review.user._id !== user._id,
+        ),
+      );
+
       setTotalReviews(fetchedReviews.total);
       setLoading(false);
     };

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 // TYPES.
-import { Notification, NotificationType, User } from "@/types";
+import { Notification, NotificationType } from "@/types";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { removeNotification } from "@/api/notifications.api";
@@ -28,13 +28,11 @@ import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 export function RecCard({
   notification,
   setNotifications,
-  sender,
 }: {
   notification: Notification;
   setNotifications: (
     notifications: Notification[] | ((prev: Notification[]) => Notification[]),
   ) => void;
-  sender?: User;
 }) {
   // USE HOOKS.
   const { user, updateUserInfo } = useUser();
@@ -63,8 +61,8 @@ export function RecCard({
     if (!notification.album) return;
 
     const returnNotificationPayload = {
-      sender: notification.receiver,
-      receiver: notification.sender,
+      sender: notification.receiver._id,
+      receiver: notification.sender._id,
       type: NotificationType.RESPONSE,
       message: `${user?.username} doesn't want to listen to ${notification.album.title} by ${notification.album.artist}`,
     };
@@ -77,8 +75,8 @@ export function RecCard({
     if (!notification.album || !user?.lists) return null;
 
     const albumInListNotificationPayload = {
-      sender: notification.receiver,
-      receiver: notification.sender,
+      sender: notification.receiver._id,
+      receiver: notification.sender._id,
       type: NotificationType.RESPONSE,
       message: `${user?.username} has already listened to ${notification.album.title} by ${notification.album.artist}`,
     };
@@ -121,8 +119,8 @@ export function RecCard({
     // SEND RETURN NOTIFICATIONS.
     if (addToListen) {
       const addToListNotificationPayload = {
-        sender: notification.receiver,
-        receiver: notification.sender,
+        sender: notification.receiver._id,
+        receiver: notification.sender._id,
         type: NotificationType.RESPONSE,
         message: `${user?.username} is going to listen to ${notification.album.title} by ${notification.album.artist}`,
       };
@@ -143,8 +141,8 @@ export function RecCard({
         <div className="mr-4 relative w-[200px]">
           {notification.album?.coverImage ? (
             <Image
-              alt={notification.album?.title || "album cover image"}
-              src={notification.album?.coverImage || ""}
+              alt={notification.album.title}
+              src={notification.album.coverImage}
               width={200}
               height={200}
             />
@@ -155,8 +153,8 @@ export function RecCard({
         <div className="flex flex-col w-full">
           <CardHeader>
             <CardTitle>
-              {sender?.username} recommended {notification.album?.title} by{" "}
-              {notification.album?.artist}!
+              {notification.sender.username} recommended{" "}
+              {notification.album?.title} by {notification.album?.artist}!
             </CardTitle>
             <CardDescription>{notification.message}</CardDescription>
           </CardHeader>

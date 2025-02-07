@@ -32,26 +32,26 @@ export const sendNotification = async (
  * @returns
  */
 export const checkNotification = async (
-  notification: Notification,
+  notification: NotificationPayload,
 ): Promise<boolean> => {
   // check if the user has already sent a rec for that album to that user
 
   // get all album recs for notification.reciever
-  if (!notification.receiver._id) return false;
+  if (!notification.receiver) return false;
 
-  const allNotifications = await getNotifications(notification.receiver._id);
+  const allNotifications = await getNotifications(notification.receiver);
   const allAlbumRecs = allNotifications.filter(
     (notif: Notification) => notif.type === NotificationType.ALBUMREC,
   );
 
   const matchingAlbum = allAlbumRecs.filter(
-    (rec: Notification) => rec.album?._id === notification.album?._id,
+    (rec: Notification) => rec.album?._id === notification.album,
   );
 
   if (matchingAlbum.length < 1) return false;
 
   const matchingUser = matchingAlbum.filter(
-    (rec: Notification) => rec.sender === notification.sender,
+    (rec: NotificationPayload) => rec.sender === notification.sender,
   );
 
   if (matchingUser < 1) return false;

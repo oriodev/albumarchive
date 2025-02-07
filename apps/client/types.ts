@@ -11,18 +11,15 @@ export interface Album {
   reviews: string[];
 }
 
-export interface User {
-  id: string;
+export interface UserSignUp {
   username: string;
-  description: string;
   email: string;
-  profileImg?: string;
-  password?: string;
-  private: boolean;
-  lists: List[];
-  following: string[];
-  followers: string[];
-  reviews: Review[];
+  password: string;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
 }
 
 export interface UserPayload {
@@ -36,6 +33,10 @@ export interface UserPayload {
   following: string[];
   followers: string[];
   reviews: Review[];
+}
+
+export interface User extends UserPayload {
+  _id: string;
 }
 
 export enum AlbumType {
@@ -89,11 +90,11 @@ export interface Notification {
 }
 
 export interface NotificationPayload {
-  sender: User;
-  receiver: User;
+  sender: string;
+  receiver: string;
   type: NotificationType;
-  album?: Album;
-  list?: List;
+  album?: string;
+  list?: string;
   message?: string;
   timestamp?: Date;
 }

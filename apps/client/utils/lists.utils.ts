@@ -80,13 +80,13 @@ export const isAlbumInListened = async (
     return false;
   }
 
-  const lists = user?.lists || [];
+  const lists = user.lists;
 
   const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
 
   const listened = lists.filter((list) => list.type === "Listened")[0];
 
-  if (!listened?._id) {
+  if (!listened._id) {
     return false;
   }
 
@@ -107,13 +107,13 @@ export const isAlbumInToListen = async (
     return false;
   }
 
-  const lists = user?.lists || [];
+  const lists = user.lists;
 
   const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
 
   const toListen = lists.filter((list) => list.type === "To Listen")[0];
 
-  if (!toListen?._id) {
+  if (!toListen._id) {
     return false;
   }
 

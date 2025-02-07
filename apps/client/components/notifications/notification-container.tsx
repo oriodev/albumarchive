@@ -32,10 +32,7 @@ export function NotificationContainer({
   // LOAD DATA.
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (!user?._id) {
-        return;
-      }
-
+      if (!user) return;
       setLoading(true);
 
       // SET NOTIFICATIONS FROM DB.
@@ -43,7 +40,6 @@ export function NotificationContainer({
       setNotifications(fetchedNotifications);
       setFilteredNotifications(fetchedNotifications);
 
-      console.log("fetchedNotifications: ", fetchedNotifications);
       setLoading(false);
     };
 

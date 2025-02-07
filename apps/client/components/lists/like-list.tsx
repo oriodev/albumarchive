@@ -32,7 +32,7 @@ export function LikeList({
 
   useEffect(() => {
     const fetchLiked = async () => {
-      if (!user?._id || !list._id) return null;
+      if (!user || !list._id) return null;
 
       const fetchedLiked = await getLike(user._id, list._id);
 
@@ -63,7 +63,7 @@ export function LikeList({
     if (!clickable) return null;
 
     if (!liked && user) {
-      if (!user._id || !list._id) return null;
+      if (!user || !list._id) return null;
 
       const likePayload: Likes = {
         user: user._id,
@@ -77,7 +77,7 @@ export function LikeList({
         setTotalLikes(totalLikes + 1);
       }
     } else {
-      if (!user || !user._id || !list._id) return null;
+      if (!user || !list._id) return null;
 
       const deletedLike = await deleteLike(likeId);
       if (deletedLike) {

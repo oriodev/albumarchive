@@ -18,15 +18,15 @@ export function RemoveFollowerButton({
   const { toast } = useToast();
 
   const handleRemoveFollower = async () => {
-    if (!user?._id || !currentUser?._id) {
+    if (!user || !currentUser) {
       toast({
         title: "Could not remove user as follower",
-        description: "User id does not exist",
+        description: "User does not exist",
       });
       return;
     }
 
-    const unfollow = await unfollowUser(currentUser?._id, user._id);
+    const unfollow = await unfollowUser(currentUser._id, user._id);
     setCurrentlyFollowing(false);
 
     if (!unfollow) {

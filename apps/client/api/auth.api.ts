@@ -1,9 +1,9 @@
 "use server";
 
-import { User } from "@/types";
+import { UserLogin, UserSignUp } from "@/types";
 import { deleteSession } from "./session.api";
 
-export const signUp = async (user: User) => {
+export const signUp = async (user: UserSignUp) => {
   try {
     const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/auth/signup`);
 
@@ -22,7 +22,7 @@ export const signUp = async (user: User) => {
   }
 };
 
-export const login = async (user: User) => {
+export const login = async (user: UserLogin) => {
   try {
     const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/auth/login`);
 

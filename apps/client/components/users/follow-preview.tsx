@@ -12,8 +12,6 @@ export function FollowPreview({
 }: {
   title: string;
   users: User[];
-  showMoreBtn?: boolean;
-  setShowMoreBtn: (showMoreBtn: boolean) => void;
 }) {
   const router = useRouter();
   const resPerPage = 5;
