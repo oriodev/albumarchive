@@ -124,6 +124,22 @@ export class ListService {
         return list;
     }
 
+    async findByUserId(id: string): Promise<List[]> {
+        const isValidId = mongoose.isValidObjectId(id)
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongo id')
+        }
+
+        const lists = await this.listModel.find({ user: id });
+
+        if (!lists) {
+            throw new NotFoundException('list not found')
+        }
+
+        return lists;
+    }
+
     async findBySlug(user: string, slug: string): Promise<List> {
 
         const isValidId = mongoose.isValidObjectId(user)

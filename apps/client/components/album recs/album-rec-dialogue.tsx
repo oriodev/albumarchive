@@ -49,6 +49,7 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
 
   // STATES.
   const [users, setUsers] = useState<User[]>([]);
+  const [receiver, setReceiver] = useState<User>();
 
   useEffect(() => {
     const fetchFollowing = async () => {
@@ -79,13 +80,13 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
   });
 
   const handleSubmit = async (values: z.infer<typeof albumRecSchema>) => {
-    if (!user) return;
+    if (!user || !receiver) return;
 
     const notificationPayload: NotificationPayload = {
-      sender: user._id,
-      receiver: values.user,
+      sender: user,
+      receiver: receiver,
       type: NotificationType.ALBUMREC,
-      album: album._id,
+      album: album,
       message: values.message,
     };
 
@@ -167,6 +168,7 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
                                 value={user._id}
                                 onSelect={() => {
                                   form.setValue("user", user._id);
+                                  setReceiver(user);
                                 }}
                               >
                                 {user.username}

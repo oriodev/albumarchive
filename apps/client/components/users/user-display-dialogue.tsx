@@ -13,7 +13,6 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { FollowButton } from "./follow-button";
 import { User } from "@/types";
-// import Image from "next/image";
 
 interface UserDisplayDialogueProps {
   user: User;

@@ -74,12 +74,10 @@ export enum Dialogs {
 export enum NotificationType {
   FRIENDREQUEST = "friendRequest",
   ALBUMREC = "albumRec",
-  LISTLIKE = "listlike",
   RESPONSE = "response",
 }
 
-export interface Notification {
-  _id: string;
+export interface NotificationPayload {
   sender: User;
   receiver: User;
   type: NotificationType;
@@ -89,14 +87,8 @@ export interface Notification {
   timestamp?: Date;
 }
 
-export interface NotificationPayload {
-  sender: string;
-  receiver: string;
-  type: NotificationType;
-  album?: string;
-  list?: string;
-  message?: string;
-  timestamp?: Date;
+export interface Notification extends NotificationPayload {
+  _id: string;
 }
 
 export interface Rating {

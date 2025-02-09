@@ -26,6 +26,11 @@ export class ListController {
         return await this.listService.getListById(id)
     }
 
+    @Get(':id/user')
+    async getListByUserId(@Param('id') id: string): Promise<List[]> {
+        return await this.listService.findByUserId(id);
+    }
+
     @Get()
     async getListByName(@Query('user') user: string, @Query('slug') slug: string): Promise<List> {
         return await this.listService.findBySlug(user, slug);

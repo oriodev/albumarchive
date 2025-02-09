@@ -40,7 +40,7 @@ export class AppNotifications implements OnModuleInit {
  
     @SubscribeMessage('newNotification')
     onNewNotification(@MessageBody() notification: Notification) {
-        const receiver = notification.receiver.toString();
+        const receiver = notification.receiver._id.toString();
         const receiverSocket = this.userSockets[receiver];
 
         this.server.to(receiverSocket).emit('onNotification', notification)

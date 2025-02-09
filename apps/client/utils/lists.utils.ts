@@ -1,5 +1,9 @@
 import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
-import { addAlbumToList, removeAlbumFromList } from "@/api/list.api";
+import {
+  addAlbumToList,
+  getListsByUserId,
+  removeAlbumFromList,
+} from "@/api/list.api";
 import { Album, AlbumType, List, User } from "@/types";
 import { makeUpdatedAlbumInListUser } from "./user.utils";
 import { slugify } from "./global.utils";
@@ -82,15 +86,21 @@ export const isAlbumInListened = async (
 
   const lists = user.lists;
 
-  const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
+  const isFullListObjects = lists.length > 0 && lists[0]._id !== undefined;
 
-  const listened = lists.filter((list) => list.type === "Listened")[0];
+  const listsToCheck = isFullListObjects
+    ? lists
+    : await getListsByUserId(user._id);
 
-  if (!listened._id) {
+  const listened = listsToCheck.find((list: List) => list.type === "Listened");
+
+  if (!listened || !listened._id) {
     return false;
   }
 
-  return listened?._id in listsAlbumIsIn;
+  const listsAlbumIsIn = await findListsAlbumIsIn(listsToCheck, album);
+
+  return listened._id in listsAlbumIsIn;
 };
 
 /**
@@ -109,15 +119,15 @@ export const isAlbumInToListen = async (
 
   const lists = user.lists;
 
-  const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
+  const toListen = lists.filter((list: List) => list.type === "To Listen")[0];
 
-  const toListen = lists.filter((list) => list.type === "To Listen")[0];
-
-  if (!toListen._id) {
+  if (!toListen || !toListen._id) {
     return false;
   }
 
-  return toListen?._id in listsAlbumIsIn;
+  const listsAlbumIsIn = await findListsAlbumIsIn(lists, album);
+
+  return toListen._id in listsAlbumIsIn;
 };
 
 /**

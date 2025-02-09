@@ -23,8 +23,6 @@ export function Profile() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showFollowingMoreBtn, setShowFollowingMoreBtn] = useState(true);
-  const [showFollowersMoreBtn, setShowFollowersMoreBtn] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -79,18 +77,8 @@ export function Profile() {
             </Button>
           </div>
 
-          <FollowPreview
-            title="following"
-            users={following}
-            showMoreBtn={showFollowingMoreBtn}
-            setShowMoreBtn={setShowFollowingMoreBtn}
-          />
-          <FollowPreview
-            title="followers"
-            users={followers}
-            showMoreBtn={showFollowersMoreBtn}
-            setShowMoreBtn={setShowFollowersMoreBtn}
-          />
+          <FollowPreview title="following" users={following} />
+          <FollowPreview title="followers" users={followers} />
         </div>
       </div>
     );

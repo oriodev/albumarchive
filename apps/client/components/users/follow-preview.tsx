@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import UserImage from "./user-image";
 import { useEffect, useState } from "react";
 import { FullPagination } from "../nav/full-pagination";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 export function FollowPreview({
   title,
@@ -44,9 +50,19 @@ export function FollowPreview({
               className=""
               onClick={() => router.push(`/central/users/${user.username}`)}
             >
-              <UserImage user={user} size={150} />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <UserImage user={user} size={150} />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{user.username}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           ))}
+
         {!users && <div>none yet!</div>}
       </div>
 

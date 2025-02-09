@@ -50,6 +50,28 @@ export const getListById = async (listId: string) => {
   return data;
 };
 
+export const getListsByUserId = async (userId: string) => {
+  const token = await getSession();
+
+  const url = new URL(
+    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/${userId}/user`,
+  );
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const getTrendingLists = async () => {
   try {
     const token = await getSession();

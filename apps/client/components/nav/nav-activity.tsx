@@ -1,7 +1,7 @@
 "use client";
 
-import { CloudLightning, SquareArrowOutUpRight } from "lucide-react";
-
+// COMPONENTS.
+import { CloudLightning } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,35 +15,60 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
+
+// HOOKS.
 import { useContext, useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
-import { SidebarNotifications } from "../notifications/sidebar-notifications";
+
+// API CALLS.
+import { getNotifications } from "@/api/notifications.api";
+
+// TYPES.
+import { Notification } from "@/types";
+import { NotificationContainer } from "../notifications/notification-container";
 
 export function NavActivity() {
   const { isMobile } = useSidebar();
-  const router = useRouter();
-  const { user } = useUser();
+  const { user, updateUserInfo } = useUser();
   const socket = useContext(WebsocketContext);
 
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationCount, setNotificationCount] = useState(0);
+
+  // FETCH NOTIFICATIONS FROM DATABASE.
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!user) return;
+
+      const fetchedNotifications = await getNotifications(user._id);
+      setNotifications(fetchedNotifications);
+    };
+
+    fetchNotifications();
+  }, [user]);
+
+  useEffect(() => {
+    setNotificationCount(notifications.length);
+  }, [notifications]);
 
   // WEBSOCKETS.
   // ------------------
 
   // CONNECTING & LISTENING.
   useEffect(() => {
-    if (user?._id && socket) {
+    if (!socket) return;
+
+    if (user) {
       socket.emit("registerUser", user._id);
     }
 
-    socket?.on("onNotification", () => {
-      setNotificationCount((prev) => prev + 1);
+    socket.on("onNotification", (notification) => {
+      setNotifications((prev: Notification[]) => [notification, ...prev]);
     });
 
     return () => {
-      socket?.off("onNotification");
+      socket.off("onNotification");
     };
   }, [socket, user]);
 
@@ -75,15 +100,18 @@ export function NavActivity() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="flex justify-between flex-1 text-left text-sm leading-tight">
                   <p className="text-lg font-semibold">Activity</p>
-                  <SquareArrowOutUpRight
-                    onClick={() => router.push("/central/activity")}
-                    className="hover:cursor-pointer hover:text-gray-300"
-                  />
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <SidebarNotifications />
+            <div className="w-full">
+              <NotificationContainer
+                notifications={notifications}
+                setNotifications={setNotifications}
+                socket={socket}
+                updateUserInfo={updateUserInfo}
+              />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

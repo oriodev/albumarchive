@@ -11,7 +11,6 @@ import { List } from "@/types";
 
 // APIS.
 import { getTrendingLists } from "@/api/list.api";
-import { WebsocketComponent } from "@/components/websocket-component";
 
 export default function Page() {
   // STATES.
@@ -31,8 +30,6 @@ export default function Page() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl pl-3">Central.</h1>
-
-      <WebsocketComponent />
 
       {/* TRENDING LISTS. */}
       {trendingLists.length >= 1 && (

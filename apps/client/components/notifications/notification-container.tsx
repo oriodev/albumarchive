@@ -1,93 +1,160 @@
 "use client";
 
-// TYPES.
-import { Notification, NotificationType } from "@/types";
-
+import { useToast } from "@/hooks/use-toast";
 // COMPONENTS.
 
-// HOOKS.
-import { useEffect, useState } from "react";
-import { useUser } from "@/utils/providers/UserProvider";
-
-// API CALLS.
-import { getNotifications } from "@/api/notifications.api";
-import { Skeleton } from "../ui/skeleton";
-import { NotificationCardsDisplay } from "./notification-cards-display";
+// TYPES.
+import { Notification, NotificationType, User } from "@/types";
+import {
+  handleAcceptAlbumRec,
+  handleDeclineNotification,
+  handleRemoveNotification,
+  sendNotification,
+} from "@/utils/notifications.utils";
+import { Socket } from "socket.io-client";
+import NotificationCard from "./notification-card";
+import { followUser } from "@/api/user.api";
 
 export function NotificationContainer({
-  selectedFilter,
+  notifications,
+  setNotifications,
+  socket,
+  updateUserInfo,
 }: {
-  selectedFilter: string;
+  notifications: Notification[];
+  setNotifications: (
+    notifications: Notification[] | ((prev: Notification[]) => Notification[]),
+  ) => void;
+  socket: Socket | null;
+  updateUserInfo: (update: Partial<User>) => void;
 }) {
-  // USE STATES.
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [filteredNotifications, setFilteredNotifications] = useState<
-    Notification[]
-  >([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // HOOKS.
-  const { user } = useUser();
-
-  // LOAD DATA.
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      if (!user) return;
-      setLoading(true);
-
-      // SET NOTIFICATIONS FROM DB.
-      const fetchedNotifications = await getNotifications(user._id);
-      setNotifications(fetchedNotifications);
-      setFilteredNotifications(fetchedNotifications);
-
-      setLoading(false);
-    };
-
-    fetchNotifications();
-  }, [user]);
-
-  // FILTER MAPPING
-  const filterMapping: Record<string, NotificationType | null> = {
-    "Friend Requests": NotificationType.FRIENDREQUEST,
-    "Album Recs": NotificationType.ALBUMREC,
-    Likes: NotificationType.LISTLIKE,
-    Activity: null,
-  };
-
-  // SET FILTERS.
-  useEffect(() => {
-    const filterNotifications = () => {
-      const notificationType = filterMapping[selectedFilter];
-
-      if (notificationType) {
-        setFilteredNotifications(
-          notifications.filter(
-            (notification) => notification.type === notificationType,
-          ),
-        );
-      } else {
-        setFilteredNotifications(notifications);
-      }
-    };
-
-    filterNotifications();
-    // eslint-disable-next-line
-  }, [selectedFilter, notifications]);
+  const { toast } = useToast();
 
   return (
-    <div className="w-full lg:w-1/2">
-      <div className="flex flex-col gap-5">
-        {loading ? (
-          Array.from({ length: filteredNotifications.length }).map(
-            (_, index) => <Skeleton key={index} className="h-[100px] w-full" />,
-          )
-        ) : (
-          <NotificationCardsDisplay
-            notifications={filteredNotifications}
-            setNotifications={setNotifications}
-          />
-        )}
-      </div>
+    <div className="max-h-[600px] overflow-y-auto flex flex-col gap-5">
+      {notifications.map((notification, index) => {
+        // ALBUM REC NOTIFICATIONS.
+        if (notification.type === NotificationType.ALBUMREC) {
+          if (!notification.album || !socket) return;
+
+          const acceptFunction = async () => {
+            const accepted = await handleAcceptAlbumRec(
+              notification,
+              setNotifications,
+              socket,
+              updateUserInfo,
+            );
+
+            if (accepted) {
+              toast(accepted);
+            }
+          };
+
+          const declineFunction = async () => {
+            if (!notification.album) return;
+
+            return await handleDeclineNotification(
+              notification,
+              setNotifications,
+              `${notification.receiver.username} doesn't want to listen to ${notification.album.title} by ${notification.album.artist}`,
+              socket,
+            );
+          };
+
+          const title = `${notification.sender.username} recommended
+              ${notification.album.title} by ${notification.album.artist}!`;
+
+          return (
+            <NotificationCard
+              key={index}
+              image={notification.album.coverImage}
+              type={NotificationType.ALBUMREC}
+              title={title}
+              description={notification.message || ""}
+              link={`/central/albums/${notification.album._id}`}
+              handleAcceptNotification={acceptFunction}
+              handleDeclineNotification={declineFunction}
+            />
+          );
+        }
+
+        // FRIEND REQUEST NOTIFICATIONS.
+        if (notification.type === NotificationType.FRIENDREQUEST) {
+          const title = `${notification.sender.username} wants to follow you!`;
+
+          const acceptFunction = async () => {
+            const follow = await followUser(
+              notification.receiver._id,
+              notification.sender._id,
+            );
+
+            if (!follow) {
+              toast({
+                title: "Could not do follow.",
+              });
+              return;
+            }
+
+            const returnNotificationPayload = {
+              sender: notification.receiver,
+              receiver: notification.sender,
+              type: NotificationType.RESPONSE,
+              message: `${notification.receiver.username} has accepted your friend request!`,
+            };
+
+            await sendNotification(socket, returnNotificationPayload);
+
+            handleRemoveNotification(notification, setNotifications);
+            toast({
+              title: `${notification.sender.username} now follows you!`,
+            });
+          };
+
+          const declineFunction = async () => {
+            if (!notification.album || !socket) return;
+
+            return await handleDeclineNotification(
+              notification,
+              setNotifications,
+              `${notification.receiver.username} has declined your friend request :(`,
+              socket,
+            );
+          };
+
+          return (
+            <NotificationCard
+              key={index}
+              image={notification.sender.profileImg}
+              type={NotificationType.FRIENDREQUEST}
+              title={title}
+              description={""}
+              link={`/central/users/${notification.sender.username}`}
+              handleAcceptNotification={acceptFunction}
+              handleDeclineNotification={declineFunction}
+            />
+          );
+        }
+
+        // RESPONSE NOTIFICATIONS.
+        if (notification.type === NotificationType.RESPONSE) {
+          const declineFunction = async () => {
+            handleRemoveNotification(notification, setNotifications);
+          };
+
+          return (
+            <NotificationCard
+              key={index}
+              image={notification.sender.profileImg}
+              type={NotificationType.RESPONSE}
+              title={notification.message || "this is an empty response"}
+              description={""}
+              link={`/central/users/${notification.sender._id}`}
+              handleAcceptNotification={() => {}}
+              handleDeclineNotification={declineFunction}
+            />
+          );
+        }
+      })}
     </div>
   );
 }

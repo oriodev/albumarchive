@@ -17,7 +17,7 @@ export class NotificationsService {
             throw new BadRequestException('please enter a valid mongo id')
         }
 
-        return this.notificationModel.find({ receiver: userId }).populate("sender receiver albumId listId").sort({ createdAt: -1 }).exec();
+        return this.notificationModel.find({ receiver: userId }).populate("sender receiver album list").sort({ createdAt: -1 }).exec();
       }
 
       async createNotification(notification: Notification): Promise<Notification> {

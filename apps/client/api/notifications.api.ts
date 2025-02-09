@@ -40,6 +40,14 @@ export const storeNotification = async (notification: NotificationPayload) => {
   try {
     const token = await getSession();
 
+    const newPayload = {
+      ...notification,
+      sender: notification.sender._id,
+      receiver: notification.receiver._id,
+      album: notification.album?._id,
+      list: notification.list?._id,
+    };
+
     const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/notifications`);
 
     const response = await fetch(url, {
@@ -48,7 +56,7 @@ export const storeNotification = async (notification: NotificationPayload) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(notification),
+      body: JSON.stringify(newPayload),
     });
 
     if (!response.ok) {
