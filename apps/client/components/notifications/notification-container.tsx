@@ -12,8 +12,8 @@ import {
   sendNotification,
 } from "@/utils/notifications.utils";
 import { Socket } from "socket.io-client";
-import NotificationCard from "./notification-card";
 import { followUser } from "@/api/user.api";
+import NotifCard from "../cards/notifcard";
 
 export function NotificationContainer({
   notifications,
@@ -65,7 +65,7 @@ export function NotificationContainer({
               ${notification.album.title} by ${notification.album.artist}!`;
 
           return (
-            <NotificationCard
+            <NotifCard
               key={index}
               image={notification.album.coverImage}
               type={NotificationType.ALBUMREC}
@@ -122,7 +122,7 @@ export function NotificationContainer({
           };
 
           return (
-            <NotificationCard
+            <NotifCard
               key={index}
               image={notification.sender.profileImg}
               type={NotificationType.FRIENDREQUEST}
@@ -142,7 +142,7 @@ export function NotificationContainer({
           };
 
           return (
-            <NotificationCard
+            <NotifCard
               key={index}
               image={notification.sender.profileImg}
               type={NotificationType.RESPONSE}

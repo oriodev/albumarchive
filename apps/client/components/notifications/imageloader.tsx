@@ -7,15 +7,15 @@ import Image from "next/image";
 
 // COMPONENTS.
 
-export default function NotificationImageLoader({
+export default function ImageLoader({
   image,
   type,
+  size,
 }: {
   image: string | undefined;
   type: NotificationType;
+  size: number;
 }) {
-  const size = 200;
-
   return (
     <>
       {type === NotificationType.FRIENDREQUEST ||
@@ -26,7 +26,7 @@ export default function NotificationImageLoader({
               width={size}
               height={size}
               src={image}
-              sizes="100vw"
+              sizes={size.toString()}
               alt={"user profile image"}
               crop="fill"
             />
