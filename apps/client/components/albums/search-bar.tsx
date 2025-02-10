@@ -29,6 +29,7 @@ export function SearchBar({
           className="pl-8 pt-5 pb-5"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          autoComplete="off"
         />
         <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
       </SidebarGroupContent>

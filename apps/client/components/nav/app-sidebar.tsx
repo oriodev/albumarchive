@@ -9,6 +9,7 @@ import {
   List,
   Send,
   User,
+  MessageCircle,
 } from "lucide-react";
 
 import { NavLists } from "@/components/nav/nav-lists";
@@ -85,6 +86,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: "Users",
             url: "/central/users",
             icon: User,
+          },
+          {
+            title: "Rooms",
+            url: "/central/rooms",
+            icon: MessageCircle,
           },
         ],
       },
