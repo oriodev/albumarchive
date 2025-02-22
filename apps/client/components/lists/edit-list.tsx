@@ -29,6 +29,7 @@ import { slugify } from "@/utils/global.utils";
 import { updateList } from "@/api/list.api";
 import ImageUpload from "../image-upload";
 import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import PageHeader from "../header";
 
 // SET FORM DATA TYPE.
 type FormData = z.infer<typeof editListSchema>;
@@ -141,13 +142,16 @@ export function EditList({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 items-center">
-      <h2 className="text-3xl">Edit {list?.name || "List"}</h2>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title={`Edit ${list?.name || "List"}`}
+        description="Set the name, description, and cover image here."
+      />
 
       <FormProvider {...form}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-4 py-4 w-1/2"
+          className="grid gap-4 py-4 w-1/2 pl-3"
         >
           {/* NAME FIELD */}
           <FormField

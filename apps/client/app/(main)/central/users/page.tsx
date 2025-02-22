@@ -59,6 +59,7 @@ export default function Page() {
       setCurrentPage={setCurrentPage}
       total={total}
       resPerPage={resPerPage}
+      searchType="users"
     >
       {users.map((user: User) => (
         <UserDisplayDialogue key={user.username} user={user} />

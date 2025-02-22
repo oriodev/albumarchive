@@ -1,4 +1,5 @@
 import { SearchBar } from "../albums/search-bar";
+import PageHeader from "../header";
 import { FullPagination } from "../nav/full-pagination";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
   setCurrentPage: (currentPage: number) => void;
   total: number;
   resPerPage: number;
+  searchType: string;
 }
 
 export default function SearchContainer({
@@ -25,31 +27,43 @@ export default function SearchContainer({
   setCurrentPage,
   total,
   resPerPage,
+  searchType,
 }: Props) {
   return (
-    <main className="flex flex-col gap-5">
-      <header className="pl-3 flex flex-col gap-1">
-        <h1 className="text-3xl font-bold">{title}.</h1>
-        <p className="text-gray-200">{description}</p>
-      </header>
+    <main
+      className="flex flex-col gap-5"
+      role="main"
+      aria-labelledby="page-header"
+    >
+      <PageHeader title={title} description={description} />
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} aria-label="Search Form">
+        <label htmlFor="search-input" className="sr-only">
+          Search
+        </label>
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          searchType="lists"
+          searchType={searchType}
+          aria-label="Search"
         />
       </form>
 
-      <div className="pl-3 grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
-        {children}
-      </div>
+      <section aria-labelledby="list-section">
+        <h2 id="list-section" className="sr-only">
+          List of Items
+        </h2>
+        <div className="pl-3 grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+          {children}
+        </div>
+      </section>
 
       <FullPagination
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
         total={total}
         resPerPage={resPerPage}
+        aria-label="Pagination controls"
       />
     </main>
   );

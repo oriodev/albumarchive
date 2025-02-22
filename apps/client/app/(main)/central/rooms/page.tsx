@@ -64,6 +64,7 @@ export default function Page() {
       setCurrentPage={setCurrentPage}
       total={total}
       resPerPage={resPerPage}
+      searchType="rooms"
     >
       {filteredRooms.map((room) => (
         <TextCard

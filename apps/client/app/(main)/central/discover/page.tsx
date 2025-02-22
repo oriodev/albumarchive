@@ -53,6 +53,7 @@ export default function Page() {
       setCurrentPage={setCurrentPage}
       total={total}
       resPerPage={resPerPage}
+      searchType="lists"
     >
       {lists.map((list) => (
         <ListCard key={`${list.name}+${list.user}`} list={list} />

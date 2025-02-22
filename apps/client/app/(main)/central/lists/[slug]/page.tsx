@@ -18,6 +18,7 @@ import { getAlbumById } from "@/api/albums.api";
 import { LikeList } from "@/components/lists/like-list";
 import ListLayoutSwitch from "@/components/lists/list-layout-switch";
 import ListList from "@/components/lists/list-list";
+import PageHeader from "@/components/header";
 
 export default function Page({
   params,
@@ -104,18 +105,14 @@ export default function Page({
 
   // NORMAL LIST STATE.
   return (
-    // TOTAL.
-    <div className="flex flex-col gap-5">
+    <main className="flex flex-col gap-5">
       {/* HEADER. */}
       <div className="flex flex-col flex-wrap gap-2">
         {/* NAME AND DESCRIPTION. */}
-        <div>
-          <h1 className="text-2xl">{list.name}</h1>
-          <p className="italic">{list.description}</p>
-        </div>
+        <PageHeader title={list.name} description={list.description} />
 
         {/* BAR. */}
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3 pl-3">
           {!(
             list.type === AlbumType.LISTENED || list.type === AlbumType.TOLISTEN
           ) && <LikeList list={list} clickable={false} />}
@@ -140,13 +137,6 @@ export default function Page({
           layoutType={layoutType}
         />
       )}
-    </div>
-
-    // <div className="">
-    //   <div className="">
-
-    //   </div>
-
-    // </div>
+    </main>
   );
 }

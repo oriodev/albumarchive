@@ -11,6 +11,7 @@ import { List } from "@/types";
 
 // APIS.
 import { getTrendingLists } from "@/api/list.api";
+import PageHeader from "@/components/header";
 
 export default function Page() {
   // STATES.
@@ -29,7 +30,10 @@ export default function Page() {
   // RENDER PAGE.
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-3xl pl-3">Central.</h1>
+      <PageHeader
+        title="Album Archive Central"
+        description="Track your albums. Make new friends. Savour your music."
+      />
 
       {/* TRENDING LISTS. */}
       {trendingLists.length >= 1 && (

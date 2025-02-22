@@ -97,8 +97,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     navSecondary: [
       {
-        title: "Support",
-        url: "/central/support",
+        title: "Documentation",
+        url: "/central/documentation",
         icon: LifeBuoy,
       },
       {
