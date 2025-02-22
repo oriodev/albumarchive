@@ -23,7 +23,7 @@ export class ListService {
     ) {}
 
     async findAll(query: Query): Promise<{ lists: List[]; total: number }> {
-        const resPerPage = 5;
+        const resPerPage = 15;
         const currentPage = Number(query.page) || 1;
         const skip = resPerPage * (currentPage - 1);
     

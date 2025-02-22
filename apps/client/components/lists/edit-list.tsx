@@ -14,7 +14,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 // COMPONENTS.
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -135,12 +141,8 @@ export function EditList({ slug }: { slug: string }) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col gap-6 items-center">
       <h2 className="text-3xl">Edit {list?.name || "List"}</h2>
-
-      {list && (
-        <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
-      )}
 
       <FormProvider {...form}>
         <form
@@ -180,6 +182,11 @@ export function EditList({ slug }: { slug: string }) {
               </FormItem>
             )}
           />
+          <FormLabel>Image</FormLabel>
+          {list && (
+            <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
+          )}
+
           {/* SUBMIT BUTTON */}
           <button
             type="submit"

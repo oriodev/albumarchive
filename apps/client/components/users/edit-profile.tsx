@@ -9,7 +9,13 @@ import { editUserSchema } from "@/zod/edit-user-schema";
 
 // HOOKS.
 import { FormProvider, useForm } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "../ui/textarea";
 import { updateUser } from "@/api/user.api";
@@ -85,15 +91,23 @@ export function EditingProfile({}) {
 
   return (
     <div className="flex flex-col items-center">
-      {user && (
-        <ImageUpload imageUrl={imageUrl} user={user} onUpload={onUpload} />
-      )}
-
+      <h1>Edit Your Profile.</h1>
       <FormProvider {...form}>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid gap-4 py-4 w-1/2"
         >
+          {user && (
+            <>
+              <FormLabel>Profile Picture</FormLabel>
+              <ImageUpload
+                imageUrl={imageUrl}
+                user={user}
+                onUpload={onUpload}
+              />
+            </>
+          )}
+
           {/* DESCRIPTION FIELD */}
           <FormField
             control={control}

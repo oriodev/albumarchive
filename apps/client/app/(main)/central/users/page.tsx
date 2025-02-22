@@ -1,8 +1,7 @@
 "use client";
 
 import { getAllUsers } from "@/api/user.api";
-import { SearchBar } from "@/components/albums/search-bar";
-import { FullPagination } from "@/components/nav/full-pagination";
+import SearchContainer from "@/components/containers/searchcontainer";
 import { UserDisplayDialogue } from "@/components/users/user-display-dialogue";
 import { User } from "@/types";
 import { useUser } from "@/utils/providers/UserProvider";
@@ -15,6 +14,8 @@ export default function Page() {
   const [total, setTotal] = useState(0);
 
   const { user: currentUser } = useUser();
+
+  const resPerPage = 15;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -48,28 +49,20 @@ export default function Page() {
   };
 
   return (
-    <>
-      <p className="text-2xl pl-3">Users.</p>
-
-      <form onSubmit={handleSubmit}>
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchType="users"
-        />
-      </form>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
-        {users.map((user: User) => (
-          <UserDisplayDialogue key={user.username} user={user} />
-        ))}
-      </div>
-
-      <FullPagination
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        total={total}
-        resPerPage={3}
-      />
-    </>
+    <SearchContainer
+      title="Find Friends to Follow"
+      description="Find your friends and explore all their favourite music."
+      handleSubmit={handleSubmit}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      total={total}
+      resPerPage={resPerPage}
+    >
+      {users.map((user: User) => (
+        <UserDisplayDialogue key={user.username} user={user} />
+      ))}
+    </SearchContainer>
   );
 }

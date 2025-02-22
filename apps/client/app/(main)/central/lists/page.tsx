@@ -1,7 +1,7 @@
 "use client";
 
 import { getUserLikedLists } from "@/api/likes.api";
-import { getListById } from "@/api/list.api";
+
 // COMPONENTS.
 import { ListScrollDisplay } from "@/components/lists/list-scroll-display";
 import { NoUser } from "@/components/users/no-user";
@@ -26,16 +26,7 @@ export default function Page() {
       if (!user) return null;
 
       const fetchedLikedLists = await getUserLikedLists(user._id);
-
-      if (fetchedLikedLists) {
-        const fullLists = await Promise.all(
-          fetchedLikedLists.map(async (listId) => await getListById(listId)),
-        );
-
-        const listsWithoutNulls = fullLists.filter((list) => list !== null);
-
-        setLikedLists(listsWithoutNulls);
-      }
+      setLikedLists(fetchedLikedLists);
     };
 
     fetchLikedLists();

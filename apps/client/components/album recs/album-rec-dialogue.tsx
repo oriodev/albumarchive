@@ -29,7 +29,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { albumRecSchema } from "@/zod/album-rec-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { useContext, useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
@@ -137,66 +143,73 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
             <FormProvider {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="flex flex-col gap-2 w-1/3"
+                className="flex flex-col w-1/3"
               >
-                <div className="text-l flex flex-col gap-2">
+                <div className="text-l flex flex-col gap-4">
                   {/* POPUP FOR LIST SELECTION */}
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={false}
-                        className="w-full justify-between"
-                      >
-                        {form.watch("user")
-                          ? users.find(
-                              (user) => user._id === form.watch("user"),
-                            )?.username
-                          : "Select a user"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search users..." />
-                        <CommandList>
-                          <CommandEmpty>No user found.</CommandEmpty>
-                          <CommandGroup>
-                            {users.map((user) => (
-                              <CommandItem
-                                key={user.username}
-                                value={user._id}
-                                onSelect={() => {
-                                  form.setValue("user", user._id);
-                                  setReceiver(user);
-                                }}
-                              >
-                                {user.username}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <div>
+                    <FormLabel>Select a user to send a rec to.</FormLabel>
 
-                  {/* MESSAGE */}
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Textarea
-                            id="message"
-                            placeholder="Enter your message"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={false}
+                          className="w-full justify-between"
+                        >
+                          {form.watch("user")
+                            ? users.find(
+                                (user) => user._id === form.watch("user"),
+                              )?.username
+                            : "Select a user"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search users..." />
+                          <CommandList>
+                            <CommandEmpty>No user found.</CommandEmpty>
+                            <CommandGroup>
+                              {users.map((user) => (
+                                <CommandItem
+                                  key={user.username}
+                                  value={user._id}
+                                  onSelect={() => {
+                                    form.setValue("user", user._id);
+                                    setReceiver(user);
+                                  }}
+                                >
+                                  {user.username}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <div>
+                    {/* MESSAGE */}
+                    <FormLabel>Enter your message.</FormLabel>
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              id="message"
+                              placeholder="Enter your message"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 {/* BUTTON */}

@@ -4,16 +4,7 @@
 import { useEffect, useState } from "react";
 
 // COMPONENTS.
-import { SearchBar } from "@/components/albums/search-bar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { AlbumDisplay } from "@/components/albums/album-display";
-import { FullPagination } from "@/components/nav/full-pagination";
+import ExtendedSearchContainer from "@/components/containers/extenddedsearchcontainer";
 
 // TYPES.
 import { Album } from "@/types";
@@ -21,7 +12,7 @@ import { Album } from "@/types";
 // API CALLS.
 import { getAlbums } from "@/api/albums.api";
 import { getAlbumsFromDiscogs } from "@/api/discogs.api";
-import { Button } from "@/components/ui/button";
+import { AlbumDialogue } from "@/components/albums/album-dialogue";
 
 export default function Page() {
   // STATES.
@@ -94,55 +85,29 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-2xl pl-3">Albums.</p>
-
-      {/* SEARCH BAR AND DROPDOWN. */}
-      <div className="flex gap-2 w-full items-center flex-wrap lg:flex-nowrap">
-        <form onSubmit={handleSubmit} className="w-full">
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            searchType="albums"
+    <ExtendedSearchContainer
+      title="Search For Your Favourite Albums"
+      description="Checkout albums you have loved forever or brand new ones you want to listen to. If you can't find an album you want, switch to wider search!"
+      handleSubmit={handleSubmit}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      total={total}
+      resPerPage={25}
+      handleSetSearchType={handleSetSearchType}
+    >
+      {albums.map((album: Album) => (
+        <div key={`${album.title}+${album.artist}+${album.genre}`}>
+          <AlbumDialogue
+            album={album}
+            setAlbums={setAlbums}
+            albums={albums}
+            layoutType="Grid"
+            local={local}
           />
-        </form>
-        <div className="pl-3 flex gap-5">
-          <Button
-            onClick={handleSubmit}
-            className="md:w-[250px] sm:w-[150px] h-full p-2"
-          >
-            Search
-          </Button>
-
-          <Select defaultValue="local" onValueChange={handleSetSearchType}>
-            <SelectTrigger className="md:w-[250px] sm:w-[150px] h-full p-2">
-              <SelectValue placeholder="Search Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="local">Local (Recommended)</SelectItem>
-              <SelectItem value="wider">Wider</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
-      </div>
-
-      {/* ALBUMS. */}
-      <AlbumDisplay albums={albums} setAlbums={setAlbums} local={local} />
-
-      {/* HINT */}
-      {albums.length < 1 && (
-        <div className="flex justify-center">
-          <p>swap to wider search to find more albums</p>
-        </div>
-      )}
-
-      {/* PAGINATION. */}
-      <FullPagination
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        total={total}
-        resPerPage={25}
-      />
-    </div>
+      ))}
+    </ExtendedSearchContainer>
   );
 }

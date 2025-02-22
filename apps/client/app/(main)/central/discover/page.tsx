@@ -10,15 +10,16 @@ import { List } from "@/types";
 import { useEffect, useState } from "react";
 
 // COMPONENTS.
-import { SearchBar } from "@/components/albums/search-bar";
 import { ListCard } from "@/components/lists/list-card";
-import { FullPagination } from "@/components/nav/full-pagination";
+import SearchContainer from "@/components/containers/searchcontainer";
 
 export default function Page() {
   const [lists, setLists] = useState<List[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [total, setTotal] = useState(0);
+
+  const resPerPage = 15;
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -42,30 +43,20 @@ export default function Page() {
   };
 
   return (
-    <>
-      <p className="text-2xl pl-3">Discover.</p>
-
-      <h2 className="text-2xl pl-3">Search Lists</h2>
-      <form onSubmit={handleSubmit}>
-        <SearchBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchType="lists"
-        />
-      </form>
-
-      <div className="pl-3 grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
-        {lists.map((list: List) => (
-          <ListCard key={`${list.name}+${list.user}`} list={list} />
-        ))}
-      </div>
-
-      <FullPagination
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        total={total}
-        resPerPage={5}
-      />
-    </>
+    <SearchContainer
+      title="Discover New Lists"
+      description="Search through the carefully crafted lists put together by our users. Discover your new favourite albums!"
+      handleSubmit={handleSubmit}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      total={total}
+      resPerPage={resPerPage}
+    >
+      {lists.map((list) => (
+        <ListCard key={`${list.name}+${list.user}`} list={list} />
+      ))}
+    </SearchContainer>
   );
 }
