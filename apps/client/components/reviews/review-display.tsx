@@ -54,7 +54,7 @@ export function ReviewDisplay({
                 href={`/central/users/${review.user.username}`}
                 className="flex hover:cursor-pointer"
               >
-                {review.user && <ProfileImage user={review.user} />}
+                {review.user && <ProfileImage user={review.user} size={16} />}
               </Link>
               <h1 className="font-bold text-center">{review.user.username}</h1>
             </div>

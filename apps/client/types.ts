@@ -125,3 +125,44 @@ export interface Review {
 export interface ReviewWithUser extends Omit<Review, "user"> {
   user: User;
 }
+
+export interface Room {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  users: User[];
+}
+
+export enum MessageType {
+  MESSAGE = "message",
+  ALBUM = "album",
+  LIST = "list",
+}
+
+export interface Message {
+  room: string;
+  sender: User;
+  content: string;
+  timestamp: string;
+  type: MessageType;
+  likes?: number;
+  album?: Album;
+  list?: List;
+}
+
+export interface MessagePayload {
+  room: string;
+  sender: User;
+  content: string;
+  timestamp: string;
+  type: MessageType;
+  album?: string;
+  list?: string;
+}
+
+export enum ImageType {
+  user = "USER",
+  album = "ALBUM",
+  list = "LIST",
+}

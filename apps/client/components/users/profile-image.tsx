@@ -7,12 +7,18 @@ import { User } from "@/types";
 // UTILS.
 import { getUsernameInitial } from "@/utils/user.utils";
 
-export default function ProfileImage({ user }: { user: User }) {
+export default function ProfileImage({
+  user,
+  size,
+}: {
+  user: User;
+  size: number;
+}) {
   const initial = getUsernameInitial(user);
 
   return (
     <div>
-      <Avatar className="w-16 h-16 text-3xl">
+      <Avatar className={`w-${size} h-${size} text-3xl`}>
         <AvatarImage src={user?.profileImg} />
         <AvatarFallback>{initial}</AvatarFallback>
       </Avatar>

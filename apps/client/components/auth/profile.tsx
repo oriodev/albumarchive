@@ -51,7 +51,7 @@ export function Profile() {
           <div className="flex flex-wrap gap-3 items-center justify-between">
             <div className="flex items-center gap-3">
               {/* PROFILE PIC */}
-              {profileData && <ProfileImage user={profileData} />}
+              {profileData && <ProfileImage user={profileData} size={16} />}
 
               {/* NAME AND EMAIL */}
               <div>

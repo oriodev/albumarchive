@@ -1,4 +1,4 @@
-import { Likes } from "@/types";
+import { Likes, List } from "@/types";
 import { getSession } from "./session.api";
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/likes`;
@@ -134,7 +134,7 @@ export const deleteLike = async (id: string): Promise<Likes | null> => {
  * @param listId string
  * @returns Promise<Likes | null>
  */
-export const getUserLikedLists = async (userId: string): Promise<string[]> => {
+export const getUserLikedLists = async (userId: string): Promise<List[]> => {
   try {
     const token = await getSession();
 

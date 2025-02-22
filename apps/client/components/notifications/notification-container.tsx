@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 // COMPONENTS.
 
 // TYPES.
-import { Notification, NotificationType, User } from "@/types";
+import { ImageType, Notification, NotificationType, User } from "@/types";
 import {
   handleAcceptAlbumRec,
   handleDeclineNotification,
@@ -69,6 +69,7 @@ export function NotificationContainer({
               key={index}
               image={notification.album.coverImage}
               type={NotificationType.ALBUMREC}
+              imageType={ImageType.album}
               title={title}
               description={notification.message || ""}
               link={`/central/albums/${notification.album._id}`}
@@ -126,6 +127,7 @@ export function NotificationContainer({
               key={index}
               image={notification.sender.profileImg}
               type={NotificationType.FRIENDREQUEST}
+              imageType={ImageType.user}
               title={title}
               description={""}
               link={`/central/users/${notification.sender.username}`}
@@ -146,6 +148,7 @@ export function NotificationContainer({
               key={index}
               image={notification.sender.profileImg}
               type={NotificationType.RESPONSE}
+              imageType={ImageType.user}
               title={notification.message || "this is an empty response"}
               description={""}
               link={`/central/users/${notification.sender._id}`}

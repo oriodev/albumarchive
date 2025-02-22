@@ -1,76 +1,40 @@
 "use client";
 
+import { getRooms } from "@/api/rooms.api";
 import { SearchBar } from "@/components/albums/search-bar";
-import IconCard from "@/components/cards/iconcard";
-import {
-  Cloud,
-  CloudLightning,
-  DollarSignIcon,
-  Guitar,
-  Heart,
-  Hourglass,
-  LucideIcon,
-} from "lucide-react";
+import TextCard from "@/components/cards/textcard";
+import { Room } from "@/types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export interface Room {
-  icon: LucideIcon;
-  title: string;
-  slug: string;
-  description: string;
-}
-
-const roomData: Room[] = [
-  {
-    icon: Heart,
-    title: "troye sivan",
-    slug: "troye-sivan",
-    description: "a room to talk abt troye sivan.",
-  },
-  {
-    icon: CloudLightning,
-    title: "all time low",
-    slug: "all-time-low",
-    description: "a room to talk abt all time low.",
-  },
-  {
-    icon: Cloud,
-    title: "green day",
-    slug: "green-day",
-    description: "a room to talk abt green day.",
-  },
-  {
-    icon: Hourglass,
-    title: "chappell roan",
-    slug: "chappell-roan",
-    description: "a room to talk abt chappell roan.",
-  },
-  {
-    icon: DollarSignIcon,
-    title: "drake",
-    slug: "drake",
-    description: "a room to talk abt drake.",
-  },
-  {
-    icon: Guitar,
-    title: "taylor swift",
-    slug: "taylor-swift",
-    description: "a room to talk abt taylor swift.",
-  },
-];
+// MAYBE:
+// 1. send lists and albums.
 
 export default function Page() {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [rooms, setRooms] = useState<Room[]>(roomData);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
 
   useEffect(() => {
-    setRooms(
-      roomData.filter((room) => room.title.includes(searchQuery.toLowerCase())),
+    const fetchRooms = async () => {
+      const fetchedRooms = await getRooms();
+      setRooms(fetchedRooms);
+      setFilteredRooms(fetchedRooms);
+    };
+
+    fetchRooms();
+  }, []);
+
+  useEffect(() => {
+    setFilteredRooms(
+      rooms.filter((room) =>
+        room.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const handleEnter = (router: AppRouterInstance | string[], slug: string) => {
@@ -88,12 +52,12 @@ export default function Page() {
         />
       </div>
 
-      <div className="pl-2 grid gap-4 grid-cols-1 lg:grid-cols-3 md:grid-cols-2">
-        {rooms.map((room) => (
-          <IconCard
+      <div className="pl-2 grid gap-4 grid-cols-1 lg:grid-cols-3">
+        {filteredRooms.map((room) => (
+          <TextCard
             key={room.title}
             room={room}
-            active={true}
+            active={room.users.length > 0}
             handleOnClick={() => handleEnter(router, room.slug)}
           />
         ))}

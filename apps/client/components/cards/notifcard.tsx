@@ -5,11 +5,12 @@ import Link from "next/link";
 import ImageLoader from "../notifications/imageloader";
 
 // TYPES.
-import { NotificationType } from "@/types";
+import { ImageType, NotificationType } from "@/types";
 
 interface Props {
   image: string | undefined;
   type: NotificationType;
+  imageType: ImageType;
   title: string;
   description: string;
   link: string;
@@ -20,6 +21,7 @@ interface Props {
 export default function NotifCard({
   image,
   type,
+  imageType,
   title,
   description,
   link,
@@ -37,7 +39,7 @@ export default function NotifCard({
       <CardHeader className="flex flex-row gap-5 justify-between">
         <div className="flex flex-row gap-5">
           <Link href={link}>
-            <ImageLoader image={image} type={type} size={100} />
+            <ImageLoader image={image} type={imageType} size={100} />
           </Link>
           <div className="flex flex-col gap-2">
             <CardTitle>{title}</CardTitle>

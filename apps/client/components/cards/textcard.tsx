@@ -8,12 +8,11 @@ interface Props {
   handleOnClick: () => void;
 }
 
-export default function IconCard({ room, active, handleOnClick }: Props) {
+export default function TextCard({ room, active, handleOnClick }: Props) {
   return (
     <Card className={`${active && "border-emerald-900"}`}>
       <CardHeader className="flex flex-row flex-wrap justify-between">
         <div className="flex flex-row gap-5">
-          <room.icon size={40} />
           <div className="flex flex-col gap-2">
             <CardTitle>{room.title}</CardTitle>
             <CardDescription>{room.description}</CardDescription>

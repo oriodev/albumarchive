@@ -104,7 +104,7 @@ export default function Page({
               <div className="flex flex-wrap gap-3 items-center justify-between">
                 <div className="flex items-center gap-3">
                   {/* PROFILE PIC */}
-                  {user && <ProfileImage user={user} />}
+                  {user && <ProfileImage user={user} size={16} />}
 
                   {/* NAME AND EMAIL */}
                   <div>

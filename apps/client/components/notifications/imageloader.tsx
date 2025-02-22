@@ -1,11 +1,7 @@
-// TYPES.
-import { NotificationType } from "@/types";
-
 // COMPONENTS.
+import { ImageType } from "@/types";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
-
-// COMPONENTS.
 
 export default function ImageLoader({
   image,
@@ -13,13 +9,12 @@ export default function ImageLoader({
   size,
 }: {
   image: string | undefined;
-  type: NotificationType;
+  type: ImageType;
   size: number;
 }) {
   return (
     <>
-      {type === NotificationType.FRIENDREQUEST ||
-      type === NotificationType.RESPONSE ? (
+      {type === ImageType.user ? (
         <>
           {image ? (
             <CldImage
@@ -39,7 +34,7 @@ export default function ImageLoader({
             />
           )}
         </>
-      ) : (
+      ) : type === ImageType.album ? (
         <div>
           {image ? (
             <Image alt={"album image"} src={image} width={size} height={size} />
@@ -49,6 +44,26 @@ export default function ImageLoader({
               width={size}
               height={size}
               alt="album fallback image"
+            />
+          )}
+        </div>
+      ) : (
+        <div>
+          {image ? (
+            <CldImage
+              width={size}
+              height={size}
+              src={image}
+              sizes={size.toString()}
+              alt={"list image"}
+              crop="fill"
+            />
+          ) : (
+            <Image
+              src="/listfallback.png"
+              width={size}
+              height={size}
+              alt="list fallback image"
             />
           )}
         </div>
