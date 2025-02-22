@@ -1,15 +1,28 @@
 # album archive.
 
+the final year project for my liberal arts & natural sciences degree from the university of birmingham.
 
+album archive is goodreads or letterboxd for your music! record albums you've listened to, organise them into lists, share those lists with your friends, send and receive album recommendations, and join group chats to meet fans of your favourite music!
 
+built with turborepo, next.js/react, tailwind, shadcn, nest.js/node, mongoose, and mongodb. also uses socket.io for websockets. 
 
-### commit naming protocol.
-feat(server/client/turbo): <message>
-fix(server/client/turbo): <message>
-style(server/client/turbo): <message>
-misc(server/client/turbo): <message>
+## features.
 
-### to run server tests.
-npm run test:watch
-p -> filename to filter
-move terminal to right for best format
+**albums/discogs.**
+
+**authentication.**
+
+**images.**
+
+**lists.**
+
+**likes.**
+
+**rooms/messages.**
+
+**notifications.**
+
+**ratings.**
+
+**reviews.**
+
