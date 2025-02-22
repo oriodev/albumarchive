@@ -88,16 +88,35 @@ export class ListService {
                 }
             },
             {
+                $lookup: {
+                    from: 'albums',
+                    localField: 'albums',
+                    foreignField: '_id',
+                    as: 'albumDetails'
+                }
+            },
+            {
                 $addFields: {
                     totalLikes: { $size: '$likes' }
                 }
             },
             {
                 $project: {
-                    likes: 0
+                    _id: 1, 
+                    name: 1,
+                    description: 1,
+                    listCoverImg: 1,
+                    slug: 1,
+                    type: 1,
+                    user: 1,
+                    albums: '$albumDetails',
+                    totalLikes: 1
                 }
             }
+
         ]);
+        
+        console.log('list: ', list)
     
         if (list.length === 0) {
             throw new NotFoundException('List not found');

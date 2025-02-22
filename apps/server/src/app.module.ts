@@ -14,6 +14,8 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { LikesModule } from './likes/likes.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { MessagesModule } from './messages/messages.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
   imports: [
@@ -31,7 +33,9 @@ import { ReviewsModule } from './reviews/reviews.module';
     NotificationsModule,
     RatingsModule,
     LikesModule,
-    ReviewsModule
+    ReviewsModule,
+    MessagesModule,
+    RoomsModule
   ],
   controllers: [AppController],
   providers: [

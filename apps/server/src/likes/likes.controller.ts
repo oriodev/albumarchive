@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { LikesService } from './likes.service';
 import { Likes } from './schemas/likes.schema';
+import { List } from 'src/list/schemas/list.schema';
 
 @Controller('likes')
 export class LikesController {
@@ -17,7 +18,7 @@ export class LikesController {
         }
 
         @Get(':userId/user')
-        async getAllLikedLists(@Param('userId') userId): Promise<string[]> {
+        async getAllLikedLists(@Param('userId') userId): Promise<List[]> {
             return await this.likesService.getUserLikedLists(userId)
         }
         

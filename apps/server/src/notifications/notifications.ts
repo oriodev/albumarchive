@@ -21,7 +21,7 @@ export class AppNotifications implements OnModuleInit {
             // STORE THE USER'S SOCKET.
             socket.on('registerUser', (userId: string) => {
                 this.userSockets[userId] = socket.id;
-                console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
+                // console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
             })
 
             // REMOVE THE USER'S SOCKET.
@@ -29,7 +29,7 @@ export class AppNotifications implements OnModuleInit {
                 for (const userId in this.userSockets) {
                     if (this.userSockets[userId] === socket.id) {
                         delete this.userSockets[userId];
-                        console.log(`User disconnected: ${userId}`);
+                        // console.log(`User disconnected: ${userId}`);
                         break;
                     }
                 }

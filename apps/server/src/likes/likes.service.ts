@@ -2,12 +2,16 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Likes } from './schemas/likes.schema';
 import mongoose, { mongo } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { List } from 'src/list/schemas/list.schema';
 
 @Injectable()
 export class LikesService {
     constructor(
         @InjectModel(Likes.name)
         private likesModel: mongoose.Model<Likes>,
+        @InjectModel('List')
+        private listModel: mongoose.Model<List>,
+
     ) {}
 
     
@@ -86,17 +90,17 @@ export class LikesService {
      * @param userId 
      * @returns 
      */
-    async getUserLikedLists(userId: string): Promise<string[]> {
+    async getUserLikedLists(userId: string): Promise<List[]> {
         const isValidId = mongoose.isValidObjectId(userId);
 
         if (!isValidId) {
             throw new BadRequestException('please enter a valid mongo id');
         }
 
-        const likes = await this.likesModel.find({ user: userId }).select('list').exec();
-
-        const likedLists = likes.map(like => like.list.toString());
-
+        const likes = await this.likesModel.find({ user: userId }).populate('list').exec();
+        const listIds = likes.map((like) => like.list);
+        const likedLists = await this.listModel.find({ _id: { $in: listIds } }).exec();
+        
         return likedLists;
     }
 
