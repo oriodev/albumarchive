@@ -1,4 +1,4 @@
-import { EditList } from "@/components/lists/edit-list";
+import { EditList } from "@/components/forms/edit-list";
 
 export default async function Page({
   params,

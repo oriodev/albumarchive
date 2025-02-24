@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageType, Message, User } from "@/types";
-import ImageLoader from "../notifications/imageloader";
+import ImageLoader from "../general/imageloader";
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { Trash } from "lucide-react";
@@ -20,13 +20,10 @@ interface Props {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-export default function MessageCard({
-  fullMessage,
-  size,
-  imageType,
-  room,
-  setMessages,
-}: Props) {
+/**
+ * for messages in a room.
+ */
+export default function MessageCard({ fullMessage, room, setMessages }: Props) {
   // HOOKS.
   const { user } = useUser();
 
@@ -35,7 +32,6 @@ export default function MessageCard({
   const [listOwner, setListOwner] = useState<User | null>(null);
 
   const { timestamp, sender, content, album, list } = fullMessage;
-  const image = sender.profileImg;
   const username = sender.username;
 
   useEffect(
@@ -83,9 +79,7 @@ export default function MessageCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex-none">
-        {/* <ImageLoader image={image} type={imageType} size={size} /> */}
-      </div>
+      <div className="flex-none"></div>
       <div className="flex-1">
         <div className="flex flex-row gap-2">
           <p className="font-bold">{username}</p>

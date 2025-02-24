@@ -9,11 +9,11 @@ import { useRouter } from "next/navigation";
 import { getUsersBatch } from "@/api/user.api";
 
 // components.
-import ProfileImage from "@/components/users/profile-image";
+import ProfileImage from "@/components/general/profile-image";
 import { Button } from "@/components/ui/button";
-import { FollowPreview } from "@/components/users/follow-preview";
-import { FallbackProfile } from "@/components/users/fallback-profile";
+import { FallbackProfile } from "@/components/loadingstates/fallback-profile";
 import { Badge } from "@/components/ui/badge";
+import { FollowPreview } from "@/components/containers/follow-preview";
 
 export default function Page() {
   const { user } = useUser();

@@ -1,13 +1,12 @@
 "use client";
 
 import { getUserLikedLists } from "@/api/likes.api";
-
+import ImageCard from "@/components/cards/imagecard";
+import { ScrollDisplay } from "@/components/general/scrolldisplay";
 // COMPONENTS.
-import { ListScrollDisplay } from "@/components/lists/list-scroll-display";
-import { NoUser } from "@/components/users/no-user";
 
 // TYPES.
-import { List } from "@/types";
+import { ImageType, List } from "@/types";
 
 // HOOKS.
 import { useUser } from "@/utils/providers/UserProvider";
@@ -32,8 +31,10 @@ export default function Page() {
     fetchLikedLists();
   }, [user]);
 
-  if (!user) <NoUser />;
-
+  if (!user)
+    <div>
+      <h1 className="text-3xl">No User.</h1>
+    </div>;
   if (!user?.lists)
     return (
       <div>
@@ -48,13 +49,41 @@ export default function Page() {
       {/* ALL USER LISTS. */}
       <div className="flex flex-col gap-1">
         <h2 className="text-xl pl-3">All Your Lists.</h2>
-        <ListScrollDisplay lists={user && user.lists} />
+        <ScrollDisplay>
+          {user.lists.map((list: List) => (
+            <div
+              className="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
+              key={`${list.name}+${list.user}`}
+            >
+              <ImageCard
+                key={`${list.name}+${list.user}`}
+                image={list.listCoverImg}
+                title={list.name}
+                imageType={ImageType.list}
+              />
+            </div>
+          ))}
+        </ScrollDisplay>
       </div>
 
       {/* LISTS YOU HAVE LIKED. */}
       <div className="flex flex-col gap-1">
         <h2 className="text-xl pl-3">Liked Lists.</h2>
-        <ListScrollDisplay lists={likedLists || []} />
+        <ScrollDisplay>
+          {likedLists.map((list: List) => (
+            <div
+              className="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
+              key={`${list.name}+${list.user}`}
+            >
+              <ImageCard
+                key={`${list.name}+${list.user}`}
+                image={list.listCoverImg}
+                title={list.name}
+                imageType={ImageType.list}
+              />
+            </div>
+          ))}
+        </ScrollDisplay>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 // COMPONENTS.
-import PageHeader from "@/components/header";
+import PageHeader from "@/components/general/header";
 import { Separator } from "@/components/ui/separator";
 
 export default function Page() {

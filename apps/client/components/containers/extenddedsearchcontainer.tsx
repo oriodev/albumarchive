@@ -1,5 +1,5 @@
-import { SearchBar } from "../albums/search-bar";
-import { FullPagination } from "../nav/full-pagination";
+import { SearchBar } from "../general/search-bar";
+import { FullPagination } from "../general/full-pagination";
 import {
   Select,
   SelectContent,

@@ -2,7 +2,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import ImageLoader from "../notifications/imageloader";
+import ImageLoader from "../general/imageloader";
 
 // TYPES.
 import { ImageType, NotificationType } from "@/types";
@@ -18,6 +18,11 @@ interface Props {
   handleDeclineNotification: () => Promise<void>;
 }
 
+/**
+ * for notifications.
+ * @param param0
+ * @returns
+ */
 export default function NotifCard({
   image,
   type,

@@ -1,6 +1,6 @@
-import { DeleteButton } from "@/components/delete-button";
-import PageHeader from "@/components/header";
-import { PrivacyButton } from "@/components/privacy-button";
+import { DeleteButton } from "@/components/buttons/delete-user-button";
+import PageHeader from "@/components/general/header";
+import { PrivacyButton } from "@/components/buttons/privacy-button";
 
 export default async function Page() {
   return (

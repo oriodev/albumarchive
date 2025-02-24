@@ -1,7 +1,7 @@
 "use client";
 
 import { getRooms } from "@/api/rooms.api";
-import TextCard from "@/components/cards/textcard";
+import RoomCard from "@/components/cards/roomcard";
 import SearchContainer from "@/components/containers/searchcontainer";
 import { Room } from "@/types";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -67,7 +67,7 @@ export default function Page() {
       searchType="rooms"
     >
       {filteredRooms.map((room) => (
-        <TextCard
+        <RoomCard
           key={room.title}
           room={room}
           active={room.users.length > 0}

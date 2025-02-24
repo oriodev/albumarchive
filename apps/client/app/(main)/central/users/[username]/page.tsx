@@ -1,19 +1,18 @@
 "use client";
 
 // COMPONENTS.
-import { FollowPreview } from "../../../../../components/users/follow-preview";
-
 import { useEffect, useState } from "react";
 import { getUserByUsername, getUsersBatch } from "@/api/user.api";
 import { User } from "@/types";
 import { checkIfFollowing } from "@/utils/user.utils";
-import { FallbackProfile } from "@/components/users/fallback-profile";
-import { ProfileListDisplay } from "@/components/lists/profile-list-display";
+import { FallbackProfile } from "@/components/loadingstates/fallback-profile";
+import { ProfileListDisplay } from "@/components/containers/profile-list-display";
 import { useRouter } from "next/navigation";
-import { FollowButton } from "@/components/users/follow-button";
-import { RemoveFollowerButton } from "@/components/users/remove-follower-button";
+import { FollowButton } from "@/components/buttons/follow-button";
+import { RemoveFollowerButton } from "@/components/buttons/remove-follower-button";
 import { useUser } from "@/utils/providers/UserProvider";
-import ProfileImage from "@/components/users/profile-image";
+import ProfileImage from "@/components/general/profile-image";
+import { FollowPreview } from "@/components/containers/follow-preview";
 
 export default function Page({
   params,

@@ -12,7 +12,6 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import RoomTopbar from "@/components/roomtopbar";
 
 // API CALL.
 import { removeUserFromRoom } from "@/api/rooms.api";
@@ -31,6 +30,7 @@ import MessageContainer from "@/components/containers/messagecontainer";
 import SimpleUserCard from "@/components/cards/simpleusercard";
 import { SendAlbumPopover } from "@/components/dropdowns/sendalbumpopover";
 import { SendListPopover } from "@/components/dropdowns/sendlistpopover";
+import PageHeader from "@/components/general/header";
 
 // PROPS.
 interface Props {
@@ -166,7 +166,12 @@ export default function Page({ params }: Props) {
             className="flex flex-col"
             style={{ height: "calc(100vh - 5rem)" }}
           >
-            <RoomTopbar title={`${room.title} Room`} />
+            <div className="w-full h-[60] p-5  flex flex-row justify-between items-center">
+              <PageHeader
+                title={`${room.title} Room`}
+                description={room.description}
+              />
+            </div>
 
             <div className="flex flex-row gap-5 overflow-hidden">
               <div className="flex flex-1 flex-col gap-5 ">

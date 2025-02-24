@@ -4,10 +4,10 @@ import { getAlbumById } from "@/api/albums.api";
 // API CALLS.
 import { getList } from "@/api/list.api";
 import { getUserByUsername } from "@/api/user.api";
-import { LikeList } from "@/components/lists/like-list";
-import { ListAlbumDisplay } from "@/components/lists/list-album-display";
-import ListLayoutSwitch from "@/components/lists/list-layout-switch";
-import { ListLoadingState } from "@/components/lists/list-loading-state";
+import { LikeList } from "@/components/buttons/like-list";
+import { ListAlbumDisplay } from "@/components/containers/list-album-display";
+import ListLayoutSwitch from "@/components/buttons/list-layout-switch";
+import { ListLoadingState } from "@/components/loadingstates/list-loading-state";
 
 // TYPES.
 import { Album, List, User } from "@/types";

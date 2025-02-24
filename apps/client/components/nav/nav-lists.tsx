@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import NewListBtn from "../lists/new-list-btn";
+import NewListBtn from "../buttons/new-list-btn";
 // import { DeleteDialog } from "./delete-dialog";
 
 import Link from "next/link";

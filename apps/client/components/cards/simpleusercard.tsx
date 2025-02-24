@@ -1,6 +1,6 @@
 // COMPONENTS.
 import Link from "next/link";
-import ImageLoader from "../notifications/imageloader";
+import ImageLoader from "../general/imageloader";
 
 // TYPES.
 import { ImageType } from "@/types";
@@ -11,6 +11,9 @@ interface Props {
   link: string;
 }
 
+/**
+ * simple user display on room sidebar.
+ */
 export default function SimpleUserCard({ image, title, link }: Props) {
   return (
     <div>

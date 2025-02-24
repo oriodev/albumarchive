@@ -2,7 +2,7 @@
 
 import { getAllUsers } from "@/api/user.api";
 import SearchContainer from "@/components/containers/searchcontainer";
-import { UserDisplayDialogue } from "@/components/users/user-display-dialogue";
+import { UserDisplayDialogue } from "@/components/dialogs/user-display-dialogue";
 import { User } from "@/types";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useEffect, useState } from "react";

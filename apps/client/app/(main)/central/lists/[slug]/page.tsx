@@ -9,16 +9,16 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { Album, AlbumType, List } from "@/types";
 
 // COMPONENTS.
-import ListGrid from "@/components/lists/list-grid";
+import ListGrid from "@/components/containers/list-grid";
 import { Button } from "@/components/ui/button";
-import { ListLoadingState } from "@/components/lists/list-loading-state";
+import { ListLoadingState } from "@/components/loadingstates/list-loading-state";
 
 // API.
 import { getAlbumById } from "@/api/albums.api";
-import { LikeList } from "@/components/lists/like-list";
-import ListLayoutSwitch from "@/components/lists/list-layout-switch";
-import ListList from "@/components/lists/list-list";
-import PageHeader from "@/components/header";
+import { LikeList } from "@/components/buttons/like-list";
+import ListLayoutSwitch from "@/components/buttons/list-layout-switch";
+import ListList from "@/components/containers/list-list";
+import PageHeader from "@/components/general/header";
 
 export default function Page({
   params,

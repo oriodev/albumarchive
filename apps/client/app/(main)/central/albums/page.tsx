@@ -12,7 +12,7 @@ import { Album } from "@/types";
 // API CALLS.
 import { getAlbums } from "@/api/albums.api";
 import { getAlbumsFromDiscogs } from "@/api/discogs.api";
-import { AlbumDialogue } from "@/components/albums/album-dialogue";
+import { AlbumDialogue } from "@/components/dialogs/album-dialogue";
 
 export default function Page() {
   // STATES.

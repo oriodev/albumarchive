@@ -8,17 +8,15 @@ import { getAllReviews, getReview } from "@/api/reviews.api";
 
 // COMPONENTS.
 import Image from "next/image";
-import { AddToList } from "@/components/albums/add-to-list";
-import ViewStarRating from "@/components/albums/viewStarRating";
-import StarRating from "@/components/albums/editStarRating";
+import { AddToList } from "@/components/dropdowns/add-to-list-dropdown";
+import ViewStarRating from "@/components/ratings/viewStarRating";
+import StarRating from "@/components/ratings/editStarRating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlbumScrollDisplay } from "@/components/albums/album-scroll-display";
-import { FallbackAlbumPage } from "@/components/albums/fallback-album-page";
-import { AlbumRecDialogue } from "@/components/album recs/album-rec-dialogue";
-import GenreDisplay from "@/components/albums/genre-display";
-import { AlbumReviewsContainer } from "@/components/reviews/album-reviews";
-import { AddReviewDialogue } from "@/components/reviews/add-review-dialogue";
+import { AlbumRecDialogue } from "@/components/dialogs/album-rec-dialogue";
+import GenreDisplay from "@/components/containers/genre-display";
+import { AlbumReviewsContainer } from "@/components/containers/album-reviews";
+import { AddReviewDialogue } from "@/components/dialogs/add-review-dialogue";
 
 // HOOKS.
 import { useEffect, useState } from "react";
@@ -36,6 +34,9 @@ import {
   isAlbumInToListen,
 } from "@/utils/lists.utils";
 import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";
+import { ScrollDisplay } from "@/components/general/scrolldisplay";
+import { AlbumDialogue } from "@/components/dialogs/album-dialogue";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Page({
   params,
@@ -175,6 +176,16 @@ export default function Page({
     });
   };
 
+  const FallbackAlbumPage = () => (
+    <div className="flex p-10 space-x-4">
+      <Skeleton className="h-[400px] w-[400px] rounded-large" />
+      <div className="space-y-2">
+        <Skeleton className="h-10 w-[500px]" />
+        <Skeleton className="h-7 w-[200px]" />
+      </div>
+    </div>
+  );
+
   if (!album) {
     return (
       <div>
@@ -243,7 +254,20 @@ export default function Page({
           {albumsByArtist && (
             <div>
               <h3 className="text-2xl font-bold">More Albums By This Artist</h3>
-              <AlbumScrollDisplay albums={albumsByArtist} />
+              <ScrollDisplay>
+                {albumsByArtist.map((album: Album) => (
+                  <div
+                    className="flex-shrink-0 w-1/5"
+                    key={`${album.title}+${album.artist}`}
+                  >
+                    <AlbumDialogue
+                      album={album}
+                      layoutType="Grid"
+                      local={true}
+                    />
+                  </div>
+                ))}
+              </ScrollDisplay>
             </div>
           )}
 

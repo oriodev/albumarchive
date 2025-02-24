@@ -1,4 +1,4 @@
-import { EditingProfile } from "@/components/users/edit-profile";
+import { EditingProfile } from "@/components/forms/edit-profile";
 
 export default async function Page() {
   return (

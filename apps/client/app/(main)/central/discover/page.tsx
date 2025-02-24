@@ -4,14 +4,14 @@
 import { getAllLists } from "@/api/list.api";
 
 // TYPES.
-import { List } from "@/types";
+import { ImageType, List } from "@/types";
 
 // HOOKS.
 import { useEffect, useState } from "react";
 
 // COMPONENTS.
-import { ListCard } from "@/components/lists/list-card";
 import SearchContainer from "@/components/containers/searchcontainer";
+import ImageCard from "@/components/cards/imagecard";
 
 export default function Page() {
   const [lists, setLists] = useState<List[]>([]);
@@ -56,7 +56,12 @@ export default function Page() {
       searchType="lists"
     >
       {lists.map((list) => (
-        <ListCard key={`${list.name}+${list.user}`} list={list} />
+        <ImageCard
+          key={`${list.name}+${list.user}`}
+          image={list.listCoverImg}
+          title={list.name}
+          imageType={ImageType.list}
+        />
       ))}
     </SearchContainer>
   );

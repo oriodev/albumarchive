@@ -1,6 +1,6 @@
-import { SearchBar } from "../albums/search-bar";
-import PageHeader from "../header";
-import { FullPagination } from "../nav/full-pagination";
+import { SearchBar } from "../general/search-bar";
+import PageHeader from "../general/header";
+import { FullPagination } from "../general/full-pagination";
 
 interface Props {
   title: string;

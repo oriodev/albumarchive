@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { User } from "@/types";
-import ProfileImage from "../users/profile-image";
+import ProfileImage from "../general/profile-image";
 import { useRouter } from "next/navigation";
 
 interface Props {
