@@ -1,8 +1,7 @@
 "use client";
 
-import { User } from "@/types";
+import { ImageType, User } from "@/types";
 import { useRouter } from "next/navigation";
-import UserImage from "./user-image";
 import { useEffect, useState } from "react";
 import { FullPagination } from "../general/full-pagination";
 import {
@@ -11,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
+import ImageLoader from "../general/imageloader";
 
 export function FollowPreview({
   title,
@@ -53,7 +53,11 @@ export function FollowPreview({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <UserImage user={user} size={150} />
+                    <ImageLoader
+                      image={user.profileImg}
+                      size={150}
+                      type={ImageType.user}
+                    />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>{user.username}</p>
