@@ -18,8 +18,8 @@ export class Reviews {
     @Prop({ min: 1, max: 5000 })
     reviewText: string
 
-    @Prop({ type: SchemaTypes.ObjectId, ref: 'Ratings' })
-    rating: mongoose.Schema.Types.ObjectId;
+    @Prop({ min: 1, max: 5})
+    rating: number;
 }
 
 export const ReviewsSchema = SchemaFactory.createForClass(Reviews)

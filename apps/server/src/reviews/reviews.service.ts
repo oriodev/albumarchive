@@ -35,7 +35,7 @@ export class ReviewsService {
         const review = await this.reviewsModel.findOne({
             user: userId,
             album: albumId
-        }).populate('rating')
+        }).populate('user')
 
         if (!review) {
             throw new NotFoundException('review not found')
@@ -49,7 +49,7 @@ export class ReviewsService {
      * @param query 
      * @returns 
      */
-    async findAll(query: Query, excludeUserId: string): Promise<{ reviews: Reviews[]; total: number; }> {
+    async getAllAlbumReviews(query: Query, excludeUserId: string): Promise<{ reviews: Reviews[]; total: number; }> {
 
         const resPerPage = 10
         const currentPage = Number(query.page) || 1
@@ -63,18 +63,18 @@ export class ReviewsService {
             .find({ album: query.albumId, ...(excludeUserId ? { user: { $ne: excludeUserId } } : {}) })
             .limit(resPerPage)
             .skip(skip)
-            .populate('rating user')
+            .populate('user')
 
     
         return { reviews, total };
     }
 
-        /**
-     * get all reviews for an album
+    /**
+     * get all reviews by a user
      * @param query 
      * @returns 
      */
-    async findAllByUser(query: Query): Promise<{ reviews: Reviews[]; total: number }> {
+    async getAllByUser(query: Query): Promise<{ reviews: Reviews[]; total: number }> {
 
         const resPerPage = 25
         const currentPage = Number(query.page) || 1
@@ -86,7 +86,7 @@ export class ReviewsService {
             .find({ user: query.userId })
             .limit(resPerPage)
             .skip(skip)
-            .populate('user', 'rating')
+            .populate('user')
     
         return { reviews, total };
     }
@@ -96,18 +96,12 @@ export class ReviewsService {
      * @param review { user, album, vibes, text }
      * @returns like object.
      */
-    async create (review: Reviews): Promise<Reviews> {
+    async create(review: Reviews): Promise<Reviews> {
         const data = Object.assign(review)
         const res = await this.reviewsModel.create(data)
 
         await this.userModel.findByIdAndUpdate(review.user, {
             $push: { reviews: res._id },
-        })
-
-        const rating = await this.ratingsModel.findOne({ user: res.user, album: res.album })
-
-        await this.reviewsModel.findByIdAndUpdate(res.id, {
-            rating: rating.id
         })
 
         return res

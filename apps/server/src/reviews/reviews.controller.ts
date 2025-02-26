@@ -16,12 +16,12 @@ export class ReviewsController {
     @Get('/albums')
     async getAllReviews(@Query() query: ExpressQuery, @Request() req): Promise<{ reviews: Reviews[]; total: number }> {
         const excludeUserId = req.user.id
-        return await this.reviewsService.findAll(query, excludeUserId)
+        return await this.reviewsService.getAllAlbumReviews(query, excludeUserId)
     }
 
     @Get('/users')
     async getAllReviewsByUser(@Query() query: ExpressQuery): Promise<{ reviews: Reviews[]; total: number }> {
-        return await this.reviewsService.findAllByUser(query)
+        return await this.reviewsService.getAllByUser(query)
     }
 
     @Post()
