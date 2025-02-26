@@ -54,9 +54,7 @@ export default function ViewStarRating({
   return (
     <div className="flex items-center gap-3">
       {/* STARS */}
-      <div
-        className={`flex ${centered ? "justify-center" : "justify-left"} gap-1`}
-      >
+      <div className={`flex ${centered ? "justify-center" : "justify-left"}`}>
         {rating === 0 && <StarOff />}
         {stars}
       </div>

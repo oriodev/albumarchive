@@ -144,4 +144,70 @@ export class ReviewsService {
 
         return await this.reviewsModel.findByIdAndDelete(id)
     }
+
+    /**
+     * get overall album rating
+     * @param albumId 
+     * @returns 
+     */
+    async getAlbumRating(albumId: string): Promise<number> {
+        const isValidId = mongoose.isValidObjectId(albumId);
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongodb ID');
+        }
+
+        const ratings = await this.reviewsModel.aggregate([
+            { $match: { album: new mongoose.Types.ObjectId(albumId) } },
+            { $group: { _id: null, averageRating: { $avg: '$rating' } } },
+        ]);
+
+        if (ratings.length === 0) {
+            return 0
+        }
+
+        return ratings[0].averageRating;
+    }
+
+
+    /**
+     * returns a count of how many ratings there are for each star plus the total.
+     * @param albumId 
+     * @returns 
+     */
+    async getRatingsCount(albumId: string): Promise<{}> {
+        const isValidId = mongoose.isValidObjectId(albumId);
+
+        if (!isValidId) {
+            throw new BadRequestException('please enter a valid mongodb ID');
+        }
+
+        const totalRatings = await this.reviewsModel.aggregate([
+            { $match: { album: new mongoose.Types.ObjectId(albumId) } },
+            {
+                $group: {
+                    _id: "$rating",
+                    count: { $count: {} }
+                }
+            }
+        ]);
+
+        const ratings = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+            total: 0
+        };
+        
+        totalRatings.forEach(rating => {
+            ratings[rating._id] = rating.count;
+        });
+        
+        ratings.total = totalRatings.reduce((sum, rating) => sum + rating.count, 0);
+        
+        return ratings;
+    }
 }
+

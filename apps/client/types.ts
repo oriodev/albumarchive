@@ -118,16 +118,11 @@ export interface ReviewPayload {
   album: string;
   vibes: string[];
   reviewText: string;
-  rating: string;
+  rating: number;
 }
 
-export interface Review extends Omit<ReviewPayload, "rating"> {
+export interface Review extends ReviewPayload {
   _id: string;
-  user: string;
-  album: string;
-  vibes: string[];
-  reviewText: string;
-  rating: Rating;
 }
 
 export interface ReviewWithUser extends Omit<Review, "user"> {

@@ -56,6 +56,8 @@ export function EditReviewDialogue({ album, review }: EditReviewDialogueProps) {
 
   //   STATES.
   const [setVibes, setSetVibes] = useState<string[]>(review.vibes);
+  const [rating, setRating] = useState<number>(0);
+  const [ratingError, setRatingError] = useState(false);
 
   const handleSetVibes = (vibe: string) => {
     if (setVibes.includes(vibe)) {
@@ -78,9 +80,15 @@ export function EditReviewDialogue({ album, review }: EditReviewDialogueProps) {
   const handleSubmit = async (values: z.infer<typeof createReviewSchema>) => {
     if (!user || !album?._id || !values.reviewText || !review?._id) return;
 
+    if (!rating) {
+      setRatingError(true);
+      return;
+    }
+
     const reviewPayload = {
       vibes: setVibes,
       reviewText: values.reviewText,
+      rating,
     };
 
     const editedReview = await editReview(review._id, reviewPayload);
@@ -130,7 +138,13 @@ export function EditReviewDialogue({ album, review }: EditReviewDialogueProps) {
 
           {/* RIGHT SIDE */}
           <div className="flex flex-col gap-3 w-full">
-            <EditStarRating album={album} />
+            <EditStarRating
+              album={album}
+              rating={rating}
+              ratingError={ratingError}
+              setRatingError={setRatingError}
+              setRating={setRating}
+            />
 
             <div className="flex flex-wrap gap-2">
               {setVibes.map((vibe, index) => (

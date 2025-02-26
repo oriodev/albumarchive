@@ -59,11 +59,8 @@ export function ReviewCard({
               <h1 className="font-bold text-center">{review.user.username}</h1>
             </div>
             <div className="flex flex-col gap-3">
-              {review.rating.rating && (
-                <ViewStarRating
-                  rating={review.rating.rating}
-                  centered={false}
-                />
+              {review.rating && (
+                <ViewStarRating rating={review.rating} centered={false} />
               )}
               <VibesDisplay setVibes={review.vibes} />
               <p>{review.reviewText}</p>

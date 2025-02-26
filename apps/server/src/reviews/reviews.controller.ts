@@ -24,6 +24,16 @@ export class ReviewsController {
         return await this.reviewsService.getAllByUser(query)
     }
 
+    @Get(':albumId/total')
+    async getTotalRating(@Param('albumId') albumId): Promise<number> {
+        return await this.reviewsService.getAlbumRating(albumId)
+    }
+
+    @Get(':albumId/ratingscount')
+    async getNumberOfRatings(@Param('albumId') albumId): Promise<{}> {
+        return await this.reviewsService.getRatingsCount(albumId)
+    }
+
     @Post()
     async createReview(@Body() review: Reviews): Promise<Reviews> {
         return await this.reviewsService.create(review)

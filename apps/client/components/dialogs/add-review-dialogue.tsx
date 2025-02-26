@@ -43,7 +43,6 @@ import { Badge } from "../ui/badge";
 import { createReview } from "@/api/reviews.api";
 import EditStarRating from "../ratings/editStarRating";
 import { presetVibes } from "@/utils/text.utils";
-import { getRating } from "@/api/ratings.api";
 
 interface AddReviewDialogueProps {
   album: Album;
@@ -56,6 +55,8 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
 
   //   STATES.
   const [setVibes, setSetVibes] = useState<string[]>([]);
+  const [rating, setRating] = useState<number>(0);
+  const [ratingError, setRatingError] = useState(false);
 
   const handleSetVibes = (vibe: string) => {
     if (setVibes.includes(vibe)) {
@@ -78,12 +79,8 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
   const handleSubmit = async (values: z.infer<typeof createReviewSchema>) => {
     if (!user || !album?._id || !values.reviewText) return;
 
-    const rating = await getRating(user._id, album._id);
-    console.log("rating: ", rating);
-    if (!rating?._id) {
-      toast({
-        title: "cannot create review without a rating!",
-      });
+    if (!rating) {
+      setRatingError(true);
       return;
     }
 
@@ -92,13 +89,12 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
       album: album._id,
       vibes: setVibes,
       reviewText: values.reviewText,
-      rating: rating._id,
+      rating,
     };
 
-    // TODO: ADD RATING TO REVIEW.
     const createdReview = await createReview(reviewPayload);
 
-    if (!createdReview?._id || !user.reviews) return;
+    if (!createdReview || !user.reviews) return;
 
     const updatedUser = {
       reviews: [...user.reviews, createdReview],
@@ -142,7 +138,13 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
 
           {/* RIGHT SIDE */}
           <div className="flex flex-col gap-3 w-full items-center">
-            <EditStarRating album={album} />
+            <EditStarRating
+              album={album}
+              rating={rating}
+              ratingError={ratingError}
+              setRatingError={setRatingError}
+              setRating={setRating}
+            />
 
             <div className="flex flex-wrap gap-2">
               {setVibes.map((vibe, index) => (

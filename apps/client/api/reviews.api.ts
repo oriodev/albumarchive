@@ -2,7 +2,7 @@
 import { getSession } from "./session.api";
 
 // TYPES.
-import { Review, ReviewPayload, ReviewWithUser } from "@/types";
+import { RatingsCount, Review, ReviewPayload, ReviewWithUser } from "@/types";
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/reviews`;
 
@@ -196,6 +196,69 @@ export const deleteReview = async (
     return data;
   } catch (error) {
     console.log("error: ", error);
+    throw error;
+  }
+};
+
+/**
+ * get overall rating for an album.
+ * @param albumId string
+ * @returns Promise<number | null>
+ */
+export const getAlbumRating = async (
+  albumId: string,
+): Promise<number | null> => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${baseUrl}/${albumId}/total`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating rating:", error);
+    throw error;
+  }
+};
+
+/**
+ * get number of rating for an album.
+ * @param albumId string
+ * @returns Promise<number | null>
+ */
+export const getRatingsCount = async (
+  albumId: string,
+): Promise<RatingsCount | null> => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${baseUrl}/${albumId}/ratingscount`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error updating rating:", error);
     throw error;
   }
 };
