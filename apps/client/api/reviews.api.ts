@@ -2,7 +2,7 @@
 import { getSession } from "./session.api";
 
 // TYPES.
-import { Review, ReviewWithUser } from "@/types";
+import { Review, ReviewPayload, ReviewWithUser } from "@/types";
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/reviews`;
 
@@ -106,7 +106,9 @@ export const getAllReviewsByUser = async (
  * @param review user, album, vibes, reviewText.
  * @returns Promise<Review | null>
  */
-export const createReview = async (review: Review): Promise<Review | null> => {
+export const createReview = async (
+  review: ReviewPayload,
+): Promise<Review | null> => {
   try {
     const token = await getSession();
     const url = new URL(baseUrl);

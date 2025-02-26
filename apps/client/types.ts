@@ -113,8 +113,16 @@ export interface Likes {
   list: string;
 }
 
-export interface Review {
-  _id?: string;
+export interface ReviewPayload {
+  user: string;
+  album: string;
+  vibes: string[];
+  reviewText: string;
+  rating: string;
+}
+
+export interface Review extends Omit<ReviewPayload, "rating"> {
+  _id: string;
   user: string;
   album: string;
   vibes: string[];

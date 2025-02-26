@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
 import ProfileImage from "../general/profile-image";
 
-export function ReviewDisplay({
+export function ReviewCard({
   review,
   userReview,
   album,
@@ -47,7 +47,7 @@ export function ReviewDisplay({
   return (
     <>
       {review.user && (
-        <div className={`flex justify-between gap-5 bg-zine-900 w-full`}>
+        <div className="flex flex-col md:flex-row justify-between gap-5 bg-zine-900 w-full">
           <div className="flex gap-5">
             <div className="flex flex-col gap-2">
               <Link

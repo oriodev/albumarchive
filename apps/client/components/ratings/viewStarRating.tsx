@@ -65,7 +65,7 @@ export default function ViewStarRating({
           <p className="text-3xl font-bold">{rating.toFixed(1)}</p>
 
           <div>
-            <p className="text-md italic text-gray-200">
+            <p className="text-md italic text-gray-200 text-center sm:text-left">
               ({ratingsCount} {ratingsCount === 1 ? "rating" : "ratings"})
             </p>
           </div>

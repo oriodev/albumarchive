@@ -45,16 +45,20 @@ export default async function Page({ params }: Props) {
     .slice(0, 10);
 
   return (
-    <main>
+    <main className="flex flex-col gap-5 pl-3 max-w-full overflow-x-hidden">
+      {/* ALBUM DETAILS. */}
       <AlbumDetails
         album={album}
         albumRating={albumRating}
         ratingsCount={ratingsCount}
       />
-      <section className="hidden md:block pt-5">
+
+      {/* MORE ALBUMS. */}
+      <section className="">
         <h3 className="text-2xl font-bold">More Albums By This Artist</h3>
         <AlbumScrollDisplay albums={albumsByArtist} />
       </section>
+
       {/* REVIEWS. */}
       <ReviewsContainer album={album} user={user} ratingsCount={ratingsCount} />
     </main>

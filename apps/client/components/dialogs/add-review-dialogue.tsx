@@ -43,6 +43,7 @@ import { Badge } from "../ui/badge";
 import { createReview } from "@/api/reviews.api";
 import EditStarRating from "../ratings/editStarRating";
 import { presetVibes } from "@/utils/text.utils";
+import { getRating } from "@/api/ratings.api";
 
 interface AddReviewDialogueProps {
   album: Album;
@@ -77,11 +78,21 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
   const handleSubmit = async (values: z.infer<typeof createReviewSchema>) => {
     if (!user || !album?._id || !values.reviewText) return;
 
+    const rating = await getRating(user._id, album._id);
+    console.log("rating: ", rating);
+    if (!rating?._id) {
+      toast({
+        title: "cannot create review without a rating!",
+      });
+      return;
+    }
+
     const reviewPayload = {
       user: user._id,
       album: album._id,
       vibes: setVibes,
       reviewText: values.reviewText,
+      rating: rating._id,
     };
 
     // TODO: ADD RATING TO REVIEW.
@@ -112,15 +123,17 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
           <DialogTitle className="text-2xl">Write Album Review</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div className="flex gap-5">
+        <div className="flex flex-col sm:flex-row gap-5">
           {/* LEFT SIDE */}
           <div className="flex flex-col gap-3 items-center">
-            <Image
-              alt={album.title}
-              src={album.coverImage}
-              width={300}
-              height={300}
-            />
+            <div className="hidden md:block">
+              <Image
+                alt={album.title}
+                src={album.coverImage}
+                width={300}
+                height={300}
+              />
+            </div>
             <div className="flex flex-col gap-1 items-center">
               <p className="text-xl font-bold">{album.title}</p>
               <p>{album.artist}</p>
@@ -128,7 +141,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex flex-col gap-3 w-full">
+          <div className="flex flex-col gap-3 w-full items-center">
             <EditStarRating album={album} />
 
             <div className="flex flex-wrap gap-2">
