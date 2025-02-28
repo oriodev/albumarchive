@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 // COMPONENTS.
 import SearchContainer from "@/components/containers/searchcontainer";
 import ImageCard from "@/components/cards/imagecard";
+import Link from "next/link";
 
 export default function Page() {
   const [lists, setLists] = useState<List[]>([]);
@@ -56,12 +57,13 @@ export default function Page() {
       searchType="lists"
     >
       {lists.map((list) => (
-        <ImageCard
-          key={`${list.name}+${list.user}`}
-          image={list.listCoverImg}
-          title={list.name}
-          imageType={ImageType.list}
-        />
+        <Link key={`${list.name}+${list.user}`} href={"/"}>
+          <ImageCard
+            image={list.listCoverImg}
+            title={list.name}
+            imageType={ImageType.list}
+          />
+        </Link>
       ))}
     </SearchContainer>
   );

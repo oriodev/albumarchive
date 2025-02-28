@@ -1,76 +1,20 @@
-"use client";
-
-// HOOKS.
-import { useEffect, useState } from "react";
-
 // COMPONENTS.
+import PageHeader from "@/components/general/header";
+import HomePageNavBoxes from "@/components/containers/homepagenavboxes";
+import ScrollContainer from "@/components/containers/scrollcontainer";
+import { getUserLikedLists } from "@/api/likes.api";
+import { getUserId } from "@/api/user.api";
+import { ImageType, List } from "@/types";
+import Link from "next/link";
+import ScrollableImageCard from "@/components/cards/scrollableimagecard";
+import { getTrendingLists } from "@/api/list.api";
 
 // TYPES.
-import { ImageType, List } from "@/types";
 
-// APIS.
-import { getTrendingLists } from "@/api/list.api";
-import PageHeader from "@/components/general/header";
-import Link from "next/link";
-import { ScrollDisplay } from "@/components/general/scrolldisplay";
-import ImageCard from "@/components/cards/imagecard";
-
-export default function Page() {
-  // STATES.
-  const [trendingLists, setTrendingLists] = useState<List[]>([]);
-
-  // SET STATES.
-  useEffect(() => {
-    const fetchLists = async () => {
-      const fetchedTrendingLists = await getTrendingLists();
-      if (fetchedTrendingLists) setTrendingLists(fetchedTrendingLists);
-    };
-
-    fetchLists();
-  }, []);
-
-  const navLinks = [
-    {
-      title: "Albums",
-      url: "/central/albums",
-      colour: "cyan",
-    },
-    {
-      title: "Lists",
-      url: "/central/discover",
-      colour: "cyan",
-    },
-    {
-      title: "Listened",
-      url: "/central/lists/listened",
-      colour: "cyan",
-    },
-    {
-      title: "To Listen",
-      url: "/central/lists/to-listen",
-      colour: "cyan",
-    },
-    {
-      title: "Users",
-      url: "/central/users",
-      colour: "cyan",
-    },
-    {
-      title: "Rooms",
-      url: "/central/rooms",
-      colour: "cyan",
-    },
-    {
-      title: "Profile",
-      url: "/central/profile",
-      colour: "cyan",
-    },
-    {
-      title: "Account",
-      url: "/central/account",
-      colour: "cyan",
-    },
-  ];
+export default async function Page() {
+  const userId = await getUserId();
+  const likedLists: List[] = await getUserLikedLists(userId);
+  const trendingLists: List[] = await getTrendingLists();
 
   // RENDER PAGE.
   return (
@@ -80,39 +24,36 @@ export default function Page() {
         description="Track your albums. Make new friends. Savour your music."
       />
 
-      <div className="pl-3 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {navLinks.map((link) => (
-          <Link
-            key={link.title}
-            className={`bg-${link.colour}-950 shadow-lg rounded-md p-5 font-bold hover:bg-${link.colour}-900 hover:cursor-pointer transition`}
-            href={link.url}
-          >
-            {link.title}
+      <HomePageNavBoxes />
+
+      <ScrollContainer title="Jump Back In.">
+        {likedLists.map((list) => (
+          <Link key={list._id} href="#" className="">
+            <ScrollableImageCard
+              key={`${list.name}+${list.user}`}
+              image={list.listCoverImg}
+              title={list.name}
+              imageType={ImageType.list}
+            />
           </Link>
         ))}
-      </div>
+      </ScrollContainer>
 
-      {/* TRENDING LISTS. */}
-      {trendingLists.length >= 1 && (
-        <div className="flex flex-col gap-3">
-          <h2 className="text-2xl pl-3">Most Popular Lists</h2>
-          <ScrollDisplay>
-            {trendingLists.map((list: List) => (
-              <div
-                className="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
-                key={`${list.name}+${list.user}`}
-              >
-                <ImageCard
-                  key={`${list.name}+${list.user}`}
-                  image={list.listCoverImg}
-                  title={list.name}
-                  imageType={ImageType.list}
-                />
-              </div>
-            ))}
-          </ScrollDisplay>
-        </div>
-      )}
+      <ScrollContainer title="Trending Now.">
+        {trendingLists.map((list) => (
+          <Link key={list._id} href="#" className="">
+            <ScrollableImageCard
+              key={`${list.name}+${list.user}`}
+              image={list.listCoverImg}
+              title={list.name}
+              imageType={ImageType.list}
+            />
+          </Link>
+        ))}
+      </ScrollContainer>
+
+      {/* albums in a genre the user likes. */}
+      {/* figuring out what genres the user likes. */}
     </main>
   );
 }

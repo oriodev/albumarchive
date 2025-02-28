@@ -10,6 +10,7 @@ import { ImageType, List } from "@/types";
 
 // HOOKS.
 import { useUser } from "@/utils/providers/UserProvider";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -51,7 +52,8 @@ export default function Page() {
         <h2 className="text-xl pl-3">All Your Lists.</h2>
         <ScrollDisplay>
           {user.lists.map((list: List) => (
-            <div
+            <Link
+              href={`/central/${user.username}/${list.slug}`}
               className="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
               key={`${list.name}+${list.user}`}
             >
@@ -61,7 +63,7 @@ export default function Page() {
                 title={list.name}
                 imageType={ImageType.list}
               />
-            </div>
+            </Link>
           ))}
         </ScrollDisplay>
       </div>
