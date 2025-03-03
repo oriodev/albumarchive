@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
       "i.discogs.com",
       "st.discogs.com",
       "link-to-cover-image.com",
-      "res.cloudinary.com",
+      "utfs.io",
     ],
   },
 };

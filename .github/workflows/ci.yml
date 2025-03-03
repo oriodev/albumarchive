@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./apps/client
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./apps/server
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: ./apps/server
+
+      - name: Run Cypress tests
+        run: npm run cypress:run
+        working-directory: ./apps/client
