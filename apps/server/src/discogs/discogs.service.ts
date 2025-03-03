@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { Query } from 'express-serve-static-core';
-import { Album } from 'src/album/schemas/album.schema';
+import { Album } from 'src/albums/schemas/album.schema';
 
 
 @Injectable()

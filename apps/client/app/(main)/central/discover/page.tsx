@@ -25,6 +25,7 @@ export default function Page() {
   useEffect(() => {
     const fetchLists = async () => {
       const fetchedLists = await getAllLists("", currentPage.toString());
+      console.log("fetched lists: ", fetchedLists);
 
       if (fetchedLists) {
         setLists(fetchedLists.lists);
@@ -57,7 +58,10 @@ export default function Page() {
       searchType="lists"
     >
       {lists.map((list) => (
-        <Link key={`${list.name}+${list.user}`} href={"/"}>
+        <Link
+          key={`${list.name}+${list.user._id}`}
+          href={`/central/users/${list.user.username}/${list.slug}`}
+        >
           <ImageCard
             image={list.listCoverImg}
             title={list.name}

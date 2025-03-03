@@ -1,15 +1,14 @@
 "use client";
 
-import { ImageType, Message, User } from "@/types";
+import { ImageType, Message } from "@/types";
 import ImageLoader from "../general/imageloader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { Trash } from "lucide-react";
 import { deleteMessage } from "@/api/messages.api";
 import { formatDate, formatLocaltime } from "@/utils/time.utils";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { getUser } from "@/api/user.api";
 import { Skeleton } from "../ui/skeleton";
 
 interface Props {
@@ -29,24 +28,10 @@ export default function MessageCard({ fullMessage, room, setMessages }: Props) {
 
   // STATES.
   const [hovered, setHovered] = useState(false);
-  const [listOwner, setListOwner] = useState<User | null>(null);
 
   const { timestamp, sender, content, album, list } = fullMessage;
   const username = sender.username;
-
-  useEffect(
-    function fetchListOwner() {
-      if (!list) return;
-      const fetchUser = async () => {
-        const fetchedUser = await getUser(list.user);
-        if (!fetchedUser) return;
-        setListOwner(fetchedUser);
-      };
-
-      fetchUser();
-    },
-    [list, sender],
-  );
+  const listOwner = list?.user;
 
   // HANDLE DELETE.
   const handleDelete = async () => {

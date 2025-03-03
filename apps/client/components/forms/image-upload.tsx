@@ -1,69 +1,63 @@
+"use client";
+
 import { List, User } from "@/types";
-import {
-  CldImage,
-  CldUploadButton,
-  CloudinaryUploadWidgetInfo,
-} from "next-cloudinary";
+import { UploadButton } from "@/utils/uploadthing.utils";
 
-export default function ImageUpload({
-  imageUrl,
-  user,
-  list,
-  onUpload,
-}: {
-  imageUrl: string;
-  user?: User;
-  list?: List;
-  onUpload: (info: CloudinaryUploadWidgetInfo) => void;
-}) {
+export default function ImageUpload(
+  {
+    // imageUrl,
+    // user,
+    // list,
+    // onUpload,
+  }: {
+    // imageUrl: string;
+    user?: User;
+    list?: List;
+    onUpload: () => void;
+  },
+) {
   return (
-    <div className="flex gap-5">
-      {imageUrl ? (
-        <CldImage
-          width="300"
-          height="300"
-          src={imageUrl}
-          sizes="100vw"
-          alt={user?.username || list?.name || "image"}
-          crop="fill"
-        />
-      ) : user?.profileImg ? (
-        <CldImage
-          width="300"
-          height="300"
-          src={user.profileImg}
-          sizes="100vw"
-          alt={user.username || "profile picture"}
-          crop="fill"
-        />
-      ) : list?.listCoverImg ? (
-        <CldImage
-          width="300"
-          height="300"
-          src={list.listCoverImg}
-          sizes="100vw"
-          alt={list.name || "list cover image"}
-          crop="fill"
-        />
-      ) : null}
-
-      <CldUploadButton
-        uploadPreset={
-          user
-            ? process.env.NEXT_PUBLIC_CLOUDINARY_PROFILE_PRESET_NAME
-            : process.env.NEXT_PUBLIC_CLOUDINARY_LISTS_PRESET_NAME
-        }
-        onUpload={(result) => {
-          if (result.event === "success") {
-            if (!result.info) return;
-            onUpload(result.info as CloudinaryUploadWidgetInfo);
-          }
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          // Do something with the response
+          console.log("Files: ", res);
+          alert("Upload Completed");
         }}
-      >
-        <span className="bg-white text-black p-2 pl-5 pr-5 rounded-lg">
-          Upload Image
-        </span>
-      </CldUploadButton>
-    </div>
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
+    </main>
+    // <div className="flex gap-5">
+    //   {/* Display the uploaded image or the user's/profile list's image */}
+    //   {imageUrl ? (
+    //     <p>hi</p>
+    //   ) : user?.profileImg ? (
+    //     <p>hi</p>
+    //   ) : list?.listCoverImg ? (
+    //     <p>hi</p>
+    //   ) : null}
+
+    //   <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    //     <UploadButton
+    //       endpoint="imageUploader" // Ensure this matches your Uploadthing endpoint
+    //       onClientUploadComplete={(res) => {
+    //         // Handle the response from Uploadthing
+    //         console.log("Files: ", res);
+    //         alert("Upload Completed");
+
+    //         // Call the onUpload callback to perform any additional actions
+    //         onUpload();
+    //       }}
+    //       onUploadError={(error: Error) => {
+    //         // Handle any errors during the upload
+    //         alert(`ERROR! ${error.message}`);
+    //       }}
+    //     />
+    //   </main>
+    // </div>
   );
 }

@@ -1,15 +1,18 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ListService } from './list.service';
+import { ListService } from './lists.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { List } from './schemas/list.schema';
 import { UpdateListDto } from './dto/update-list.dto';
 
 import { Query as ExpressQuery } from 'express-serve-static-core';
 
-@Controller('list')
+// USER NEEDS TO BE POPULUATED IN LIST.
+
+@Controller('lists')
 export class ListController {
     constructor(private listService: ListService) {}
 
+    // GET.
 
     @Get('/all')
     async getAllLists(@Query() query: ExpressQuery): Promise<{ lists: List[]; total: number }> {
@@ -41,23 +44,21 @@ export class ListController {
         return await this.listService.isAlbumInList(list, album)
     }
 
-    // @Get(':genre/genre')
-    // async getListsByGenre(
-    //     @Param('genre')
-    //     genre: string
-    // ): Promise<List[]> {
-    //     return await this.listService.getListsByGenre(genre)
-    // }
+    // POST.
 
     @Post()
     async createList(@Body() list: CreateListDto): Promise<List> {
         return await this.listService.create(list)
     }
 
+    // DELETE.
+
     @Delete(':id')
     async deleteList(@Param('id') id: string): Promise<List> {
         return await this.listService.deleteById(id)
     }
+
+    // 
 
     @Put('/add-album')
     async addAlbum(

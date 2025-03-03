@@ -14,7 +14,7 @@ export class ReviewsController {
     }
 
     @Get('/albums')
-    async getAllReviews(@Query() query: ExpressQuery, @Request() req): Promise<{ reviews: Reviews[]; total: number }> {
+    async getAllReviewsByAlbum(@Query() query: ExpressQuery, @Request() req): Promise<{ reviews: Reviews[]; total: number }> {
         const excludeUserId = req.user.id
         return await this.reviewsService.getAllAlbumReviews(query, excludeUserId)
     }
@@ -50,7 +50,7 @@ export class ReviewsController {
     }
 
     @Delete(':id')
-    async deleteRating(@Param('id') id: string): Promise<Reviews> {
+    async deleteReview(@Param('id') id: string): Promise<Reviews> {
         return await this.reviewsService.deleteReview(id)
     }
     

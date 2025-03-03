@@ -3,6 +3,8 @@ import { getSession } from "./session.api";
 
 const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/likes`;
 
+// GET.
+
 /**
  * get specific like for a user and list.
  * @param userId string
@@ -16,9 +18,7 @@ export const getLike = async (
   try {
     const token = await getSession();
 
-    const url = new URL(baseUrl);
-    url.searchParams.append("user", userId);
-    url.searchParams.append("list", listId);
+    const url = new URL(`${baseUrl}/${listId}/${userId}`);
 
     const response = await fetch(url, {
       method: "GET",
@@ -47,7 +47,7 @@ export const getLike = async (
 export const getTotalLikes = async (listId: string): Promise<number | null> => {
   try {
     const token = await getSession();
-    const url = new URL(`${baseUrl}/${listId}`);
+    const url = new URL(`${baseUrl}/${listId}/total`);
 
     const response = await fetch(url, {
       method: "GET",
@@ -67,6 +67,40 @@ export const getTotalLikes = async (listId: string): Promise<number | null> => {
     throw error;
   }
 };
+
+/**
+ * get specific like for a user and list.
+ * @param userId string
+ * @param listId string
+ * @returns Promise<Likes | null>
+ */
+export const getUserLikedLists = async (userId: string): Promise<List[]> => {
+  try {
+    const token = await getSession();
+    const url = new URL(`${baseUrl}/${userId}/user`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("response: ", response);
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching like:", error);
+    throw error;
+  }
+};
+
+// POST.
 
 /**
  * creates a new like.
@@ -99,6 +133,8 @@ export const createLike = async (like: Likes): Promise<Likes | null> => {
   }
 };
 
+// DELETE.
+
 /**
  * delete a like.
  * @param id string
@@ -124,39 +160,6 @@ export const deleteLike = async (id: string): Promise<Likes | null> => {
     return data;
   } catch (error) {
     console.error("Error deleting like:", error);
-    throw error;
-  }
-};
-
-/**
- * get specific like for a user and list.
- * @param userId string
- * @param listId string
- * @returns Promise<Likes | null>
- */
-export const getUserLikedLists = async (userId: string): Promise<List[]> => {
-  try {
-    const token = await getSession();
-
-    const url = new URL(`${baseUrl}/${userId}/user`);
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    console.log("response: ", response);
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching like:", error);
     throw error;
   }
 };

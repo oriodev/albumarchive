@@ -2,11 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { List } from './schemas/list.schema';
 import mongoose, { ObjectId } from 'mongoose';
-import { AlbumService } from '../album/album.service';
+import { AlbumService } from '../albums/album.service';
 import { User } from 'src/auth/schemas/user.schema';
 import { Query } from 'express-serve-static-core';
 import { Likes } from 'src/likes/schemas/likes.schema';
-import { Album } from 'src/album/schemas/album.schema';
+import { Album } from 'src/albums/schemas/album.schema';
 
 @Injectable()
 export class ListService {
@@ -17,11 +17,9 @@ export class ListService {
         private userModel: mongoose.Model<User>,
         @InjectModel('Likes')
         private likesModel: mongoose.Model<Likes>,
-        @InjectModel('Album')
-        private albumModel: mongoose.Model<Album>,
         private albumService: AlbumService
     ) {}
-
+    
     async findAll(query: Query): Promise<{ lists: List[]; total: number }> {
         const resPerPage = 15;
         const currentPage = Number(query.page) || 1;
@@ -50,8 +48,22 @@ export class ListService {
                 }
             },
             {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
                 $addFields: {
-                    totalLikes: { $size: '$likes' }
+                    totalLikes: { $size: '$likes' },
                 }
             },
             {
@@ -94,6 +106,19 @@ export class ListService {
                     foreignField: '_id',
                     as: 'albumDetails'
                 }
+            },            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user',
+                    preserveNullAndEmptyArrays: true
+                }
             },
             {
                 $addFields: {
@@ -124,24 +149,6 @@ export class ListService {
     
         return list[0];
     }
-    
-    
-    async findById(id: string): Promise<List> {
-
-        const isValidId = mongoose.isValidObjectId(id)
-
-        if (!isValidId) {
-            throw new BadRequestException('please enter a valid mongo id')
-        }
-
-        const list = await this.listModel.findById(id);
-
-        if (!list) {
-            throw new NotFoundException('list not found')
-        }
-
-        return list;
-    }
 
     async findByUserId(id: string): Promise<List[]> {
         const isValidId = mongoose.isValidObjectId(id)
@@ -150,7 +157,7 @@ export class ListService {
             throw new BadRequestException('please enter a valid mongo id')
         }
 
-        const lists = await this.listModel.find({ user: id });
+        const lists = await this.listModel.find({ user: id }).populate('user');
 
         if (!lists) {
             throw new NotFoundException('list not found')
@@ -170,7 +177,7 @@ export class ListService {
         const list = await this.listModel.findOne({
             user: user,
             slug: slug 
-        })
+        }).populate('user')
 
         return list
 
@@ -245,7 +252,7 @@ export class ListService {
             throw new BadRequestException('please enter a valid mongodb id for the list')
         }
 
-        const albumIsValid = await this.albumService.findById(album_id)
+        const albumIsValid = await this.albumService.getAlbumById(album_id)
         
         if (!albumIsValid) {
             throw new BadRequestException('that album does not exist in our db')
@@ -267,7 +274,7 @@ export class ListService {
     }
 
     async removeAlbum (id: string, album_id: string): Promise<List> {
-        const albumIsValid = await this.albumService.findById(album_id)
+        const albumIsValid = await this.albumService.getAlbumById(album_id)
         
         if (!albumIsValid) {
             throw new BadRequestException('that album does not exist in our db')
@@ -320,7 +327,11 @@ export class ListService {
                 }
             },
             {
-                $unwind: '$user'
+                $unwind: {
+                    path: '$user',
+                    preserveNullAndEmptyArrays: true
+                }
+                
             },
             {
                 $match: {
@@ -329,7 +340,13 @@ export class ListService {
             },
             {
                 $replaceRoot: {
-                    newRoot: { $mergeObjects: ["$list", { totalLikes: "$count" }] }
+                    newRoot: { 
+                        $mergeObjects: [
+                            "$list", 
+                            { totalLikes: "$count" },
+                            { user: "$user" }
+                        ]
+                    }
                 }
             }
         ]);

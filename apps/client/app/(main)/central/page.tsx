@@ -1,20 +1,41 @@
+"use client";
+
 // COMPONENTS.
 import PageHeader from "@/components/general/header";
 import HomePageNavBoxes from "@/components/containers/homepagenavboxes";
 import ScrollContainer from "@/components/containers/scrollcontainer";
 import { getUserLikedLists } from "@/api/likes.api";
-import { getUserId } from "@/api/user.api";
 import { ImageType, List } from "@/types";
 import Link from "next/link";
 import ScrollableImageCard from "@/components/cards/scrollableimagecard";
 import { getTrendingLists } from "@/api/list.api";
+import { useEffect, useState } from "react";
+import { useUser } from "@/utils/providers/UserProvider";
 
 // TYPES.
 
-export default async function Page() {
-  const userId = await getUserId();
-  const likedLists: List[] = await getUserLikedLists(userId);
-  const trendingLists: List[] = await getTrendingLists();
+export default function Page() {
+  const { user } = useUser();
+
+  const [likedLists, setLikedLists] = useState<List[]>();
+  const [trendingLists, setTrendingLists] = useState<List[]>();
+
+  useEffect(
+    function fetchInformation() {
+      if (!user) return;
+
+      const fetchingInformation = async () => {
+        const fetchedLikedLists: List[] = await getUserLikedLists(user._id);
+        const fetchedTrendingLists: List[] = await getTrendingLists();
+        console.log("fetched: ", fetchedTrendingLists);
+        setLikedLists(fetchedLikedLists);
+        setTrendingLists(fetchedTrendingLists);
+      };
+
+      fetchingInformation();
+    },
+    [user],
+  );
 
   // RENDER PAGE.
   return (
@@ -27,33 +48,42 @@ export default async function Page() {
       <HomePageNavBoxes />
 
       <ScrollContainer title="Jump Back In.">
-        {likedLists.map((list) => (
-          <Link key={list._id} href="#" className="">
-            <ScrollableImageCard
-              key={`${list.name}+${list.user}`}
-              image={list.listCoverImg}
-              title={list.name}
-              imageType={ImageType.list}
-            />
-          </Link>
-        ))}
+        {likedLists &&
+          likedLists.map((list) => {
+            console.log("list: ", list);
+            return (
+              <Link
+                key={list._id}
+                href={`/central/users/${list.user.username}/${list.slug}`}
+                className=""
+              >
+                <ScrollableImageCard
+                  key={`${list.name}+${list.user}`}
+                  image={list.listCoverImg}
+                  title={list.name}
+                  imageType={ImageType.list}
+                />
+              </Link>
+            );
+          })}
       </ScrollContainer>
 
       <ScrollContainer title="Trending Now.">
-        {trendingLists.map((list) => (
-          <Link key={list._id} href="#" className="">
-            <ScrollableImageCard
-              key={`${list.name}+${list.user}`}
-              image={list.listCoverImg}
-              title={list.name}
-              imageType={ImageType.list}
-            />
-          </Link>
-        ))}
+        {trendingLists &&
+          trendingLists.map((list) => (
+            <Link
+              key={list._id}
+              href={`/central/users/${list.user.username}/${list.slug}`}
+            >
+              <ScrollableImageCard
+                key={`${list.name}+${list.user}`}
+                image={list.listCoverImg}
+                title={list.name}
+                imageType={ImageType.list}
+              />
+            </Link>
+          ))}
       </ScrollContainer>
-
-      {/* albums in a genre the user likes. */}
-      {/* figuring out what genres the user likes. */}
     </main>
   );
 }

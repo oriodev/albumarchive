@@ -4,7 +4,6 @@ import { Reviews } from './schemas/reviews.schema';
 import mongoose from 'mongoose';
 import { Query } from 'express-serve-static-core';
 import { User } from 'src/auth/schemas/user.schema';
-import { Ratings } from 'src/ratings/schemas/ratings.schema';
 
 
 @Injectable()
@@ -14,8 +13,6 @@ export class ReviewsService {
         private reviewsModel: mongoose.Model<Reviews>,
         @InjectModel('User')
         private userModel: mongoose.Model<User>,
-        @InjectModel('Ratings')
-        private ratingsModel: mongoose.Model<Ratings>
     ) {}
 
     /**

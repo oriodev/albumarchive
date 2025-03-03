@@ -1,10 +1,11 @@
 "use client";
 
 import { getAllUsers } from "@/api/user.api";
+import ImageCard from "@/components/cards/imagecard";
 import SearchContainer from "@/components/containers/searchcontainer";
-import { UserDisplayDialogue } from "@/components/dialogs/user-display-dialogue";
-import { User } from "@/types";
+import { ImageType, User } from "@/types";
 import { useUser } from "@/utils/providers/UserProvider";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -62,7 +63,13 @@ export default function Page() {
       searchType="users"
     >
       {users.map((user: User) => (
-        <UserDisplayDialogue key={user.username} user={user} />
+        <Link key={user.username} href={`/central/users/${user.username}`}>
+          <ImageCard
+            image={user.profileImg}
+            title={user.username}
+            imageType={ImageType.user}
+          />
+        </Link>
       ))}
     </SearchContainer>
   );

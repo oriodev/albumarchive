@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DiscogsApiService } from './discogs_api.service';
-import { DiscogsApiController } from './discogs_api.controller';
+import { DiscogsApiService } from './discogs.service';
+import { DiscogsApiController } from './discogs.controller';
 import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({

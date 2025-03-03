@@ -1,10 +1,14 @@
 import { Album } from "@/types";
 import { getSession } from "./session.api";
 
+const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/albums`;
+
+// GET.
+
 export const getAlbums = async (search: string = "", page: string = "1") => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album`);
+  const url = new URL(`${baseUrl}`);
   url.searchParams.append("search", search);
   url.searchParams.append("page", page);
 
@@ -26,8 +30,7 @@ export const getAlbums = async (search: string = "", page: string = "1") => {
 export const getAlbumByTitle = async (title: string) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album/by-title`);
-  url.searchParams.append("title", title);
+  const url = new URL(`${baseUrl}/${title}/title`);
 
   const response = await fetch(url, {
     method: "GET",
@@ -47,7 +50,7 @@ export const getAlbumByTitle = async (title: string) => {
 export const getAlbumById = async (id: string) => {
   try {
     const token = await getSession();
-    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album/${id}`);
+    const url = new URL(`${baseUrl}/${id}/id`);
 
     const response = await fetch(url, {
       method: "GET",
@@ -70,9 +73,7 @@ export const getAlbumById = async (id: string) => {
 export const getAlbumsByArtist = async (artist: string) => {
   try {
     const token = await getSession();
-    const url = new URL(
-      `${process.env.NEXT_PUBLIC_BACKEND_API}/album/${artist}/artist`,
-    );
+    const url = new URL(`${baseUrl}/${artist}/artist`);
 
     const response = await fetch(url, {
       method: "GET",
@@ -92,10 +93,12 @@ export const getAlbumsByArtist = async (artist: string) => {
   }
 };
 
+// POST.
+
 export const createAlbum = async (album: Album) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/album`);
+  const url = new URL(`${baseUrl}/album`);
 
   const response = await fetch(url, {
     method: "POST",

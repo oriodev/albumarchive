@@ -49,6 +49,7 @@ export function UserProfileTabs({ user }: Props) {
         setFollowers(followerData);
 
         const followingData = await getUsersBatch(user.following || []);
+        console.log("followingData: ", followingData);
         setFollowing(followingData);
       };
 

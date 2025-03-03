@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -76,7 +75,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -85,10 +83,6 @@
     @apply bg-background text-foreground;
   }
 }
-
-
-
-
 
 @layer base {
   * {
@@ -99,3 +93,19 @@
   }
 }
 
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  .card {
+    display: inline-block;
+  }
+}
+
+.card {
+  border: 2px solid red;
+  width: 150px;
+  height: 75px;
+  background: black;
+}

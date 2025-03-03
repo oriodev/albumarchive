@@ -135,10 +135,10 @@ export const getUsersBatch = async (ids: string[]) => {
       });
     }
 
-    return null;
+    return [];
   } catch (error) {
     console.log("error: ", error);
-    return null;
+    return [];
   }
 };
 

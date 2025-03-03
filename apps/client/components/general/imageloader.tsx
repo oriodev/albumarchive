@@ -1,6 +1,5 @@
 // COMPONENTS.
 import { ImageType } from "@/types";
-import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 
 export default function ImageLoader({
@@ -17,13 +16,11 @@ export default function ImageLoader({
       {type === ImageType.user ? (
         <>
           {image ? (
-            <CldImage
+            <Image
+              src="/userfallback.png"
               width={size}
               height={size}
-              src={image}
-              sizes={size.toString()}
-              alt={"user profile image"}
-              crop="fill"
+              alt="user fallback image"
             />
           ) : (
             <Image
@@ -50,13 +47,11 @@ export default function ImageLoader({
       ) : (
         <div>
           {image ? (
-            <CldImage
+            <Image
+              src="/userfallback.png"
               width={size}
               height={size}
-              src={image}
-              sizes={size.toString()}
-              alt={"list image"}
-              crop="fill"
+              alt="user fallback image"
             />
           ) : (
             <Image

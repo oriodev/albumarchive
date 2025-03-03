@@ -27,8 +27,8 @@ import { Textarea } from "../ui/textarea";
 import { useUser } from "@/utils/providers/UserProvider";
 import { slugify } from "@/utils/global.utils";
 import { updateList } from "@/api/list.api";
-import ImageUpload from "./image-upload";
-import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
+// import ImageUpload from "./image-upload";
+// import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import PageHeader from "../general/header";
 
 // SET FORM DATA TYPE.
@@ -41,7 +41,7 @@ export function EditList({ slug }: { slug: string }) {
 
   // STATES.
   const [list, setList] = useState<List | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
+  // const [imageUrl, setImageUrl] = useState("");
 
   // GRAB LIST.
   useEffect(() => {
@@ -118,7 +118,7 @@ export function EditList({ slug }: { slug: string }) {
         name: data.name,
         slug: slug,
         description: data.description,
-        listCoverImg: imageUrl,
+        // listCoverImg: imageUrl,
       };
 
       // UPDATE THE LIST IN THE DATABASE.
@@ -137,9 +137,9 @@ export function EditList({ slug }: { slug: string }) {
   };
 
   // ON UPLOAD.
-  const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
-    setImageUrl(info.secure_url);
-  };
+  // const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
+  //   setImageUrl(info.secure_url);
+  // };
 
   return (
     <div className="flex flex-col gap-6">
@@ -188,7 +188,8 @@ export function EditList({ slug }: { slug: string }) {
           />
           <FormLabel>Image</FormLabel>
           {list && (
-            <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
+            <p>hi</p>
+            // <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
           )}
 
           {/* SUBMIT BUTTON */}

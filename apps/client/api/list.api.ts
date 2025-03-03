@@ -1,14 +1,16 @@
 "use server";
 
-import { List, AlbumType } from "@/types";
+import { List, AlbumType, ListPayload } from "@/types";
 import { getSession } from "./session.api";
 import { getUserId } from "./user.api";
+
+const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_API}/lists`;
 
 export const getAllLists = async (search: string = "", page: string = "1") => {
   try {
     const token = await getSession();
 
-    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/all`);
+    const url = new URL(`${baseUrl}/all`);
     url.searchParams.append("search", search);
     url.searchParams.append("page", page);
 
@@ -31,9 +33,7 @@ export const getAllLists = async (search: string = "", page: string = "1") => {
 export const getListById = async (listId: string) => {
   const token = await getSession();
 
-  const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/${listId}/id`,
-  );
+  const url = new URL(`${baseUrl}/${listId}/id`);
 
   const response = await fetch(url, {
     method: "GET",
@@ -50,12 +50,11 @@ export const getListById = async (listId: string) => {
   return data;
 };
 
+// GET ALL OF A USER'S LISTS.
 export const getListsByUserId = async (userId: string) => {
   const token = await getSession();
 
-  const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/${userId}/user`,
-  );
+  const url = new URL(`${baseUrl}/${userId}/user`);
 
   const response = await fetch(url, {
     method: "GET",
@@ -76,7 +75,7 @@ export const getTrendingLists = async () => {
   try {
     const token = await getSession();
 
-    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/trending`);
+    const url = new URL(`${baseUrl}/trending`);
 
     const response = await fetch(url, {
       method: "GET",
@@ -99,7 +98,7 @@ export const getTrendingLists = async () => {
 export const generateNewUserLists = async () => {
   const userId = await getUserId();
 
-  const listenedList: List = {
+  const listenedList: ListPayload = {
     name: "Listened",
     slug: "listened",
     description: "Every album you have listened to!",
@@ -108,7 +107,7 @@ export const generateNewUserLists = async () => {
     albums: [],
   };
 
-  const toListenList: List = {
+  const toListenList: ListPayload = {
     name: "To Listen",
     slug: "to-listen",
     description: "Albums you want to listen to!",
@@ -127,10 +126,10 @@ export const generateNewUserLists = async () => {
   }
 };
 
-export const createList = async (list: List) => {
+export const createList = async (list: ListPayload) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list`);
+  const url = new URL(`${baseUrl}`);
 
   const response = await fetch(url, {
     method: "POST",
@@ -149,10 +148,11 @@ export const createList = async (list: List) => {
   return data;
 };
 
+// GET A LIST ON A PAGE VIA SLUG.
 export const getList = async (slug: string, user: string) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list`);
+  const url = new URL(`${baseUrl}`);
   url.searchParams.append("user", user);
   url.searchParams.append("slug", slug);
 
@@ -174,7 +174,7 @@ export const getList = async (slug: string, user: string) => {
 export const deleteList = async (id: string) => {
   try {
     const token = await getSession();
-    const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/${id}`);
+    const url = new URL(`${baseUrl}/${id}`);
 
     const response = await fetch(url, {
       method: "DELETE",
@@ -197,7 +197,7 @@ export const deleteList = async (id: string) => {
 export const updateList = async (id: string, updatedList: Partial<List>) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/${id}`);
+  const url = new URL(`${baseUrl}/${id}`);
 
   try {
     const response = await fetch(url, {
@@ -221,10 +221,12 @@ export const updateList = async (id: string, updatedList: Partial<List>) => {
   }
 };
 
+// ALBUM STUFF.
+
 export const addAlbumToList = async (list_id: string, album_id: string) => {
   const token = await getSession();
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_API}/list/add-album`);
+  const url = new URL(`${baseUrl}/add-album`);
   url.searchParams.append("id", list_id);
 
   const body = {
@@ -261,9 +263,7 @@ export const removeAlbumFromList = async (
 ) => {
   const token = await getSession();
 
-  const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/delete-album/${list_id}`,
-  );
+  const url = new URL(`${baseUrl}/delete-album/${list_id}`);
 
   const body = {
     albumId: album_id,
@@ -296,9 +296,7 @@ export const removeAlbumFromList = async (
 export const getIsAlbumInList = async (list_id: string, album_id: string) => {
   const token = await getSession();
 
-  const url = new URL(
-    `${process.env.NEXT_PUBLIC_BACKEND_API}/list/album-in-list`,
-  );
+  const url = new URL(`${baseUrl}/album-in-list`);
   url.searchParams.append("list", list_id);
   url.searchParams.append("album", album_id);
 

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ListService } from './list.service';
+import { ListService } from './lists.service';
 import mongoose, { Model, Types } from 'mongoose';
 import { List, Type } from './schemas/list.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { AlbumService } from '../album/album.service';
-import { Album } from '../album/schemas/album.schema';
+import { AlbumService } from '../albums/album.service';
+import { Album } from '../albums/schemas/album.schema';
 
 describe('ListService', () => {
   let service: ListService;

@@ -22,6 +22,16 @@ export interface UserLogin {
   password: string;
 }
 
+export enum GenreNames {
+  POP = "Pop",
+  ROCK = "Rock",
+  PUNK = "Punk",
+  COUNTRY = "Country",
+  JAZZ = "Jazz",
+  LOFI = "Lofi",
+  RAP = "Rap",
+}
+
 export interface UserPayload {
   username: string;
   description: string;
@@ -33,6 +43,7 @@ export interface UserPayload {
   following: string[];
   followers: string[];
   reviews: Review[];
+  genres: GenreNames[];
 }
 
 export interface User extends UserPayload {
@@ -45,8 +56,7 @@ export enum AlbumType {
   CUSTOM = "Custom",
 }
 
-export interface List {
-  _id?: string;
+export interface ListPayload {
   name: string;
   slug: string;
   description: string;
@@ -55,6 +65,11 @@ export interface List {
   user: string;
   albums: string[];
   totalLikes?: number;
+}
+
+export interface List extends Omit<ListPayload, "user"> {
+  _id: string;
+  user: User;
 }
 
 export interface listToRender {
