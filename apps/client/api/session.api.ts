@@ -10,7 +10,7 @@ export const createSession = async (token: string) => {
 
     cookieStore.set("session", token, {
       httpOnly: true,
-      secure: true,
+      secure: false, // THIS SHOULD BE TRUE BUT FOR E2E PURPOSES IT IS FALSE FOR NOW.
       expires: expiresAt,
       sameSite: "lax",
       path: "/",
@@ -27,7 +27,6 @@ export const getSession = async () => {
     if (sessionCookie) {
       return sessionCookie.value;
     }
-
     return null;
   } catch (error) {
     console.log(error);

@@ -28,7 +28,7 @@ export default async function ReviewsContainer({
   const totalReviews = allReviews.total;
 
   return (
-    <div className="max-w-full pt-5">
+    <div className="max-w-full pt-5" data-cy="reviews">
       <AlbumReviewsContainer
         album={album}
         initialReviews={reviews}

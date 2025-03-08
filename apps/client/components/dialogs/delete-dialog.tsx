@@ -21,9 +21,9 @@ export function DeleteDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button>{`Delete ${thingToDelete}`}</Button>
+        <Button data-cy="deleteBtn">{`Delete ${thingToDelete}`}</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent data-cy="deleteDialog">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
@@ -33,7 +33,12 @@ export function DeleteDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={deleteFunction}>Delete</AlertDialogAction>
+          <AlertDialogAction
+            onClick={deleteFunction}
+            data-cy="confirmDeleteBtn"
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -31,7 +31,7 @@ export function AlbumReviewsContainer({
 
   // TODO: ADD PAGINATION STATES INTO HERE.
   const [currentPage, setCurrentPage] = useState(1);
-  const [reviews, setReviews] = useState(initialReviews);
+  const [reviews] = useState(initialReviews);
   const [userReview, setUserReview] = useState(initialUserReview);
 
   useEffect(() => {

@@ -190,11 +190,13 @@ export default function Page({ params }: Props) {
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     ref={inputRef}
+                    data-cy="textInput"
                   />
                   <Button
                     onClick={onSendMessage}
                     variant={"dark"}
                     className="pl-8 pr-8"
+                    data-cy="submitBtn"
                   >
                     Send
                   </Button>

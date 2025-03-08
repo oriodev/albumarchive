@@ -55,8 +55,6 @@ export function LoginForm() {
         }
       }
 
-      console.log("response: ", response);
-
       // SESSION HANDLING
       if (response.token) {
         await createSession(response.token);

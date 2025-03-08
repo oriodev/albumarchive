@@ -23,7 +23,10 @@ export default function ImageCard({
   description,
 }: Props) {
   return (
-    <Card className="flex flex-col gap-1 hover:cursor-pointer transition-transform transform hover:scale-105">
+    <Card
+      data-cy="card"
+      className="flex flex-col gap-1 hover:cursor-pointer transition-transform transform hover:scale-105"
+    >
       <CardHeader className="relative">
         <ImageLoader image={image} type={imageType} size={300} />
       </CardHeader>

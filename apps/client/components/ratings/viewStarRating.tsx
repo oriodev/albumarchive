@@ -52,7 +52,7 @@ export default function ViewStarRating({
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3" data-cy="rating">
       {/* STARS */}
       <div className={`flex ${centered ? "justify-center" : "justify-left"}`}>
         {rating === 0 && <StarOff />}

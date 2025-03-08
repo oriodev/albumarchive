@@ -55,17 +55,25 @@ export default function ExtendedSearchContainer({
           <Button
             onClick={handleSubmit}
             className="md:w-[250px] sm:w-[150px] h-full p-2"
+            data-cy="submitBtn"
           >
             Search
           </Button>
 
           <Select defaultValue="local" onValueChange={handleSetSearchType}>
-            <SelectTrigger className="md:w-[250px] sm:w-[150px] h-full p-2">
+            <SelectTrigger
+              className="md:w-[250px] sm:w-[150px] h-full p-2"
+              data-cy="searchType"
+            >
               <SelectValue placeholder="Search Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="local">Local (Recommended)</SelectItem>
-              <SelectItem value="wider">Wider</SelectItem>
+              <SelectItem value="local" data-cy="searchType-local">
+                Local (Recommended)
+              </SelectItem>
+              <SelectItem value="wider" data-cy="searchType-wider">
+                Wider
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

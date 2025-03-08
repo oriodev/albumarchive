@@ -79,6 +79,7 @@ export default function EditStarRating({
             onClick={() => handleClick(index)}
             fill={index <= (hoveredRating || rating) ? "#fcd34d" : "grey"}
             className={`transition-colors duration-200`}
+            data-cy="star"
           />
         ))}
       </div>

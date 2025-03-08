@@ -15,6 +15,7 @@ export default function AlbumScrollDisplay({ albums }: Props) {
         <div
           className="flex-shrink-0 w-1/5"
           key={`${album.title}+${album.artist}`}
+          data-cy="anotherAlbum"
         >
           <AlbumDialogue album={album} layoutType="Grid" local={true} />
         </div>

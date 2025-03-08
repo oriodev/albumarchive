@@ -17,12 +17,14 @@ export default function Page() {
         <Button
           className="text-xl pl-10 pr-10"
           onClick={() => router.push("/login")}
+          data-cy="login"
         >
           LOG IN
         </Button>
         <Button
           className="text-xl pl-10 pr-10"
           onClick={() => router.push("/signup")}
+          data-cy="signup"
         >
           SIGN UP
         </Button>

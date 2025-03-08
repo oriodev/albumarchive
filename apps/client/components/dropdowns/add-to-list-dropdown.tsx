@@ -155,6 +155,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
+          data-cy="addToList"
         >
           {"Add to list"}
           <PlusCircleIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -175,6 +176,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
                     setOpen(false);
                     onAddToList(currentValue);
                   }}
+                  data-cy="list"
                 >
                   {/* make this show if album is already in list. */}
                   <Check
@@ -184,6 +186,7 @@ export function AddToList({ album, setAlbums, albums }: AddToListProps) {
                         ? "opacity-100"
                         : "opacity-0",
                     )}
+                    data-cy="check"
                   />
                   {list.name}
                 </CommandItem>

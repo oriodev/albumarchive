@@ -117,11 +117,13 @@ export function AlbumRecDialogue({ album }: { album: Album }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Send Album Rec</Button>
+          <Button data-cy="albumRec">Send Album Rec</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">Album Rec</DialogTitle>
+            <DialogTitle className="text-2xl" data-cy="title">
+              Album Rec
+            </DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="flex gap-5">

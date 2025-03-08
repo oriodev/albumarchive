@@ -112,7 +112,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Write Album Review</Button>
+        <Button data-cy="writeReviewBtn">Write Album Review</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -209,6 +209,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
                             id="reviewText"
                             placeholder="Write your review here..."
                             className="min-h-[150px]"
+                            data-cy="reviewText"
                             {...field}
                           />
                         </FormControl>
@@ -220,7 +221,7 @@ export function AddReviewDialogue({ album }: AddReviewDialogueProps) {
 
                 <DialogFooter>
                   {/* BUTTON */}
-                  <Button type="submit" className="mt-4">
+                  <Button type="submit" className="mt-4" data-cy="submitBtn">
                     Publish Review
                   </Button>
                 </DialogFooter>

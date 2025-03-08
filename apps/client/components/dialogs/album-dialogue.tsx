@@ -33,10 +33,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useParams, useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import ImageCard from "../cards/imagecard";
-import ViewStarRating from "../ratings/viewStarRating";
+// import ViewStarRating from "../ratings/viewStarRating";
 import GenreDisplay from "../containers/genre-display";
 import { ListCard } from "../cards/listcard";
-import { getAlbumRating } from "@/api/reviews.api";
+// import { getAlbumRating } from "@/api/reviews.api";
 
 interface AlbumDialogueProps {
   album: Album;
@@ -51,7 +51,6 @@ export function AlbumDialogue({
   setAlbums,
   albums,
   layoutType,
-  local,
 }: AlbumDialogueProps) {
   // HOOKS.
   const { user, updateUserInfo } = useUser();
@@ -61,7 +60,7 @@ export function AlbumDialogue({
 
   // STATES.
   const [showToListen, setShowToListen] = useState(false);
-  const [albumRating, setAlbumRating] = useState(0);
+  // const [albumRating, setAlbumRating] = useState(0);
 
   useEffect(() => {
     const getBooleans = async () => {
@@ -75,15 +74,15 @@ export function AlbumDialogue({
         return;
       }
 
-      const fetchedAlbumRating = await getAlbumRating(album._id);
-      if (fetchedAlbumRating) {
-        setAlbumRating(fetchedAlbumRating);
-      }
+      // const fetchedAlbumRating = await getAlbumRating(album._id);
+      // if (fetchedAlbumRating) {
+      //   setAlbumRating(fetchedAlbumRating);
+      // }
     };
 
     getBooleans();
     fetchAlbumRating();
-  }, [user, album, setAlbumRating]);
+  }, [user, album]);
 
   const handleHaveListened = async () => {
     if (!user?.lists) return;
@@ -193,13 +192,13 @@ export function AlbumDialogue({
               </Badge>
             </div>
 
-            {local && (
+            {/* {local && (
               <>
                 <div>
                   <ViewStarRating rating={albumRating} centered={false} />
                 </div>
               </>
-            )}
+            )} */}
 
             <GenreDisplay album={album} />
           </div>
@@ -216,7 +215,11 @@ export function AlbumDialogue({
               Finished Listening
             </Button>
           )}
-          <Button className="w-full" onClick={handleFullAlbum}>
+          <Button
+            className="w-full"
+            onClick={handleFullAlbum}
+            data-cy="seeFullAlbumBtn"
+          >
             See Full Album
           </Button>
         </div>

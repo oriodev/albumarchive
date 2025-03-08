@@ -42,7 +42,7 @@ export function FullPagination({
             className={`hover:cursor-pointer ${currentPage === 1 ? "opacity-50 hover:cursor-default" : ""}`}
           />
         </PaginationItem>
-        <PaginationItem>
+        <PaginationItem data-cy="paginationNumbers">
           <p>
             {currentPage} of {totalPages}
           </p>{" "}
@@ -51,6 +51,7 @@ export function FullPagination({
           <PaginationNext
             onClick={handleNextPage}
             className={`hover:cursor-pointer ${currentPage >= totalPages ? "opacity-50 hover:cursor-default" : ""}`}
+            data-cy="paginationNext"
           />
         </PaginationItem>
       </PaginationContent>

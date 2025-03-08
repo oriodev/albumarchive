@@ -73,7 +73,7 @@ export default function NewListBtn({ setLists, lists }: NewListBtnProps) {
     <div>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger onClick={handleCreateNewList}>
+          <TooltipTrigger onClick={handleCreateNewList} data-cy="newListBtn">
             <PlusCircleIcon className="text-white hover:text-gray-300 transition-colors duration-200 cursor-pointer" />
           </TooltipTrigger>
           <TooltipContent>

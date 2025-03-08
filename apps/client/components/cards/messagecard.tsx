@@ -63,6 +63,7 @@ export default function MessageCard({ fullMessage, room, setMessages }: Props) {
       className="relative flex flex-row gap-5"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      data-cy="message"
     >
       <div className="flex-none"></div>
       <div className="flex-1">
@@ -114,6 +115,7 @@ export default function MessageCard({ fullMessage, room, setMessages }: Props) {
             size={17}
             className="hover:cursor-pointer"
             onClick={handleDelete}
+            data-cy="deleteMessageBtn"
           />
         </div>
       )}

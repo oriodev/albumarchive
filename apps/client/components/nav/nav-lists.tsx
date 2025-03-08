@@ -105,7 +105,7 @@ export function NavLists({
         <SidebarMenu>
           {lists.map((item) => (
             // SET NAME AND ICON.
-            <SidebarMenuItem key={item.name}>
+            <SidebarMenuItem key={item.name} data-cy="listItem">
               <SidebarMenuButton asChild>
                 <Link href={item.url || "/"}>
                   <item.icon />
@@ -116,7 +116,7 @@ export function NavLists({
               {/* DROPDOWN MENU. */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction showOnHover>
+                  <SidebarMenuAction showOnHover data-cy="listDropdownBtn">
                     <MoreHorizontal />
                     <span className="sr-only">More</span>
                   </SidebarMenuAction>
@@ -152,7 +152,10 @@ export function NavLists({
                       </DropdownMenuItem>
 
                       {/* DELETE LIST. */}
-                      <DropdownMenuItem onClick={() => handleDelete(item.id)}>
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(item.id)}
+                        data-cy="deleteListBtn"
+                      >
                         <Trash2 className="text-muted-foreground" />
                         <span>Delete List</span>
                       </DropdownMenuItem>

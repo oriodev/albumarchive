@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -28,6 +28,10 @@ jobs:
       - name: Install backend dependencies
         run: npm install
         working-directory: ./apps/server
+
+      - name: Start app
+        run: npm run dev
+        working-directory: ./
 
       - name: Run backend tests
         run: npm test

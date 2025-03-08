@@ -13,7 +13,7 @@ interface Props {
  */
 export default function RoomCard({ room, active, handleOnClick }: Props) {
   return (
-    <Card className={`${active && "border-emerald-900"}`}>
+    <Card className={`${active && "border-emerald-900"}`} data-cy="roomCard">
       <CardHeader className="flex flex-row flex-wrap gap-3 justify-between">
         <div className="flex flex-row gap-5">
           <div className="flex flex-col gap-2">
@@ -24,6 +24,7 @@ export default function RoomCard({ room, active, handleOnClick }: Props) {
         <Button
           className="bg-zinc-900 hover:bg-zinc-800 text-white border-zinc-300 pl-5 pr-5"
           onClick={handleOnClick}
+          data-cy="enterRoomBtn"
         >
           Enter.
         </Button>

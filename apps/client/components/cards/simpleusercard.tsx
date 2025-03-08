@@ -16,7 +16,7 @@ interface Props {
  */
 export default function SimpleUserCard({ image, title, link }: Props) {
   return (
-    <div>
+    <div data-cy="userCard">
       <div className="flex flex-row gap-5 justify-between pt-5">
         <Link href={link}>
           <div className="flex flex-row gap-5">

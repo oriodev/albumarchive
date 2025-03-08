@@ -47,7 +47,10 @@ export function ReviewCard({
   return (
     <>
       {review.user && (
-        <div className="flex flex-col md:flex-row justify-between gap-5 bg-zine-900 w-full">
+        <div
+          data-cy="reviewCard"
+          className="flex flex-col md:flex-row justify-between gap-5 bg-zine-900 w-full"
+        >
           <div className="flex gap-5">
             <div className="flex flex-col gap-2">
               <Link
