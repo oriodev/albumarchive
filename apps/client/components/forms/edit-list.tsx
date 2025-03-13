@@ -18,7 +18,7 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
+  // FormLabel,
   FormMessage,
 } from "../ui/form";
 import { Label } from "../ui/label";
@@ -186,11 +186,10 @@ export function EditList({ slug }: { slug: string }) {
               </FormItem>
             )}
           />
-          <FormLabel>Image</FormLabel>
+          {/* <FormLabel>Image</FormLabel>
           {list && (
-            <p>hi</p>
             // <ImageUpload imageUrl={imageUrl} list={list} onUpload={onUpload} />
-          )}
+          )} */}
 
           {/* SUBMIT BUTTON */}
           <button

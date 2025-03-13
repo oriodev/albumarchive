@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Query } from 'express-serve-static-core';
 import { User } from '../auth/schemas/user.schema';
-import { List } from 'src/lists/schemas/list.schema';
+import { List } from '../lists/schemas/list.schema';
 
 @Injectable()
 export class UsersService {

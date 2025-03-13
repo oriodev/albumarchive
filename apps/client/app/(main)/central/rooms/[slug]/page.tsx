@@ -203,7 +203,7 @@ export default function Page({ params }: Props) {
                 </div>
               </div>
 
-              <div className="w-1/4 md:w-1/6 overflow-hidden border border-zinc-600 p-5 hidden md:block">
+              <div className="w-1/4 md:w-1/6 overflow-hidden border border-zinc-600 p-5 hidden">
                 <h3 className="text-xl font-bold">Online - {users.length}.</h3>
                 <div>
                   {users.map((user, index) => (

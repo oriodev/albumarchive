@@ -2,6 +2,7 @@
 
 import { getUserLikedLists } from "@/api/likes.api";
 import ImageCard from "@/components/cards/imagecard";
+import PageHeader from "@/components/general/header";
 import { ScrollDisplay } from "@/components/general/scrolldisplay";
 // COMPONENTS.
 
@@ -45,7 +46,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-2xl pl-3">Lists</h1>
+      <PageHeader title="Lists" description="All your lists and liked lists." />
 
       {/* ALL USER LISTS. */}
       <div className="flex flex-col gap-1">
@@ -53,7 +54,7 @@ export default function Page() {
         <ScrollDisplay>
           {user.lists.map((list: List) => (
             <Link
-              href={`/central/${user.username}/${list.slug}`}
+              href={`/central/users/${user.username}/${list.slug}`}
               className="flex-shrink-0 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
               key={`${list.name}+${list.user}`}
             >

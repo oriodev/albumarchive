@@ -47,26 +47,27 @@ export default function Page() {
 
       <HomePageNavBoxes />
 
-      <ScrollContainer title="Jump Back In.">
-        {likedLists &&
-          likedLists.map((list) => {
-            console.log("list: ", list);
-            return (
-              <Link
-                key={list._id}
-                href={`/central/users/${list.user.username}/${list.slug}`}
-                className=""
-              >
-                <ScrollableImageCard
-                  key={`${list.name}+${list.user}`}
-                  image={list.listCoverImg}
-                  title={list.name}
-                  imageType={ImageType.list}
-                />
-              </Link>
-            );
-          })}
-      </ScrollContainer>
+      {likedLists && likedLists.length > 0 && (
+        <ScrollContainer title="Jump Back In.">
+          {likedLists &&
+            likedLists.map((list) => {
+              return (
+                <Link
+                  key={list._id}
+                  href={`/central/users/${list.user.username}/${list.slug}`}
+                  className=""
+                >
+                  <ScrollableImageCard
+                    key={`${list.name}+${list.user}`}
+                    image={list.listCoverImg}
+                    title={list.name}
+                    imageType={ImageType.list}
+                  />
+                </Link>
+              );
+            })}
+        </ScrollContainer>
+      )}
 
       <ScrollContainer title="Trending Now.">
         {trendingLists &&

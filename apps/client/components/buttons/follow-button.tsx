@@ -1,5 +1,5 @@
 // HOOKS.
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
 
@@ -23,8 +23,12 @@ export function FollowButton({ user }: { user: User | null }) {
   const isPrivate = user?.private || false;
 
   // SET INITIAL FOLLOW STATUS.
-  const followStatus = checkIfFollowing(currentUser?._id, user);
-  const [currentlyFollowing, setCurrentlyFollowing] = useState(followStatus);
+  const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
+
+  useEffect(() => {
+    const followStatus = checkIfFollowing(currentUser?._id, user);
+    if (followStatus) setCurrentlyFollowing(true);
+  }, [user, currentUser]);
 
   // FOLLOW USER.
   const handleFollow = async () => {
@@ -105,6 +109,8 @@ export function FollowButton({ user }: { user: User | null }) {
     });
     return;
   };
+
+  console.log("currentlyFollowing: ", currentlyFollowing);
 
   return (
     <div>

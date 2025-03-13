@@ -7,12 +7,16 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { AlbumService } from '../albums/album.service';
 import { Album } from '../albums/schemas/album.schema';
+import { User } from '../auth/schemas/user.schema';
+import { Likes } from '../likes/schemas/likes.schema';
 
 describe('ListService', () => {
-  let service: ListService;
+  let listService: ListService;
   let albumService: AlbumService;
   let model: Model<List>;
   let albumModel: Model<Album>;
+  let userModel: Model<User>;
+  let likesModel: Model<Likes>;
 
   const mockListService = {
     create: jest.fn(),
@@ -24,6 +28,9 @@ describe('ListService', () => {
   const mockAlbumService = {
     findById: jest.fn()
   }
+
+  const mockUserService = {}
+  const mockLikesService = {}
 
   const mockAlbum = {
     _id: "671cf2598f4e61ab24d095b3",
@@ -66,18 +73,28 @@ const mockListWithAlbum = {
         {
           provide: getModelToken(Album.name),
           useValue: mockAlbumService
+        },
+        {
+          provide: getModelToken(User.name),
+          useValue: mockUserService
+        },
+        {
+          provide: getModelToken(Likes.name),
+          useValue: mockLikesService
         }
       ],
     }).compile();
 
-    service = module.get<ListService>(ListService);
+    listService = module.get<ListService>(ListService);
     albumService = module.get<AlbumService>(AlbumService);
     model = module.get<Model<List>>(getModelToken(List.name))
     albumModel = module.get<Model<Album>>(getModelToken(Album.name))
+    userModel = module.get<Model<User>>(getModelToken(User.name))
+    likesModel = module.get<Model<Likes>>(getModelToken(Likes.name))
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(listService).toBeDefined();
   });
 
   describe('create', () => {
@@ -88,7 +105,7 @@ const mockListWithAlbum = {
 
       const {_id, ...newList} = mockList
       
-      const result = await service.create(newList as any)
+      const result = await listService.create(newList as any)
 
       expect(result).toEqual(mockList)
     })
@@ -102,7 +119,7 @@ const mockListWithAlbum = {
       .spyOn(mongoose, 'isValidObjectId')
       .mockReturnValueOnce(true)
 
-      const result = await service.deleteById(mockList._id)
+      const result = await listService.deleteById(mockList._id)
 
       expect(result).toEqual(mockList)
     })
@@ -114,7 +131,7 @@ const mockListWithAlbum = {
         .spyOn(mongoose, 'isValidObjectId')
         .mockReturnValueOnce(false)
 
-      await expect(service.deleteById(mockList._id)).rejects.toThrow(BadRequestException)
+      await expect(listService.deleteById(mockList._id)).rejects.toThrow(BadRequestException)
     })
   })
 
@@ -134,7 +151,7 @@ const mockListWithAlbum = {
       .spyOn(mongoose, 'isValidObjectId')
       .mockReturnValueOnce(true)
 
-      const result = await service.updateById(mockList._id, update as any)
+      const result = await listService.updateById(mockList._id, update as any)
       
       expect(result).toEqual(updatedList)
 
@@ -147,7 +164,7 @@ const mockListWithAlbum = {
         .spyOn(mongoose, 'isValidObjectId')
         .mockReturnValueOnce(false)
       
-        await expect(service.updateById(mockList._id, update as any))
+        await expect(listService.updateById(mockList._id, update as any))
           .rejects
           .toThrow(BadRequestException)
 
@@ -203,28 +220,28 @@ const mockListWithAlbum = {
   
     it('should remove album and return list', async () => {
       jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(mockList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(initialList as any)
+      jest.spyOn(albumService, 'getAlbumById').mockResolvedValue(initialList as any)
 
-      const result = await service.removeAlbum(initialList._id, mockAlbumId)
+      const result = await listService.removeAlbum(initialList._id, mockAlbumId)
 
       expect(result).toEqual(mockList)
     })
 
     it('should throw BadRequestException if album id is invalid', async () => {
       jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(mockList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(undefined)
+      jest.spyOn(albumService, 'getAlbumById').mockResolvedValue(undefined)
 
-      await expect(service.removeAlbum(initialList._id, mockAlbumId))
+      await expect(listService.removeAlbum(initialList._id, mockAlbumId))
         .rejects
         .toThrow(BadRequestException)
     })
 
     it('should throw BadRequestException if list id is invalid mongo id', async () => {
       jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(mockList)
-      jest.spyOn(albumService, 'findById').mockResolvedValue(initialList as any)
+      jest.spyOn(albumService, 'getAlbumById').mockResolvedValue(initialList as any)
       jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false)
 
-      await expect(service.removeAlbum(mockList._id, mockAlbumId))
+      await expect(listService.removeAlbum(mockList._id, mockAlbumId))
         .rejects
         .toThrow(BadRequestException)
     })
@@ -234,7 +251,7 @@ const mockListWithAlbum = {
     it('should find and return a list by ID', async () => {
         jest.spyOn(model, 'findById').mockResolvedValue(mockList)
 
-        const result = await service.findById(mockList._id);
+        const result = await listService.getListById(mockList._id);
         
         expect(model.findById).toHaveBeenCalledWith(mockList._id) 
         expect(result).toEqual(mockList)
@@ -247,7 +264,7 @@ const mockListWithAlbum = {
         .spyOn(mongoose, 'isValidObjectId')
         .mockReturnValue(false)
 
-        await expect(service.findById(id)).rejects.toThrow(BadRequestException)
+        await expect(listService.getListById(id)).rejects.toThrow(BadRequestException)
         expect(isValidObjectionIdMock).toHaveBeenCalledWith(id)
         isValidObjectionIdMock.mockRestore()
     })
@@ -258,7 +275,7 @@ const mockListWithAlbum = {
         jest.spyOn(mongoose, 'isValidObjectId').mockReturnValue(true)
 
         jest.spyOn(model, 'findById').mockResolvedValue(null)
-        await expect(service.findById(id)).rejects.toThrow(NotFoundException)
+        await expect(listService.getListById(id)).rejects.toThrow(NotFoundException)
     })
   })
 

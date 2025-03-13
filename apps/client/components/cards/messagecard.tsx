@@ -48,10 +48,6 @@ export default function MessageCard({ fullMessage, room, setMessages }: Props) {
     if (!deletedMessage) return;
   };
 
-  if (list && listOwner) {
-    console.log(`central/users/${listOwner.username}/${list.slug}`);
-  }
-
   const now = dayjs();
   const isToday = dayjs(timestamp).isSame(now, "day");
   const date = formatDate(timestamp);

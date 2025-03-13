@@ -1,27 +1,30 @@
 "use client";
 
-import { UploadDropzone } from "@/utils/uploadthing.utils";
 import Image from "next/image";
+import { CldUploadButton } from "next-cloudinary";
 
 import { useState } from "react";
 
 export default function EditProfile() {
   const [imageUrl, setImageUrl] = useState("");
 
+  const handleUpload = () => {
+    console.log("hello");
+  };
+
   return (
     <div className={"max-w-2xl p-8"}>
-      <UploadDropzone
-        endpoint={"imageUpload"}
-        onClientUploadComplete={(res) => {
-          if (res?.[0].url) {
-            console.log("Good job!. We did it!", res?.[0].url);
-            setImageUrl(res?.[0].url);
-          }
+      <CldUploadButton
+        options={{
+          maxFiles: 1,
         }}
-        onUploadError={(error: Error) => {
-          console.error("Ooops something is wrong", error);
-        }}
-      />
+        onSuccess={handleUpload}
+        uploadPreset="profile"
+      >
+        <div className="p-2 pl-10 pr-10 rounded-lg bg-white text-black font-bold">
+          <p>upload image</p>
+        </div>
+      </CldUploadButton>
 
       {imageUrl && (
         <div>
