@@ -34,7 +34,7 @@ jobs:
         working-directory: ./apps/server
 
       - name: Start app
-        run: npx turbo dev
+        run: npx turbo dev &
         working-directory: ./
 
       - name: Run backend tests
