@@ -33,14 +33,12 @@ jobs:
         run: npm install
         working-directory: ./apps/server
 
-      - name: Start app
-        run: |
-          npx turbo dev & 
-
       - name: Run backend tests
         run: npm test
         working-directory: ./apps/server
 
-      - name: Run Cypress tests
-        run: npm run cypress:run
-        working-directory: ./apps/client
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+            build: npm run build
+            start: npm start
