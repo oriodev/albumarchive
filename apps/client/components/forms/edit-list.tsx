@@ -27,8 +27,6 @@ import { Textarea } from "../ui/textarea";
 import { useUser } from "@/utils/providers/UserProvider";
 import { slugify } from "@/utils/global.utils";
 import { updateList } from "@/api/list.api";
-// import ImageUpload from "./image-upload";
-// import { CloudinaryUploadWidgetInfo } from "next-cloudinary";
 import PageHeader from "../general/header";
 
 // SET FORM DATA TYPE.
@@ -135,11 +133,6 @@ export function EditList({ slug }: { slug: string }) {
       throw new Error("could not create list");
     }
   };
-
-  // ON UPLOAD.
-  // const onUpload = async (info: CloudinaryUploadWidgetInfo) => {
-  //   setImageUrl(info.secure_url);
-  // };
 
   return (
     <div className="flex flex-col gap-6">
