@@ -141,8 +141,6 @@ export class ListService {
 
         ]);
         
-        console.log('list: ', list)
-    
         if (list.length === 0) {
             throw new NotFoundException('List not found');
         }
@@ -159,8 +157,8 @@ export class ListService {
 
         const lists = await this.listModel.find({ user: id }).populate('user');
 
-        if (!lists) {
-            throw new NotFoundException('list not found')
+        if (lists.length === 0) {
+            throw new NotFoundException('list not found');
         }
 
         return lists;
