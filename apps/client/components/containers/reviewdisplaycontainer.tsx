@@ -9,7 +9,7 @@ import { RatingDisplay } from "@/components/ratings/rating-display";
 import { FullPagination } from "../general/full-pagination";
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
-import { getReview } from "@/api/reviews.api";
+import { getReview } from "@/apis/reviews.api";
 import { AddReviewDialogue } from "../dialogs/add-review-dialogue";
 
 interface Props {

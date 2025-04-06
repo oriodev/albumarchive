@@ -18,9 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/zod/login-schema";
 import { FormField, FormItem, FormControl, FormMessage } from "../ui/form";
 import { PasswordInput } from "../ui/password-input";
-import { login } from "@/api/auth.api";
+import { login } from "@/apis/auth.api";
 import { useRouter } from "next/navigation";
-import { createSession } from "@/api/session.api";
+import { createSession } from "@/apis/session.api";
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({

@@ -26,7 +26,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useUser } from "@/utils/providers/UserProvider";
 import { slugify } from "@/utils/global.utils";
-import { updateList } from "@/api/list.api";
+import { updateList } from "@/apis/list.api";
 import PageHeader from "../general/header";
 
 // SET FORM DATA TYPE.

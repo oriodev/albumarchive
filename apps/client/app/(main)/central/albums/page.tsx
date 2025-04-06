@@ -10,8 +10,8 @@ import ExtendedSearchContainer from "@/components/containers/extenddedsearchcont
 import { Album } from "@/types";
 
 // API CALLS.
-import { getAlbums } from "@/api/albums.api";
-import { getAlbumsFromDiscogs } from "@/api/discogs.api";
+import { getAlbums } from "@/apis/albums.api";
+import { getAlbumsFromDiscogs } from "@/apis/discogs.api";
 import { AlbumDialogue } from "@/components/dialogs/album-dialogue";
 
 export default function Page() {

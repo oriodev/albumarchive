@@ -5,7 +5,7 @@ import ViewStarRating from "../ratings/viewStarRating";
 import Link from "next/link";
 import { EditReviewDialogue } from "../dialogs/edit-review-dialogue";
 import { DeleteDialog } from "../dialogs/delete-dialog";
-import { deleteReview } from "@/api/reviews.api";
+import { deleteReview } from "@/apis/reviews.api";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/utils/providers/UserProvider";
 import ProfileImage from "../general/profile-image";

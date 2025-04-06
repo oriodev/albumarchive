@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserByUsername } from "@/api/user.api";
+import { getUserByUsername } from "@/apis/user.api";
 import { FollowButton } from "@/components/buttons/follow-button";
 import { RemoveFollowerButton } from "@/components/buttons/remove-follower-button";
 // COMPONENTS.

@@ -4,11 +4,11 @@
 import PageHeader from "@/components/general/header";
 import HomePageNavBoxes from "@/components/containers/homepagenavboxes";
 import ScrollContainer from "@/components/containers/scrollcontainer";
-import { getUserLikedLists } from "@/api/likes.api";
+import { getUserLikedLists } from "@/apis/likes.api";
 import { ImageType, List } from "@/types";
 import Link from "next/link";
 import ScrollableImageCard from "@/components/cards/scrollableimagecard";
-import { getTrendingLists } from "@/api/list.api";
+import { getTrendingLists } from "@/apis/list.api";
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 

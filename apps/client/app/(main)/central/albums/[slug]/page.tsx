@@ -1,6 +1,6 @@
-import { getAlbumById, getAlbumsByArtist } from "@/api/albums.api";
-import { getAlbumRating, getRatingsCount } from "@/api/reviews.api";
-import { getUser, getUserId } from "@/api/user.api";
+import { getAlbumById, getAlbumsByArtist } from "@/apis/albums.api";
+import { getAlbumRating, getRatingsCount } from "@/apis/reviews.api";
+import { getUser, getUserId } from "@/apis/user.api";
 import AlbumDetails from "@/components/containers/albumdetails";
 import AlbumScrollDisplay from "@/components/containers/albumscrolldisplay";
 import ReviewsContainer from "@/components/containers/reviewscontainer";

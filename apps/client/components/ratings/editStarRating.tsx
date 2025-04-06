@@ -1,7 +1,7 @@
 "use client";
 
 // API CALLS.
-// import { createRating, deleteRating, updateRating } from "@/api/ratings.api";
+// import { createRating, deleteRating, updateRating } from "@/apis/ratings.api";
 
 // TYPES
 import { Album } from "@/types";
@@ -12,7 +12,7 @@ import { Star } from "lucide-react";
 // HOOKS.
 import { useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
-import { getReview } from "@/api/reviews.api";
+import { getReview } from "@/apis/reviews.api";
 
 export default function EditStarRating({
   album,

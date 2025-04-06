@@ -1,7 +1,7 @@
 "use client";
 
 // API CALLS.
-import { getAllLists } from "@/api/list.api";
+import { getAllLists } from "@/apis/list.api";
 
 // TYPES.
 import { ImageType, List } from "@/types";

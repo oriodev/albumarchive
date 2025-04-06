@@ -1,6 +1,6 @@
 import { Album, RatingsCount, Review, ReviewWithUser, User } from "@/types";
 import { AlbumReviewsContainer } from "./reviewdisplaycontainer";
-import { getAllReviews, getReview } from "@/api/reviews.api";
+import { getAllReviews, getReview } from "@/apis/reviews.api";
 
 interface Props {
   album: Album;

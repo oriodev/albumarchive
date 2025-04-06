@@ -1,6 +1,6 @@
-import { getMessages, storeMessage } from "@/api/messages.api";
-import { addUserToRoom, getRoom } from "@/api/rooms.api";
-import { getUser } from "@/api/user.api";
+import { getMessages, storeMessage } from "@/apis/messages.api";
+import { addUserToRoom, getRoom } from "@/apis/rooms.api";
+import { getUser } from "@/apis/user.api";
 import {
   Album,
   List,

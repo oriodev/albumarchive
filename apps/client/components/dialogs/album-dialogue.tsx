@@ -15,7 +15,7 @@ import { Album, ImageType } from "@/types";
 
 // API CALLS.
 import { AddToList } from "../dropdowns/add-to-list-dropdown";
-import { addAlbumToList } from "@/api/list.api";
+import { addAlbumToList } from "@/apis/list.api";
 
 // UTILS.
 import { useUser } from "@/utils/providers/UserProvider";
@@ -36,7 +36,7 @@ import ImageCard from "../cards/imagecard";
 // import ViewStarRating from "../ratings/viewStarRating";
 import GenreDisplay from "../containers/genre-display";
 import { ListCard } from "../cards/listcard";
-// import { getAlbumRating } from "@/api/reviews.api";
+// import { getAlbumRating } from "@/apis/reviews.api";
 
 interface AlbumDialogueProps {
   album: Album;

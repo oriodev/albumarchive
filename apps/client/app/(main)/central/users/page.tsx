@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllUsers } from "@/api/user.api";
+import { getAllUsers } from "@/apis/user.api";
 import ImageCard from "@/components/cards/imagecard";
 import SearchContainer from "@/components/containers/searchcontainer";
 import { ImageType, User } from "@/types";

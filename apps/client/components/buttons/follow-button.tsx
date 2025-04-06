@@ -9,7 +9,7 @@ import { checkIfFollowing } from "@/utils/user.utils";
 
 // TYPES.
 import { NotificationType, User } from "@/types";
-import { followUser, unfollowUser } from "@/api/user.api";
+import { followUser, unfollowUser } from "@/apis/user.api";
 import { sendNotification } from "@/utils/notifications.utils";
 import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 

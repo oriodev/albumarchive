@@ -1,7 +1,7 @@
 "use client";
 
 // API CALLS.
-import { getListById } from "@/api/list.api";
+import { getListById } from "@/apis/list.api";
 
 // COMPONENTS.
 import { Button } from "@/components/ui/button";

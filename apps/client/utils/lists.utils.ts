@@ -1,9 +1,9 @@
-import { createAlbum, getAlbumByTitle } from "@/api/albums.api";
+import { createAlbum, getAlbumByTitle } from "@/apis/albums.api";
 import {
   addAlbumToList,
   getListsByUserId,
   removeAlbumFromList,
-} from "@/api/list.api";
+} from "@/apis/list.api";
 import { Album, AlbumType, List, User } from "@/types";
 import { makeUpdatedAlbumInListUser } from "./user.utils";
 import { slugify } from "./global.utils";

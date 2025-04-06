@@ -1,6 +1,6 @@
 // "use server";
 
-import { getUser, getUserId } from "@/api/user.api";
+import { getUser, getUserId } from "@/apis/user.api";
 import { User } from "@/types";
 
 export const getUserDetails = async () => {

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // API CALL.
-import { removeUserFromRoom } from "@/api/rooms.api";
+import { removeUserFromRoom } from "@/apis/rooms.api";
 
 // UTILS.
 import {

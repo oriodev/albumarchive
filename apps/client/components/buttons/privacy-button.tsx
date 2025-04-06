@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import { updateUser } from "@/api/user.api";
+import { updateUser } from "@/apis/user.api";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useState } from "react";
 

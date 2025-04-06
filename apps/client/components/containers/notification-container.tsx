@@ -12,7 +12,7 @@ import {
   sendNotification,
 } from "@/utils/notifications.utils";
 import { Socket } from "socket.io-client";
-import { followUser } from "@/api/user.api";
+import { followUser } from "@/apis/user.api";
 import NotifCard from "../cards/notifcard";
 
 export function NotificationContainer({

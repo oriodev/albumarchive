@@ -12,10 +12,10 @@ import {
   getNotifications,
   removeNotification,
   storeNotification,
-} from "@/api/notifications.api";
+} from "@/apis/notifications.api";
 import { Socket } from "socket.io-client";
 import { isAlbumInListened, isAlbumInToListen } from "./lists.utils";
-import { addAlbumToList, getListsByUserId } from "@/api/list.api";
+import { addAlbumToList, getListsByUserId } from "@/apis/list.api";
 import { makeUpdatedAlbumInListUser } from "./user.utils";
 
 /**

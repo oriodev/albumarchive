@@ -40,7 +40,7 @@ import { z } from "zod";
 import { createReviewSchema } from "@/zod/create-review-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "../ui/badge";
-import { editReview } from "@/api/reviews.api";
+import { editReview } from "@/apis/reviews.api";
 import EditStarRating from "../ratings/editStarRating";
 import { presetVibes } from "@/utils/text.utils";
 

@@ -37,7 +37,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 
 // API CALLS.
-import { addAlbumToList } from "@/api/list.api";
+import { addAlbumToList } from "@/apis/list.api";
 
 // UTILS.
 import { makeUpdatedAlbumInListUser } from "@/utils/user.utils";

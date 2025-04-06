@@ -1,9 +1,9 @@
 "use client";
 
-import { getAlbumById } from "@/api/albums.api";
+import { getAlbumById } from "@/apis/albums.api";
 // API CALLS.
-import { getList } from "@/api/list.api";
-import { getUserByUsername } from "@/api/user.api";
+import { getList } from "@/apis/list.api";
+import { getUserByUsername } from "@/apis/user.api";
 import { LikeList } from "@/components/buttons/like-list";
 import { ListAlbumDisplay } from "@/components/containers/list-album-display";
 import ListLayoutSwitch from "@/components/buttons/list-layout-switch";

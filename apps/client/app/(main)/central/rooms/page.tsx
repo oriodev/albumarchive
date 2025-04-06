@@ -1,6 +1,6 @@
 "use client";
 
-import { getRooms } from "@/api/rooms.api";
+import { getRooms } from "@/apis/rooms.api";
 import RoomCard from "@/components/cards/roomcard";
 import SearchContainer from "@/components/containers/searchcontainer";
 import { Room } from "@/types";

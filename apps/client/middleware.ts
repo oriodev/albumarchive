@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getSession } from "./api/session.api";
-import { getRooms } from "./api/rooms.api";
+import { getSession } from "./apis/session.api";
+import { getRooms } from "./apis/rooms.api";
 import { Room } from "./types";
 
 export async function middleware(request: NextRequest) {

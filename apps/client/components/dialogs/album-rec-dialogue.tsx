@@ -39,7 +39,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { useContext, useEffect, useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
-import { getUser } from "@/api/user.api";
+import { getUser } from "@/apis/user.api";
 import {
   checkNotification,
   sendNotification,

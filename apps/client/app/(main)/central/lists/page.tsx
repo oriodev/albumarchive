@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserLikedLists } from "@/api/likes.api";
+import { getUserLikedLists } from "@/apis/likes.api";
 import ImageCard from "@/components/cards/imagecard";
 import PageHeader from "@/components/general/header";
 import { ScrollDisplay } from "@/components/general/scrolldisplay";

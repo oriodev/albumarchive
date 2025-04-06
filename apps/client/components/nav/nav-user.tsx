@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { deleteSession } from "@/api/session.api";
+import { deleteSession } from "@/apis/session.api";
 import { useRouter } from "next/navigation";
 import { getUsernameInitial } from "@/utils/user.utils";
 import { useUser } from "@/utils/providers/UserProvider";

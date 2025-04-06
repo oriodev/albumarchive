@@ -5,7 +5,7 @@ import ImageLoader from "../general/imageloader";
 import { useState } from "react";
 import { useUser } from "@/utils/providers/UserProvider";
 import { Trash } from "lucide-react";
-import { deleteMessage } from "@/api/messages.api";
+import { deleteMessage } from "@/apis/messages.api";
 import { formatDate, formatLocaltime } from "@/utils/time.utils";
 import dayjs from "dayjs";
 import Link from "next/link";

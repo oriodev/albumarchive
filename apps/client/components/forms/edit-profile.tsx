@@ -7,7 +7,7 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUser } from "@/api/user.api";
+import { updateUser } from "@/apis/user.api";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "../ui/button";
 import { FormField, FormItem, FormControl, FormMessage } from "../ui/form";

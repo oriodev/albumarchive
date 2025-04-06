@@ -22,7 +22,7 @@ import { useUser } from "@/utils/providers/UserProvider";
 import { WebsocketContext } from "@/utils/providers/WebsocketProvider";
 
 // API CALLS.
-import { getNotifications } from "@/api/notifications.api";
+import { getNotifications } from "@/apis/notifications.api";
 
 // TYPES.
 import { Notification } from "@/types";

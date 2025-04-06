@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { ListComboBox } from "../comboboxes/listcombobox";
 import { Socket } from "socket.io-client";
 import { handleSendMessage } from "@/app/(main)/central/rooms/(utils)/rooms.utils";
-import { getUserLikedLists } from "@/api/likes.api";
+import { getUserLikedLists } from "@/apis/likes.api";
 
 interface Props {
   room: Room;

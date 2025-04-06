@@ -12,12 +12,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListCard } from "../cards/listcard";
 
 // API CALLS.
-import { getUserLikedLists } from "@/api/likes.api";
+import { getUserLikedLists } from "@/apis/likes.api";
 
 // TYPES.
 import { ImageType, List, User } from "@/types";
 import { useEffect, useState } from "react";
-import { getUsersBatch } from "@/api/user.api";
+import { getUsersBatch } from "@/apis/user.api";
 import Link from "next/link";
 
 interface Props {

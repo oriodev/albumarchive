@@ -24,7 +24,7 @@ import NewListBtn from "../buttons/new-list-btn";
 import Link from "next/link";
 import { listToRender } from "@/types";
 import { usePathname, useRouter } from "next/navigation";
-import { deleteList } from "@/api/list.api";
+import { deleteList } from "@/apis/list.api";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useToast } from "@/hooks/use-toast";
 import { slugify } from "@/utils/global.utils";

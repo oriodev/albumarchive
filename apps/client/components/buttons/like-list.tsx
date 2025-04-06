@@ -10,7 +10,7 @@ import {
   deleteLike,
   getLike,
   getTotalLikes,
-} from "@/api/likes.api";
+} from "@/apis/likes.api";
 import { useUser } from "@/utils/providers/UserProvider";
 
 export function LikeList({

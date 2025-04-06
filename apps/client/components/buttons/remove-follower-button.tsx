@@ -5,7 +5,7 @@ import { User } from "@/types";
 import { Button } from "../ui/button";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useToast } from "@/hooks/use-toast";
-import { unfollowUser } from "@/api/user.api";
+import { unfollowUser } from "@/apis/user.api";
 
 export function RemoveFollowerButton({
   user,

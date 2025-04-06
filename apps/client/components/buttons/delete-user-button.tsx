@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import { deleteUser } from "@/api/user.api";
+import { deleteUser } from "@/apis/user.api";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useRouter } from "next/navigation";
 
