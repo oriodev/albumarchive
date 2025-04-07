@@ -4,7 +4,6 @@ import { getRooms } from "@/apis/rooms.api";
 import RoomCard from "@/components/cards/roomcard";
 import SearchContainer from "@/components/containers/searchcontainer";
 import { Room } from "@/types";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -37,10 +36,7 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
-  const handleEnterRoom = (
-    router: AppRouterInstance | string[],
-    slug: string,
-  ) => {
+  const handleEnterRoom = (slug: string) => {
     router.push(`/central/rooms/${slug}`);
   };
 
@@ -71,7 +67,7 @@ export default function Page() {
           key={room.title}
           room={room}
           active={room.users.length > 0}
-          handleOnClick={() => handleEnterRoom(router, room.slug)}
+          handleOnClick={() => handleEnterRoom(room.slug)}
         />
       ))}
     </SearchContainer>
