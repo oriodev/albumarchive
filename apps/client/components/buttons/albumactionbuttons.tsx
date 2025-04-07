@@ -3,6 +3,8 @@
 import { Album } from "@/types";
 import { AddToList } from "../dropdowns/add-to-list-dropdown";
 import { AlbumRecDialogue } from "../dialogs/album-rec-dialogue";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface Props {
   album: Album;
@@ -13,6 +15,16 @@ export default function AlbumActionButton({ album }: Props) {
     <div className="flex gap-2">
       <AddToList album={album} />
       <AlbumRecDialogue album={album} />
+      <Link
+        href={`https://www.youtube.com/results?search_query=${album.artist}+${album.title}`}
+      >
+        <Button className="bg-rose-800">YouTube</Button>
+      </Link>
+      <Link
+        href={`https://open.spotify.com/search/${album.artist}${album.title}`}
+      >
+        <Button className="bg-emerald-800">Spotify</Button>
+      </Link>
     </div>
   );
 }
