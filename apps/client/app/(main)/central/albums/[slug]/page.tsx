@@ -51,12 +51,14 @@ export default async function Page({ params }: Props) {
         albumRating={albumRating}
         ratingsCount={ratingsCount}
       />
-      <section className="hidden md:block pt-5">
-        <h3 data-cy="moreAlbums" className="text-2xl font-bold">
-          More Albums By This Artist
-        </h3>
-        <AlbumScrollDisplay albums={albumsByArtist} />
-      </section>
+      {albumsByArtist && (
+        <section className="hidden md:block pt-5">
+          <h3 data-cy="moreAlbums" className="text-2xl font-bold">
+            More Albums By This Artist
+          </h3>
+          <AlbumScrollDisplay albums={albumsByArtist} />
+        </section>
+      )}
       {/* REVIEWS. */}
       <ReviewsContainer album={album} user={user} ratingsCount={ratingsCount} />
     </main>
