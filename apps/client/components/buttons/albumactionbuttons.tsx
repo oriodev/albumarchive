@@ -17,13 +17,19 @@ export default function AlbumActionButton({ album }: Props) {
       <AlbumRecDialogue album={album} />
       <Link
         href={`https://www.youtube.com/results?search_query=${album.artist}+${album.title}`}
+        target="_blank"
       >
-        <Button className="bg-rose-800">YouTube</Button>
+        <Button className="bg-rose-700 hover:bg-rose-800 text-white">
+          YouTube
+        </Button>
       </Link>
       <Link
-        href={`https://open.spotify.com/search/${album.artist}${album.title}`}
+        href={`https://open.spotify.com/search/${album.artist} ${album.title}`}
+        target="_blank"
       >
-        <Button className="bg-emerald-800">Spotify</Button>
+        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+          Spotify
+        </Button>
       </Link>
     </div>
   );
