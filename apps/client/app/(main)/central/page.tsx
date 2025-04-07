@@ -45,8 +45,6 @@ export default function Page() {
         description="Track your albums. Make new friends. Savour your music."
       />
 
-      <p>CHANGE THIS BACK PLS</p>
-
       <HomePageNavBoxes />
 
       {likedLists && likedLists.length > 0 && (
