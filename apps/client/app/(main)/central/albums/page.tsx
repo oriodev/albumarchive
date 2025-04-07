@@ -97,17 +97,23 @@ export default function Page() {
       resPerPage={25}
       handleSetSearchType={handleSetSearchType}
     >
-      {albums.map((album: Album) => (
-        <div key={`${album.title}+${album.artist}+${album.genre}`}>
-          <AlbumDialogue
-            album={album}
-            setAlbums={setAlbums}
-            albums={albums}
-            layoutType="Grid"
-            local={local}
-          />
+      {albums ? (
+        albums.map((album: Album) => (
+          <div key={`${album.title}+${album.artist}+${album.genre}`}>
+            <AlbumDialogue
+              album={album}
+              setAlbums={setAlbums}
+              albums={albums}
+              layoutType="Grid"
+              local={local}
+            />
+          </div>
+        ))
+      ) : (
+        <div>
+          <p>Can`&apos;`t find the album? Switch to Wider Search!</p>
         </div>
-      ))}
+      )}
     </ExtendedSearchContainer>
   );
 }
