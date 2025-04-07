@@ -6,7 +6,7 @@ import { socketMessage } from "src/messages/schemas/socketMessages";
 
 @WebSocketGateway({
     cors: {
-         origin: ['http://localhost:3000']
+         origin: ['https://www.albumarchive.live'] // PROD
     }
 })
 export class Rooms implements OnModuleInit {

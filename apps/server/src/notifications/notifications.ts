@@ -5,7 +5,7 @@ import { Notification } from "./schemas/notifications.schema";
 
 @WebSocketGateway({
     cors: {
-         origin: ['http://localhost:3000']
+         origin: ['https://www.albumarchive.live'] // PROD
     }
 })
 export class AppNotifications implements OnModuleInit {
