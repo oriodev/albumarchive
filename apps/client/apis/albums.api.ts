@@ -98,7 +98,7 @@ export const getAlbumsByArtist = async (artist: string) => {
 export const createAlbum = async (album: Album) => {
   const token = await getSession();
 
-  const url = new URL(`${baseUrl}/album`);
+  const url = new URL(`${baseUrl}`);
 
   const response = await fetch(url, {
     method: "POST",
