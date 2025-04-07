@@ -13,7 +13,9 @@ export const WebsocketProvider = ({
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io(process.env.NEXT_PUBLIC_BACKEND_API);
+    const newSocket = io(process.env.NEXT_PUBLIC_BACKEND_API, {
+      transports: ["websocket"],
+    });
     setSocket(newSocket);
 
     newSocket.on("onNotification", () => {

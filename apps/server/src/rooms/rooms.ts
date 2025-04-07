@@ -4,9 +4,13 @@ import { Server, Socket } from "socket.io";
 import { Message } from "src/messages/schemas/messages.schema";
 import { socketMessage } from "src/messages/schemas/socketMessages";
 
-@WebSocketGateway({
+  // https://www.albumarchive.live
+  // http://localhost:3000
+
+  @WebSocketGateway({
     cors: {
-         origin: ['https://www.albumarchive.live'] // PROD
+        origin: ['https://www.albumarchive.live'],
+        methods: ['GET', 'POST'],
     }
 })
 export class Rooms implements OnModuleInit {

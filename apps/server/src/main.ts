@@ -7,6 +7,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe())
 
+  // https://www.albumarchive.live
+  // http://localhost:3000
+
   app.enableCors({
     origin: 'https://www.albumarchive.live', // PROD
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

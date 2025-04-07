@@ -3,9 +3,13 @@ import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from
 import { Server } from "socket.io";
 import { Notification } from "./schemas/notifications.schema";
 
-@WebSocketGateway({
+  // https://www.albumarchive.live
+  // http://localhost:3000
+
+  @WebSocketGateway({
     cors: {
-         origin: ['https://www.albumarchive.live'] // PROD
+        origin: ['https://www.albumarchive.live'],
+        methods: ['GET', 'POST'],
     }
 })
 export class AppNotifications implements OnModuleInit {
