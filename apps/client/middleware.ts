@@ -5,6 +5,11 @@ import { getRooms } from "./apis/rooms.api";
 import { Room } from "./types";
 
 export async function middleware(request: NextRequest) {
+  // Skip middleware for static files
+  if (request.nextUrl.pathname.startsWith("/_next/static")) {
+    return NextResponse.next();
+  }
+
   // SET ROUTES.
   const loggedOutPages = ["", "login", "signup"];
   const loggedInPages = ["central"];
