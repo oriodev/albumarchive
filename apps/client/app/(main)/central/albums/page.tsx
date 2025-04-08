@@ -87,7 +87,7 @@ export default function Page() {
   return (
     <ExtendedSearchContainer
       title="Search For Your Favourite Albums"
-      description="Checkout albums you have loved forever or brand new ones you want to listen to. If you can't find an album you want, switch to wider search!"
+      description="Check out albums you have loved forever or brand new ones you want to listen to. If you can't find an album you want, switch to wider search!"
       handleSubmit={handleSubmit}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}

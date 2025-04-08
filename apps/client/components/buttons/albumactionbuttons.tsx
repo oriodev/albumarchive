@@ -19,7 +19,7 @@ export default function AlbumActionButton({ album }: Props) {
         href={`https://www.youtube.com/results?search_query=${album.artist}+${album.title}`}
         target="_blank"
       >
-        <Button className="bg-rose-700 hover:bg-rose-800 text-white">
+        <Button className="bg-rose-700 hover:bg-rose-800 font-bold text-white">
           YouTube
         </Button>
       </Link>
@@ -27,7 +27,7 @@ export default function AlbumActionButton({ album }: Props) {
         href={`https://open.spotify.com/search/${album.artist} ${album.title}`}
         target="_blank"
       >
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+        <Button className="bg-emerald-600 hover:bg-emerald-700 font-bold text-white">
           Spotify
         </Button>
       </Link>
