@@ -150,7 +150,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
-        <NavLists lists={data.lists || []} title="Lists" setLists={setLists} />
+        <NavLists
+          lists={data.lists || []}
+          title="Your Lists"
+          setLists={setLists}
+        />
 
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

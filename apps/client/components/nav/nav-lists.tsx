@@ -1,7 +1,14 @@
 "use client";
 
 // COMPONENTS.
-import { Edit, Folder, MoreHorizontal, Share, Trash2 } from "lucide-react";
+import {
+  Edit,
+  Folder,
+  MoreHorizontal,
+  PlusCircleIcon,
+  Share,
+  Trash2,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +25,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import NewListBtn from "../buttons/new-list-btn";
 // import { DeleteDialog } from "./delete-dialog";
 
 import Link from "next/link";
@@ -28,6 +34,7 @@ import { deleteList } from "@/apis/list.api";
 import { useUser } from "@/utils/providers/UserProvider";
 import { useToast } from "@/hooks/use-toast";
 import { slugify } from "@/utils/global.utils";
+import { handleCreateNewList } from "@/utils/lists.utils";
 
 export function NavLists({
   lists,
@@ -71,7 +78,7 @@ export function NavLists({
   const handleShare = async (name: string) => {
     try {
       if (!user) return null;
-      const shareUrl = `www.albumarchive.com/central/users/${user.username}/${slugify(name)}`;
+      const shareUrl = `www.albumarchive.live/central/users/${user.username}/${slugify(name)}`;
       await navigator.clipboard.writeText(shareUrl);
       toast({
         title: "List url saved to clipboard",
@@ -98,7 +105,6 @@ export function NavLists({
               {title}
             </Link>
           </SidebarGroupLabel>
-          <NewListBtn setLists={setLists} lists={lists} />
         </div>
 
         {/* ITERATE THROUGH LISTS. */}
@@ -183,6 +189,24 @@ export function NavLists({
               </SidebarMenuButton>
             </SidebarMenuItem>
           )}
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() =>
+                handleCreateNewList(
+                  user,
+                  lists,
+                  router,
+                  updateUserInfo,
+                  setLists,
+                )
+              }
+              data-cy="newListBtn"
+            >
+              <PlusCircleIcon />
+              <span className="font-bold">Create New List</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroup>
     </>

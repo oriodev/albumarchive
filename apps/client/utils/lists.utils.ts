@@ -1,12 +1,15 @@
 import { createAlbum, getAlbumByTitle } from "@/apis/albums.api";
 import {
   addAlbumToList,
+  createList,
   getListsByUserId,
   removeAlbumFromList,
 } from "@/apis/list.api";
-import { Album, AlbumType, List, User } from "@/types";
+import { Album, AlbumType, List, listToRender, User } from "@/types";
 import { makeUpdatedAlbumInListUser } from "./user.utils";
 import { slugify } from "./global.utils";
+import { Headphones } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 /**
  * checks whether the album is in a list
@@ -354,4 +357,59 @@ export const deleteAlbumFromList = async (
   }
 
   return null;
+};
+
+export const handleCreateNewList = async (
+  user: User | null,
+  lists: listToRender[],
+  router: AppRouterInstance,
+  updateUserInfo: (update: Partial<User>) => void,
+  setLists: React.Dispatch<React.SetStateAction<listToRender[]>>,
+) => {
+  if (!user || !user?.lists) {
+    throw new Error("no user");
+  }
+
+  const existingLists = lists || [];
+
+  const baseName = "New List";
+  let newListName = baseName;
+  let counter = 1;
+
+  while (existingLists.some((list) => list.name === newListName)) {
+    counter++;
+    newListName = `${baseName} ${counter}`;
+  }
+
+  const newList = {
+    name: newListName,
+    slug: slugify(newListName),
+    description: "",
+    type: AlbumType.CUSTOM,
+    user: user._id,
+    albums: [],
+    likes: 0,
+  };
+
+  const list = await createList(newList);
+
+  // UPDATE USER PROVIDER.
+  const updatedLists = [...user.lists, list];
+  updateUserInfo({ lists: updatedLists });
+
+  const listToRender: listToRender = {
+    id: list.id,
+    name: list.name,
+    type: list.type,
+    url: `/central/lists/${list.slug}`,
+    icon: Headphones,
+    description: "",
+  };
+
+  if (list) {
+    setLists((prev) => [...prev, listToRender]);
+    router.push(`/central/lists/${list.slug}/editing`);
+  } else {
+    throw new Error("could not create list");
+  }
 };

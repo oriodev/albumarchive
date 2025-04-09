@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
+import React from "react";
 
 interface Props {
   title: string;
@@ -79,9 +80,20 @@ export default function ExtendedSearchContainer({
         </div>
       </div>
 
-      <div className="pl-3 grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
-        {children}
-      </div>
+      {React.Children.count(children) > 0 ? (
+        <div className="pl-3 grid grid-cols-1 gap-4 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+          {children}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1 justify-center items-center border border-gray-400 p-5 ml-3">
+          <p>
+            Can&apos;t find an album? Check your spelling or switch from Local
+            Search to Wider Search!
+          </p>
+
+          <p>It&apos;s just next to the search button :)</p>
+        </div>
+      )}
 
       <FullPagination
         setCurrentPage={setCurrentPage}
