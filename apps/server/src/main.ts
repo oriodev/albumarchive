@@ -11,21 +11,12 @@ async function bootstrap() {
   // http://localhost:3000
 
   app.enableCors({
-    origin: 'https://www.albumarchive.live', // PROD
+    origin: process.env.FRONTEND,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
   await app.listen(process.env.PORT || 8000);
-
-  setInterval(() => {
-    const memoryUsage = process.memoryUsage();
-    console.log(`Memory Usage: 
-      RSS: ${memoryUsage.rss / 1024 / 1024} MB,
-      Heap Total: ${memoryUsage.heapTotal / 1024 / 1024} MB,
-      Heap Used: ${memoryUsage.heapUsed / 1024 / 1024} MB,
-      External: ${memoryUsage.external / 1024 / 1024} MB`);
-  }, 60000); // Log every minute
   
 }
 bootstrap();

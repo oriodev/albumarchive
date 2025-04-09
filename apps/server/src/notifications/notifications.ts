@@ -8,7 +8,7 @@ import { Notification } from "./schemas/notifications.schema";
 
   @WebSocketGateway({
     cors: {
-        origin: ['https://www.albumarchive.live'],
+        origin: [process.env.FRONTEND],
         methods: ['GET', 'POST'],
     }
 })

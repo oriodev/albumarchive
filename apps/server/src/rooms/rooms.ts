@@ -1,7 +1,6 @@
 import { OnModuleInit } from "@nestjs/common";
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { Message } from "src/messages/schemas/messages.schema";
 import { socketMessage } from "src/messages/schemas/socketMessages";
 
   // https://www.albumarchive.live
@@ -9,7 +8,7 @@ import { socketMessage } from "src/messages/schemas/socketMessages";
 
   @WebSocketGateway({
     cors: {
-        origin: ['https://www.albumarchive.live'],
+        origin: [process.env.FRONTEND],
         methods: ['GET', 'POST'],
     }
 })
